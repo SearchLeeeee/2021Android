@@ -1,10 +1,16 @@
 plugins {
     id 'com.android.application'
+    id 'realm-android'
 }
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
+
+    buildFeatures{
+        viewBinding= true
+    }
+
 
     defaultConfig {
         applicationId "com.example.webviewapp"
@@ -36,4 +42,8 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // FastJSON
+    implementation 'com.alibaba:fastjson:1.2.55'
+    implementation 'com.alibaba:fastjson:1.2.55'
 }
