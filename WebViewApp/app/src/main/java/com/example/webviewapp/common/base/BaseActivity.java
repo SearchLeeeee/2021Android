@@ -15,6 +15,9 @@ import com.example.webviewapp.common.utils.UIUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+/**
+ * 继承后可以简化ViewBinding的使用，只需要在实现类中声明即可
+ */
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
@@ -36,7 +39,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    // 配置View绑定
+
+    /**
+     * 配置View绑定
+     * @throws Exception
+     */
     void setupViewBinding() throws Exception {
         Class<? extends BaseActivity> clazz = getClass();
         Class<? extends ViewBinding> vbClazz = ViewBinding.class;
@@ -54,8 +61,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    // endregion
 
+    /**
+     * 封装好点击一个view跳转到一个activity的动作
+     * @param view 被点击的view
+     * @param clazz 目标activity
+     * @return
+     */
     protected Intent registerActivitySwitch(View view, Class<? extends Activity> clazz) {
         return UIUtils.registerActivitySwitch(this, view, clazz);
     }

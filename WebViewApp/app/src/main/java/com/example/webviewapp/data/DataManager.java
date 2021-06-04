@@ -41,8 +41,13 @@ public class DataManager {
                 .build());
     }
 
-    // 获取最大的PrimaryKey并加一，否则id不变，会覆盖已有记录
-    private <T extends RealmObject> long generatePk(Class<T> clazz) {
+    /**
+     * 获取最大的PrimaryKey并加一，否则id不变，会覆盖已有记录
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    private <T extends RealmObject> long generatePrimaryKey(Class<T> clazz) {
         RealmResults<T> results = examRealm.where(clazz).findAll();
         if (results == null) return 1;
         return results.size() + 1;
