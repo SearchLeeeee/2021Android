@@ -26,6 +26,11 @@ public class DataUtils {
         return newKey.toString().getBytes();
     }
 
+    /**
+     * 毫秒转成 mm:ss 的字符串形式
+     * @param time 毫秒数
+     * @return
+     */
     public static String time2Str(Long time) {
         if (time == null) return "";
 
@@ -38,6 +43,12 @@ public class DataUtils {
         return mm + ":" + ss;
     }
 
+    /**
+     *
+     * @param assetManager
+     * @param filename
+     * @return
+     */
     public static JSONArray readJSONArray(AssetManager assetManager, String filename) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open(filename)));
@@ -68,6 +79,11 @@ public class DataUtils {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public static int findResource(String name) {
         Application app = BaseApplication.getInstance();
         return app.getResources().getIdentifier(
