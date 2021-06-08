@@ -47,7 +47,7 @@ public class DataUtils {
     }
 
     /**
-     * 毫秒转成日期的字符串形式
+     * 毫秒转成日期的字符串形式 1970年1月1日星期四
      *
      * @param time 毫秒数
      * @return

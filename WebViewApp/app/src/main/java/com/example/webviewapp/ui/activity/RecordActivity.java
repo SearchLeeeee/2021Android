@@ -31,6 +31,8 @@ public class RecordActivity extends AppCompatActivity {
         DataManager.init(this);
 
         initViewPager();
+
+        viewBinding.backBtn.setOnClickListener(v -> finish());
     }
 
 

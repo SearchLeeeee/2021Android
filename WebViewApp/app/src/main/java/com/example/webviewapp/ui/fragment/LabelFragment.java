@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.RecordRecyclerViewAdapter;
@@ -57,6 +58,18 @@ public class LabelFragment extends Fragment implements LabelContract.View {
         }
         viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         viewBinding.recyclerView.setAdapter(new RecordRecyclerViewAdapter(re, getActivity(), R.layout.record_item));
+        viewBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 20) {
+                    viewBinding.editText.setVisibility(View.GONE);
+                }
+                if (dy < 0) {
+                    viewBinding.editText.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override
