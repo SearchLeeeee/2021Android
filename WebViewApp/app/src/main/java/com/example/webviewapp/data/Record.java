@@ -8,8 +8,16 @@ import io.realm.annotations.PrimaryKey;
 
 public class Record extends RealmObject implements Parcelable {
 
-    private long uid;
+    /**
+     * 表示该字段是主键
+     * <p>
+     * 字段类型必须是字符串（String）或整数（byte，short，int或long）
+     * 以及它们的包装类型（Byte,Short, Integer, 或 Long）。不可以存在多个主键，
+     * 使用字符串字段作为主键意味着字段被索引（注释@PrimaryKey隐式地设置注释@Index）。
+     */
     @PrimaryKey
+    private long primaryKey;
+    private long uid;
     private long time;
     private String url;
     private String title;
@@ -32,7 +40,19 @@ public class Record extends RealmObject implements Parcelable {
         this.isHistory = isHistory;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(getPrimaryKey());
+        dest.writeLong(getUid());
+        dest.writeLong(getTime());
+        dest.writeString(getUrl());
+        dest.writeString(getTitle());
+        dest.writeString(getDetails());
+        dest.writeInt(getIsHistory());
+    }
+
     protected Record(Parcel in) {
+        primaryKey = in.readLong();
         uid = in.readLong();
         time = in.readLong();
         url = in.readString();
@@ -101,18 +121,16 @@ public class Record extends RealmObject implements Parcelable {
         this.isHistory = isHistory;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public long getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(long primaryKey) {
+        this.primaryKey = primaryKey;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(getUid());
-        dest.writeLong(getTime());
-        dest.writeString(getUrl());
-        dest.writeString(getTitle());
-        dest.writeString(getDetails());
-        dest.writeInt(getIsHistory());
+    public int describeContents() {
+        return 0;
     }
 }

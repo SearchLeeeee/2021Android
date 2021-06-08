@@ -133,6 +133,7 @@ public class DataManager {
      */
     public void addRecord(Record record) {
         realm.executeTransaction(realm1 -> {
+            record.setPrimaryKey(generatePrimaryKey(Record.class));
             realm.copyToRealmOrUpdate(record);
         });
     }

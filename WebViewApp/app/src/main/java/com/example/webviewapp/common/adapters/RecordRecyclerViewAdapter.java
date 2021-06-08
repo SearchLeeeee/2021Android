@@ -16,6 +16,7 @@ import com.example.webviewapp.data.Record;
 import java.util.List;
 
 public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecyclerViewAdapter.ViewHolder> {
+    private static final String TAG = "RecordRecyclerViewAdapt";
 
     private LayoutInflater inflater;
     private List<Record> records;
@@ -42,8 +43,28 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         holder.date.setText(DataUtils.time2Date(record.getTime()));
         holder.title.setText(record.getTitle());
         holder.details.setText(record.getDetails());
+        checkDate(holder, position, record);
         //TODO:处理每个item的事件
     }
+
+    /**
+     * 检查这条记录日期是否和上一条的相同，实现按日期分组
+     * TODO：由于item会被回收，刷新页面会刷掉日期。从数据源入手？每个记录按日期分组
+     *
+     * @param holder
+     * @param position
+     * @param record
+     */
+    private void checkDate(ViewHolder holder, int position, Record record) {
+        if (position - 1 >= 0) {
+            String yesterday = DataUtils.time2Date(records.get(position - 1).getTime());
+            String now = DataUtils.time2Date(record.getTime());
+            if (now.equals(yesterday)) {
+                holder.date.setVisibility(View.GONE);
+            }
+        }
+    }
+
 
     @Override
     public int getItemCount() {

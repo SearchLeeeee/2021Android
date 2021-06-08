@@ -1,6 +1,8 @@
 package com.example.webviewapp.ui.fragment;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.FragmentLabelBinding;
 import com.example.webviewapp.presenter.LabelPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LabelFragment extends Fragment implements LabelContract.View {
@@ -32,9 +35,14 @@ public class LabelFragment extends Fragment implements LabelContract.View {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         presenter = new LabelPresenter(this);
         viewBinding = FragmentLabelBinding.inflate(inflater, container, false);
-        initView();
+        initData();
         initButton();
         return viewBinding.getRoot();
+    }
+
+    private void initData() {
+        records = presenter.getData();
+        initView(records);
     }
 
     private void initButton() {
@@ -43,17 +51,43 @@ public class LabelFragment extends Fragment implements LabelContract.View {
         viewBinding.edit.setText("编辑");
     }
 
-    private void initView() {
-        records = presenter.getData();
-        for (int i = 0; i < records.size(); i++) {
-            Log.d(TAG, "initView: " + records.get(i).getTitle() + i);
+    private void initView(List<Record> re) {
+        for (int i = 0; i < re.size(); i++) {
+            Log.d(TAG, "initView: " + re.get(i).getTitle() + i);
         }
         viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        viewBinding.recyclerView.setAdapter(new RecordRecyclerViewAdapter(records, getActivity(), R.layout.record_item));
+        viewBinding.recyclerView.setAdapter(new RecordRecyclerViewAdapter(re, getActivity(), R.layout.record_item));
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initEditView();
+    }
+
+    private void initEditView() {
+        viewBinding.editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String input = viewBinding.editText.getText().toString();
+                List<Record> output = new ArrayList<>();
+                for (Record record : records) {
+                    if (record.getTitle().contains(input) || record.getDetails().contains(input)) {
+                        output.add(record);
+                    }
+                }
+                initView(output);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }
