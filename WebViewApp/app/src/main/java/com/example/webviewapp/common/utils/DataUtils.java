@@ -10,6 +10,9 @@ import com.example.webviewapp.common.base.BaseApplication;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class DataUtils {
     /**
@@ -44,7 +47,20 @@ public class DataUtils {
     }
 
     /**
+     * 毫秒转成日期的字符串形式
      *
+     * @param time 毫秒数
+     * @return
+     */
+    public static String time2Date(Long time) {
+        if (time == null) return "";
+        Date date = new Date();
+        date.setTime(time);
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, Locale.CHINA);
+        return dateFormat.format(date);
+    }
+
+    /**
      * @param assetManager
      * @param filename
      * @return

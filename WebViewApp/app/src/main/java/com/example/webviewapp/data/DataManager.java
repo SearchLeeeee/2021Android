@@ -128,7 +128,9 @@ public class DataManager {
      * @param record
      */
     public void addRecord(Record record) {
-        realm.copyToRealmOrUpdate(record);
+        realm.executeTransaction(realm1 -> {
+            realm.copyToRealmOrUpdate(record);
+        });
     }
 
     public Record queryRecordByUid(long uid) {

@@ -4,10 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class Record extends RealmObject implements Parcelable {
 
     private long uid;
+    @PrimaryKey
     private long time;
     private String url;
     private String title;

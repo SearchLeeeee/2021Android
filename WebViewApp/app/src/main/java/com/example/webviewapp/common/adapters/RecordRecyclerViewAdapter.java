@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.webviewapp.R;
+import com.example.webviewapp.common.utils.DataUtils;
 import com.example.webviewapp.data.Record;
 
 import java.util.List;
@@ -38,7 +39,8 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Record record = records.get(position);
-        holder.time.setText((int) record.getTime());
+        holder.date.setText(DataUtils.time2Date(record.getTime()));
+        //TODO:将时间转成日期
         holder.title.setText(record.getTitle());
         holder.details.setText(record.getDetails());
         //TODO:处理每个item的事件
@@ -50,13 +52,13 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView time;
+        public TextView date;
         public TextView title;
         public TextView details;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            time = itemView.findViewById(R.id.time);
+            date = itemView.findViewById(R.id.date);
             title = itemView.findViewById(R.id.title);
             details = itemView.findViewById(R.id.details);
         }
