@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">WebViewApp</string>
+    <string name="search">搜索框</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
 </resources>
