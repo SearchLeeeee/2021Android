@@ -1,6 +1,7 @@
 package com.example.webviewapp.data;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.webviewapp.common.utils.DataUtils;
 
@@ -55,8 +56,8 @@ public class DataManager {
 
         //TODO:测试数据
         for (long i = 0; i < 10; i++) {
-            addRecord(new Record(100, i, "test", "test", "test", IS_HISTORY));
-            addRecord(new Record(100, i, "test", "test", "test", IS_LABEL));
+            addRecord(new Record(100, i, "test", "IS_HISTORY", "test", IS_HISTORY));
+            addRecord(new Record(100, i * 50, "test3", "IS_LABEL", "test3", IS_LABEL));
         }
         loadHistories();
         loadLabels();
@@ -67,6 +68,9 @@ public class DataManager {
                 .equalTo("isHistory", IS_HISTORY)
                 .findAll();
         historyList = realm.copyFromRealm(res);
+        if (historyList.size() < 5) {
+            Log.d("TAG", "loadHistories: initView");
+        }
     }
 
     private void loadLabels() {
@@ -133,6 +137,12 @@ public class DataManager {
         });
     }
 
+    /**
+     * 根据uid查询书签/历史记录
+     *
+     * @param uid
+     * @return
+     */
     public Record queryRecordByUid(long uid) {
         Record res = realm.where(Record.class)
                 .equalTo("uid", uid)

@@ -1,6 +1,7 @@
 package com.example.webviewapp.ui.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.RecordRecyclerViewAdapter;
 import com.example.webviewapp.contract.LabelContract;
-import com.example.webviewapp.data.DataManager;
 import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.FragmentLabelBinding;
 import com.example.webviewapp.presenter.LabelPresenter;
@@ -33,18 +33,21 @@ public class LabelFragment extends Fragment implements LabelContract.View {
         presenter = new LabelPresenter(this);
         viewBinding = FragmentLabelBinding.inflate(inflater, container, false);
         initView();
+        initButton();
         return viewBinding.getRoot();
     }
 
+    private void initButton() {
+        viewBinding.delete.setText("删除");
+        viewBinding.selectAll.setText("全选");
+        viewBinding.edit.setText("编辑");
+    }
+
     private void initView() {
-        //TODO:未解决DataManager单例初始化问题
-        DataManager.init(getActivity());
-        //TODO:测试数据
-        for (long i = 0; i < 10; i++) {
-            DataManager.get().addRecord(new Record(100, i, "test", "test", "test", 1));
-            DataManager.get().addRecord(new Record(100, i, "test", "test", "test", 2));
-        }
         records = presenter.getData();
+        for (int i = 0; i < records.size(); i++) {
+            Log.d(TAG, "initView: " + records.get(i).getTitle() + i);
+        }
         viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         viewBinding.recyclerView.setAdapter(new RecordRecyclerViewAdapter(records, getActivity(), R.layout.record_item));
     }

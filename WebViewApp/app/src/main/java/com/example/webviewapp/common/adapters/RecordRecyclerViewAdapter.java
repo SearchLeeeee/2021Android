@@ -40,7 +40,6 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Record record = records.get(position);
         holder.date.setText(DataUtils.time2Date(record.getTime()));
-        //TODO:将时间转成日期
         holder.title.setText(record.getTitle());
         holder.details.setText(record.getDetails());
         //TODO:处理每个item的事件

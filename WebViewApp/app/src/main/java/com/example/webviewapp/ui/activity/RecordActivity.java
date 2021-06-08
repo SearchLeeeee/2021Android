@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.webviewapp.common.adapters.RecordViewPagerAdapter;
+import com.example.webviewapp.data.DataManager;
 import com.example.webviewapp.databinding.ActivityRecordBinding;
 import com.example.webviewapp.ui.fragment.HistoryFragment;
 import com.example.webviewapp.ui.fragment.LabelFragment;
@@ -26,6 +27,8 @@ public class RecordActivity extends AppCompatActivity {
         viewBinding = ActivityRecordBinding.inflate(getLayoutInflater());
         setContentView(viewBinding.getRoot());
         getSupportActionBar().hide();
+        //TODO:未解决DataManager单例初始化问题
+        DataManager.init(this);
 
         initViewPager();
     }
