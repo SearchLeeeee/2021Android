@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.webviewapp.common.utils.DataUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -80,6 +81,8 @@ public class DataManager {
         labelList = realm.copyFromRealm(res);
     }
 
+    ////////////////////////记录相关/////////////////////////
+
     /**
      * 获取最大的PrimaryKey并加一，否则id不变，会覆盖已有记录
      *
@@ -150,4 +153,65 @@ public class DataManager {
                 .findFirst();
         return realm.copyFromRealm(res);
     }
+
+    //////////////////////////////////权限相关/////////////////////////////////
+
+    /**
+     * 查询已存储的被拒绝权限
+     *
+     * @param permission
+     * @return
+     */
+    public Permissions queryDeniedPermission(String permission) {
+        if (permission == null) {
+            return null;
+        }
+        Permissions res = realm
+                .where(Permissions.class)
+                .equalTo("permission", permission)
+                .findFirst();
+        if (res == null) {
+            return null;
+        }
+        return realm.copyFromRealm(res);
+    }
+
+    /**
+     * 增加被拒绝权限，时间戳为当下
+     *
+     * @param permission
+     */
+    public void addDeniedPermission(String permission) {
+        Permissions p = new Permissions(permission, new Date().getTime());
+        realm.executeTransaction(realm -> {
+            realm.copyToRealmOrUpdate(p);
+        });
+    }
+
+    /**
+     * 更新被拒绝权限时间戳为当下
+     *
+     * @param permission
+     */
+    public void updateDeniedPermission(String permission) {
+        addDeniedPermission(permission);
+    }
+
+    /**
+     * 该权限已获得，从记录中删除
+     *
+     * @param permission
+     */
+    public void deleteDeniedPermission(String permission) {
+        RealmResults<Permissions> res = realm
+                .where(Permissions.class)
+                .equalTo("permission", permission)
+                .findAll();
+        realm.executeTransaction(realm -> {
+            res.deleteAllFromRealm();
+        });
+    }
+
+    //////////////////////////////////权限相关/////////////////////////////////
+
 }
