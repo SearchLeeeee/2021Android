@@ -1,6 +1,7 @@
 package com.example.webviewapp.ui.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
         mainpage();
+        startActivity(new Intent(MainActivity.this, RecordActivity.class));
     }
 
 

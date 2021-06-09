@@ -1,11 +1,14 @@
 package com.example.webviewapp.data;
 
 import android.content.Context;
-import android.util.Log;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.webviewapp.common.utils.DataUtils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +38,7 @@ public class DataManager {
     public List<Record> historyList = new ArrayList<>();
     public List<Record> labelList = new ArrayList<>();
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     DataManager(Context context) {
         if (instance == null) {
             synchronized (DataManager.class) {
@@ -64,21 +68,32 @@ public class DataManager {
         loadLabels();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void loadHistories() {
         RealmResults<Record> res = realm.where(Record.class)
                 .equalTo("isHistory", IS_HISTORY)
                 .findAll();
         historyList = realm.copyFromRealm(res);
-        if (historyList.size() < 5) {
-            Log.d("TAG", "loadHistories: initView");
-        }
+        historyList.sort(new Comparator<Record>() {
+            @Override
+            public int compare(Record o1, Record o2) {
+                return (int) (o1.getTime() - o2.getTime());
+            }
+        });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void loadLabels() {
         RealmResults<Record> res = realm.where(Record.class)
                 .equalTo("isHistory", IS_LABEL)
                 .findAll();
         labelList = realm.copyFromRealm(res);
+        labelList.sort(new Comparator<Record>() {
+            @Override
+            public int compare(Record o1, Record o2) {
+                return (int) (o1.getTime() - o2.getTime());
+            }
+        });
     }
 
     ////////////////////////记录相关/////////////////////////
@@ -120,7 +135,7 @@ public class DataManager {
      * @param isHistory
      * @return
      */
-    public Record queryRecord(String title, String details, int isHistory) {
+    public Record queryRecordByTitleDetails(String title, String details, int isHistory) {
         Record res = realm.where(Record.class)
                 .equalTo("title", title)
                 .equalTo("details", details)
@@ -141,6 +156,12 @@ public class DataManager {
         });
     }
 
+    public void updateRecord(Record record) {
+        realm.executeTransaction(realm1 -> {
+            realm.copyToRealmOrUpdate(record);
+        });
+    }
+
     /**
      * 根据uid查询书签/历史记录
      *
@@ -153,6 +174,22 @@ public class DataManager {
                 .findFirst();
         return realm.copyFromRealm(res);
     }
+
+    /**
+     * 根据主键查询记录
+     *
+     * @param primaryKey
+     * @return
+     */
+    public Record queryRecordByPrimaryKey(long primaryKey) {
+        Record res = realm.where(Record.class)
+                .equalTo("primaryKey", primaryKey)
+                .findFirst();
+        assert res != null;
+        return realm.copyFromRealm(res);
+    }
+
+    /////////////////////////////记录相关//////////////////////////
 
     //////////////////////////////////权限相关/////////////////////////////////
 
