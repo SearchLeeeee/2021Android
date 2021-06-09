@@ -10,6 +10,6 @@ public interface HistoryContract {
     }
 
     interface Presenter {
-        public List<Record> getData();
+        List<Record> getData();
     }
 }

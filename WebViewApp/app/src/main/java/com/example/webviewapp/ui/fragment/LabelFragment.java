@@ -1,9 +1,9 @@
 package com.example.webviewapp.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +20,7 @@ import com.example.webviewapp.contract.LabelContract;
 import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.FragmentLabelBinding;
 import com.example.webviewapp.presenter.LabelPresenter;
+import com.example.webviewapp.ui.activity.EditRecordActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +29,10 @@ public class LabelFragment extends Fragment implements LabelContract.View {
     private static final String TAG = "LabelFragment";
     FragmentLabelBinding viewBinding;
 
+    private RecordRecyclerViewAdapter adapter;
     private LabelContract.Presenter presenter;
     private List<Record> records;
+    private boolean isEditing = false;
 
     @Nullable
     @Override
@@ -41,23 +44,38 @@ public class LabelFragment extends Fragment implements LabelContract.View {
         return viewBinding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
+
     private void initData() {
         records = presenter.getData();
         initView(records);
     }
 
-    private void initButton() {
-        viewBinding.delete.setText("删除");
-        viewBinding.selectAll.setText("全选");
-        viewBinding.edit.setText("编辑");
-    }
-
     private void initView(List<Record> re) {
-        for (int i = 0; i < re.size(); i++) {
-            Log.d(TAG, "initView: " + re.get(i).getTitle() + i);
-        }
         viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        viewBinding.recyclerView.setAdapter(new RecordRecyclerViewAdapter(re, getActivity(), R.layout.record_item));
+        adapter = new RecordRecyclerViewAdapter(re, getActivity(), R.layout.record_item);
+        adapter.setOnItemClickListener(new RecordRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (isEditing) {
+
+                } else {
+                    //TODO:书签点击处理
+                }
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                //TODO：书签长按处理
+                viewBinding.bottomBar.setVisibility(View.VISIBLE);
+                isEditing = true;
+            }
+        });
+        viewBinding.recyclerView.setAdapter(adapter);
         viewBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -69,6 +87,18 @@ public class LabelFragment extends Fragment implements LabelContract.View {
                     viewBinding.editText.setVisibility(View.VISIBLE);
                 }
             }
+        });
+    }
+
+    private void initButton() {
+        viewBinding.delete.setText("删除");
+        viewBinding.selectAll.setText("全选");
+        viewBinding.cancel.setText("取消");
+        viewBinding.edit.setText("编辑");
+        viewBinding.edit.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), EditRecordActivity.class);
+            intent.putExtra("primaryKey", adapter.getSelectedPosition());
+            startActivity(intent);
         });
     }
 

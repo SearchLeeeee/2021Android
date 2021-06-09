@@ -10,6 +10,6 @@ public interface LabelContract {
     }
 
     interface Presenter {
-        public List<Record> getData();
+        List<Record> getData();
     }
 }
