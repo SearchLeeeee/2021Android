@@ -1,13 +1,10 @@
 package com.example.webviewapp.ui.activity;
 
 
-import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
@@ -17,9 +14,11 @@ import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.webviewapp.R;
+import com.example.webviewapp.data.DataManager;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,8 +28,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+        //TODO:未解决DataManager单例初始化问题
+        DataManager.init(this);
         mainpage();
+        startActivity(new Intent(MainActivity.this, RecordActivity.class));
     }
+
 
     public void mainpage() {
         // 组件注册
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
     }
 
     /**
@@ -110,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
         //设置按钮的点击事件
         menuButton.setOnClickListener(v -> {
             Log.d("TAG", "菜单栏点击");
+            Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+            startActivity(intent);
             popwindow();
         });
 
@@ -140,17 +146,16 @@ public class MainActivity extends AppCompatActivity {
      */
     public void popwindow() {
         // PopWindow 布局发
-        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
-        final PopupWindow popWindow = new PopupWindow(view,
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        popWindow.setTouchable(true);
-        popWindow.setTouchInterceptor((v, event) -> {
-            Log.d("TAG", "onTouch: popwindowss");
-            return false;
-        });
-        popWindow.showAtLocation(view, 80, 0, 0);
+//        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
+//        final PopupWindow popWindow = new PopupWindow(view,
+//                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+//        popWindow.setTouchable(true);
+//        popWindow.setTouchInterceptor((v, event) -> {
+//            Log.d("TAG", "onTouch: popwindowss");
+//            return false;
+//        });
+//        popWindow.showAtLocation(view, 80, 0, 0);
     }
-
 
     // 弹出窗实现
 
@@ -164,9 +169,5 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
-//个人中心： 写死数据
-
-
 }
 

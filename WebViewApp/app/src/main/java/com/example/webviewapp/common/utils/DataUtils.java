@@ -10,6 +10,9 @@ import com.example.webviewapp.common.base.BaseApplication;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class DataUtils {
     /**
@@ -26,6 +29,11 @@ public class DataUtils {
         return newKey.toString().getBytes();
     }
 
+    /**
+     * 毫秒转成 mm:ss 的字符串形式
+     * @param time 毫秒数
+     * @return
+     */
     public static String time2Str(Long time) {
         if (time == null) return "";
 
@@ -38,6 +46,25 @@ public class DataUtils {
         return mm + ":" + ss;
     }
 
+    /**
+     * 毫秒转成日期的字符串形式 1970年1月1日星期四
+     *
+     * @param time 毫秒数
+     * @return
+     */
+    public static String time2Date(Long time) {
+        if (time == null) return "";
+        Date date = new Date();
+        date.setTime(time);
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, Locale.CHINA);
+        return dateFormat.format(date);
+    }
+
+    /**
+     * @param assetManager
+     * @param filename
+     * @return
+     */
     public static JSONArray readJSONArray(AssetManager assetManager, String filename) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open(filename)));
@@ -68,6 +95,11 @@ public class DataUtils {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public static int findResource(String name) {
         Application app = BaseApplication.getInstance();
         return app.getResources().getIdentifier(
