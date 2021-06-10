@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
@@ -14,7 +17,7 @@ import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.webviewapp.R;
@@ -146,15 +149,15 @@ public class MainActivity extends AppCompatActivity {
      */
     public void popwindow() {
         // PopWindow 布局发
-//        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
-//        final PopupWindow popWindow = new PopupWindow(view,
-//                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-//        popWindow.setTouchable(true);
-//        popWindow.setTouchInterceptor((v, event) -> {
-//            Log.d("TAG", "onTouch: popwindowss");
-//            return false;
-//        });
-//        popWindow.showAtLocation(view, 80, 0, 0);
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
+        final PopupWindow popWindow = new PopupWindow(view,
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popWindow.setTouchable(true);
+        popWindow.setTouchInterceptor((v, event) -> {
+            Log.d("TAG", "onTouch: popwindowss");
+            return false;
+        });
+        popWindow.showAtLocation(view, 80, 0, 0);
     }
 
     // 弹出窗实现
