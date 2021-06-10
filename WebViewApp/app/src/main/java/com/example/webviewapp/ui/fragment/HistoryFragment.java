@@ -57,7 +57,19 @@ public class HistoryFragment extends Fragment implements HistoryContract.View {
             Log.d(TAG, "initView: " + re.get(i).getTitle() + i);
         }
         viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        viewBinding.recyclerView.setAdapter(new RecordRecyclerViewAdapter(re, getActivity(), R.layout.record_item));
+        RecordRecyclerViewAdapter adapter = new RecordRecyclerViewAdapter(re, getActivity(), R.layout.record_item);
+        adapter.setOnItemClickListener(new RecordRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                //TODO:历史点击处理
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                //TODO：历史长按处理
+            }
+        });
+        viewBinding.recyclerView.setAdapter(adapter);
         viewBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

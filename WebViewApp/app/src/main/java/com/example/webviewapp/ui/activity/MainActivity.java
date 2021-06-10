@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
         mainpage();
+        startActivity(new Intent(MainActivity.this, RecordActivity.class));
     }
 
 
