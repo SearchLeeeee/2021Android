@@ -15,16 +15,35 @@
     <!--            android:theme="?attr/actionBarTheme"-->
     <!--            tools:layout_editor_absoluteY="90dp" />-->
 
+
     <WebView
         android:id="@+id/webview"
-        android:layout_width="415dp"
-        android:layout_height="580dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="411dp"
+        android:layout_height="565dp"
+        android:layout_marginTop="120dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </WebView>
+
+    <ListView
+        android:id="@+id/listitem"
+        android:layout_width="416dp"
+        android:layout_height="363dp"
+        android:layout_marginTop="76dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/searchbar" />
+
+    <SearchView
+        android:id="@+id/searchbar"
+        android:layout_width="409dp"
+        android:layout_height="78dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:showAsAction="always">
+
+    </SearchView>
 
     <LinearLayout
         android:layout_width="408dp"
