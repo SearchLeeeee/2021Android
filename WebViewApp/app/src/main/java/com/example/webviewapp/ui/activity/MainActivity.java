@@ -48,12 +48,15 @@ public class MainActivity extends AppCompatActivity {
         initButton(myWebView, menuButton, refreshButton, backButton, forwardButton);
 
 
+
     }
 
     private void initButton(WebView myWebView, ImageButton menuButton, ImageButton refreshButton, ImageButton backButton, ImageButton forwardButton) {
         //设置按钮的点击事件
         menuButton.setOnClickListener(v -> {
             Log.d("TAG", "菜单栏点击");
+            Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+            startActivity(intent);
             popwindow();
         });
 
