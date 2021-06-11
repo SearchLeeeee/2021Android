@@ -5,7 +5,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.webviewapp.common.utils.DataUtils;
+import com.example.webviewapp.common.utils.DataFormatUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -55,7 +55,7 @@ public class DataManager {
                 .deleteRealmIfMigrationNeeded()
                 .schemaVersion(2)
                 .name(DB_SPORT)
-                .encryptionKey(DataUtils.getRealmKey(DB_KEY))
+                .encryptionKey(DataFormatUtils.getRealmKey(DB_KEY))
                 .allowWritesOnUiThread(true)
                 .build());
 

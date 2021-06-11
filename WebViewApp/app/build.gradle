@@ -46,4 +46,7 @@ dependencies {
     // FastJSON
     implementation 'com.alibaba:fastjson:1.2.55'
     implementation 'com.alibaba:fastjson:1.2.55'
+
+    implementation 'com.bm.photoview:library:1.4.1'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
 }

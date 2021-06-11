@@ -1,6 +1,8 @@
 package com.example.webviewapp.ui.activity;
 
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -20,11 +21,19 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.webviewapp.R;
+import com.example.webviewapp.common.adapters.JavaScripAdapter;
+import com.example.webviewapp.common.adapters.PictureWebViewClient;
+import com.example.webviewapp.common.utils.PermissionUtils;
+import com.example.webviewapp.common.utils.UrlUtils;
 import com.example.webviewapp.data.DataManager;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+
+    private final String[] imageUrls = UrlUtils.returnImageUrlsFromHtml();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +43,26 @@ public class MainActivity extends AppCompatActivity {
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
         mainpage();
-        startActivity(new Intent(MainActivity.this, RecordActivity.class));
+        new PermissionUtils.PermissionsManager(this).requestPermissions(
+                Manifest.permission.INTERNET
+        );
     }
 
+    @Override
+    protected void onDestroy() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // 子线程清空磁盘缓存
+                Glide.get(MainActivity.this).clearDiskCache();
+            }
+        }).start();
+        // 主线程清空内存缓存
+        Glide.get(this).clearMemory();
+        super.onDestroy();
+    }
 
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     public void mainpage() {
         // 组件注册
         WebView myWebView = findViewById(R.id.webview);
@@ -47,24 +72,20 @@ public class MainActivity extends AppCompatActivity {
         ImageButton backButton = findViewById(R.id.backButton);
         ImageButton forwardButton = findViewById(R.id.fowardButton);
         SearchView searchView = findViewById(R.id.searchbar);
-        myWebView.loadUrl("http://www.baidu.com");
 
-        myWebView.setWebViewClient(new WebViewClient() {
-            //在webview里打开新链接
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return false;
-            }
-        });
+        myWebView.getSettings().setJavaScriptEnabled(true);
+        myWebView.getSettings().setAppCacheEnabled(true);
+        myWebView.getSettings().setDatabaseEnabled(true);
+        myWebView.getSettings().setDomStorageEnabled(true);
+        myWebView.loadUrl("http://www.baidu.com");
+        myWebView.addJavascriptInterface(new JavaScripAdapter(this, imageUrls), "imagelistener");
+        myWebView.setWebViewClient(new PictureWebViewClient());
 
         /**
          * 初始化菜单栏
          */
         initButton(myWebView, menuButton, refreshButton, backButton, forwardButton);
         initSearchbar(searchView, listView, myWebView);
-
-
     }
 
     private void initSearchbar(SearchView searchView, ListView listView, WebView myWebView) {
