@@ -1,0 +1,10 @@
+com.example.webviewapp
+com.example.webviewapp.common.adapters
+com.example.webviewapp.common.base
+com.example.webviewapp.common.utils
+com.example.webviewapp.contract
+com.example.webviewapp.data
+com.example.webviewapp.presenter
+com.example.webviewapp.ui.activity
+com.example.webviewapp.ui.fragment
+com.example.webviewapp.ui.view

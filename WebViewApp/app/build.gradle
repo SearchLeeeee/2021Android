@@ -47,6 +47,11 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.55'
     implementation 'com.alibaba:fastjson:1.2.55'
 
+    // 图片查看
     implementation 'com.bm.photoview:library:1.4.1'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
+
+    // 高德地图sdk
+    implementation 'com.amap.api:search:5.0.0'
+    implementation 'com.amap.api:location:5.3.0'
 }

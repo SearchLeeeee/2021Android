@@ -3,4 +3,6 @@
     <string name="search">搜索框</string>
     <string name="username">username</string>
     <string name="password">password</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

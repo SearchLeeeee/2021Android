@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/appWidgetBackgroundColor"
+    android:padding="@dimen/widget_margin"
+    android:theme="@style/ThemeOverlay.WebViewApp.AppWidgetContainer">
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="广州"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/location"
+        android:layout_alignLeft="@+id/location"
+        android:text="6月11日" />
+
+    <TextView
+        android:id="@+id/temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date"
+        android:layout_alignLeft="@+id/location"
+        android:text="30度" />
+
+    <TextView
+        android:id="@+id/tomorrow_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/temperature"
+        android:layout_alignLeft="@+id/location"
+        android:text="31度" />
+
+    <TextView
+        android:id="@+id/weather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tomorrow_temperature"
+        android:layout_alignLeft="@+id/location"
+        android:text="晴" />
+
+    <TextView
+        android:id="@+id/tomorrow_weather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weather"
+        android:layout_alignLeft="@+id/location"
+        android:text="阴" />
+
+</RelativeLayout>
