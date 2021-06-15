@@ -7,8 +7,7 @@ import com.example.webviewapp.data.Record;
 import java.util.List;
 
 public class HistoryPresenter implements HistoryContract.Presenter {
-    private HistoryContract.View view;
-
+    private final HistoryContract.View view;
     public HistoryPresenter(HistoryContract.View view) {
         this.view = view;
     }

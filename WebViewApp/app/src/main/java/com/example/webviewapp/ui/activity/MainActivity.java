@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.example.webviewapp.data.DataManager;
 
 public class MainActivity extends AppCompatActivity {
 
+    WebView myWebView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,20 +36,20 @@ public class MainActivity extends AppCompatActivity {
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
         mainpage();
-        startActivity(new Intent(MainActivity.this, RecordActivity.class));
+        // startActivity(new Intent(MainActivity.this, UserActivity.class));
     }
 
-
+    //处理返回键的监听事件
     public void mainpage() {
         // 组件注册
-        WebView myWebView = findViewById(R.id.webview);
+        myWebView = findViewById(R.id.webview);
         ImageButton menuButton = findViewById(R.id.menuButton);
         ListView listView = findViewById(R.id.listitem);
         ImageButton refreshButton = findViewById(R.id.refreshButton);
         ImageButton backButton = findViewById(R.id.backButton);
         ImageButton forwardButton = findViewById(R.id.fowardButton);
         SearchView searchView = findViewById(R.id.searchbar);
-        myWebView.loadUrl("http://www.baidu.com");
+        myWebView.loadUrl("https://www.baidu.com/");
 
         myWebView.setWebViewClient(new WebViewClient() {
             //在webview里打开新链接
@@ -63,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
          */
         initButton(myWebView, menuButton, refreshButton, backButton, forwardButton);
         initSearchbar(searchView, listView, myWebView);
-
 
     }
 
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, RecordActivity.class);
             startActivity(intent);
             popwindow();
+
         });
 
         refreshButton.setOnClickListener(v -> {
@@ -141,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
             //是前进捏
 
         });
+
     }
 
 
@@ -154,23 +157,23 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popWindow.setTouchable(true);
         popWindow.setTouchInterceptor((v, event) -> {
-            Log.d("TAG", "onTouch: popwindowss");
-            return false;
-        });
+                    Log.d("TAG", "onTouch: popwindowss");
+                    return false;
+                }
+        );
         popWindow.showAtLocation(view, 80, 0, 0);
     }
 
-    // 弹出窗实现
-
-    public void alertdialog() {
-        //   AlertDialog布局法：
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        // builder = new AlertDialog.Builder(getApplicationContext());
-        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-        View view_menu = inflater.inflate(R.layout.menu_mainpage, null, false);
-        builder.setView(view_menu);
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Log.e("TAG", "onBackPressed  22222 : 按下了返回键");
+            myWebView.goBack();
+            return false;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
+
 }
 

@@ -13,9 +13,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WebViewApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activity.EditRecordActivity"></activity>
+        <activity android:name=".ui.activity.SignupActivity" />
+
+        <activity
+            android:name=".ui.activity.UserActivity"
+            android:label="@string/title_activity_user"
+            android:theme="@style/Theme.WebViewApp.NoActionBar" />
+        <activity android:name=".ui.activity.EditRecordActivity" />
         <activity android:name=".ui.activity.RecordActivity" />
-        <activity android:name=".ui.activity.MainActivity">
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
