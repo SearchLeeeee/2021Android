@@ -12,13 +12,12 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -58,19 +57,17 @@ public class MainActivity extends AppCompatActivity {
         Glide.get(this).clearMemory();
         super.onDestroy();
     }
-        // startActivity(new Intent(MainActivity.this, UserActivity.class));
-    }
 
     //处理返回键的监听事件
 
     public void mainpage() {
         // 组件注册
         myWebView = findViewById(R.id.webview);
-        ImageButton menuButton = findViewById(R.id.menuButton);
+        ImageView menuButton = findViewById(R.id.menuButton);
         ListView listView = findViewById(R.id.listitem);
-        ImageButton refreshButton = findViewById(R.id.refreshButton);
-        ImageButton backButton = findViewById(R.id.backButton);
-        ImageButton forwardButton = findViewById(R.id.fowardButton);
+        ImageView refreshButton = findViewById(R.id.refreshButton);
+        ImageView backButton = findViewById(R.id.backButton);
+        ImageView forwardButton = findViewById(R.id.fowardButton);
         SearchView searchView = findViewById(R.id.searchbar);
         myWebView.loadUrl("https://www.baidu.com/");
 
@@ -144,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
      * @param backButton
      * @param forwardButton 实现了按钮和webview的初始化
      */
-    private void initButton(WebView myWebView, ImageButton menuButton, ImageButton refreshButton, ImageButton backButton, ImageButton forwardButton) {
+    private void initButton(WebView myWebView, ImageView menuButton, ImageView refreshButton, ImageView backButton, ImageView forwardButton) {
         //设置按钮的点击事件
         menuButton.setOnClickListener(v -> {
             Log.d("TAG", "菜单栏点击");
