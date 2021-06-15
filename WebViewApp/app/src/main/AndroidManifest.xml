@@ -19,10 +19,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WebViewApp"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.activity.VideoViewActivity"></activity>
         <activity android:name=".ui.activity.PictureViewActivity" />
         <activity android:name=".ui.activity.EditRecordActivity" />
         <activity android:name=".ui.activity.RecordActivity" />
-        <activity android:name=".ui.activity.MainActivity">
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:hardwareAccelerated="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

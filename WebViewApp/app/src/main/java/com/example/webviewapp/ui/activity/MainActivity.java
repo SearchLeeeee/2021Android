@@ -1,7 +1,5 @@
 package com.example.webviewapp.ui.activity;
 
-
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -23,17 +22,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.webviewapp.R;
-import com.example.webviewapp.common.adapters.JavaScripAdapter;
-import com.example.webviewapp.common.adapters.PictureWebViewClient;
-import com.example.webviewapp.common.utils.PermissionUtils;
-import com.example.webviewapp.common.utils.UrlUtils;
+import com.example.webviewapp.common.adapters.CustomWebViewClient;
+import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
 import com.example.webviewapp.data.DataManager;
-
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
-    private final String[] imageUrls = UrlUtils.returnImageUrlsFromHtml();
+    public static final String DEFAULT_URL = "file:///android_asset/index.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +38,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
+
         mainpage();
-        new PermissionUtils.PermissionsManager(this).requestPermissions(
-                Manifest.permission.INTERNET
-        );
     }
 
     @Override
@@ -62,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     public void mainpage() {
         // 组件注册
         WebView myWebView = findViewById(R.id.webview);
@@ -73,19 +66,26 @@ public class MainActivity extends AppCompatActivity {
         ImageButton forwardButton = findViewById(R.id.fowardButton);
         SearchView searchView = findViewById(R.id.searchbar);
 
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.getSettings().setAppCacheEnabled(true);
-        myWebView.getSettings().setDatabaseEnabled(true);
-        myWebView.getSettings().setDomStorageEnabled(true);
-        myWebView.loadUrl("http://www.baidu.com");
-        myWebView.addJavascriptInterface(new JavaScripAdapter(this, imageUrls), "imagelistener");
-        myWebView.setWebViewClient(new PictureWebViewClient());
+        initWebView(myWebView);
 
         /**
          * 初始化菜单栏
          */
         initButton(myWebView, menuButton, refreshButton, backButton, forwardButton);
         initSearchbar(searchView, listView, myWebView);
+    }
+
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
+    private void initWebView(WebView myWebView) {
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        myWebView.loadUrl(DEFAULT_URL);
+        JavaScripInterfaceAdapter javaScripInterface = new JavaScripInterfaceAdapter(this);
+        myWebView.addJavascriptInterface(javaScripInterface, "imagelistener");
+        myWebView.setWebViewClient(new CustomWebViewClient());
     }
 
     private void initSearchbar(SearchView searchView, ListView listView, WebView myWebView) {

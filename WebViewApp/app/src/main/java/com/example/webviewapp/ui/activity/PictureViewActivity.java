@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,6 +47,7 @@ public class PictureViewActivity extends AppCompatActivity {
         viewBinding = ActivityPictureViewBinding.inflate(getLayoutInflater());
         setContentView(viewBinding.getRoot());
         getSupportActionBar().hide();
+        Log.d(TAG, "onCreate: urls");
 
         initValue();
         initButton();
@@ -73,17 +75,22 @@ public class PictureViewActivity extends AppCompatActivity {
                     final PhotoView view = new PhotoView(PictureViewActivity.this);
                     view.enable();
                     view.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    Glide.with(PictureViewActivity.this).load(imageUrls[position]).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).fitCenter().crossFade().listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            if (position == curPosition) {
-                                hideLoadingAnimation();
-                            }
-                            showErrorLoading();
-                            return false;
-                        }
+                    Glide.with(PictureViewActivity.this)
+                            .load(imageUrls[position])
+                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .fitCenter()
+                            .crossFade()
+                            .listener(new RequestListener<String, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    if (position == curPosition) {
+                                        hideLoadingAnimation();
+                                    }
+                                    showErrorLoading();
+                                    return false;
+                                }
 
-                        @Override
+                                @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                             initialedPositions[position] = position;
                             if (position == curPosition) {
@@ -184,6 +191,8 @@ public class PictureViewActivity extends AppCompatActivity {
     private void initValue() {
         curImageUrl = getIntent().getStringExtra("curImageUrl");
         imageUrls = getIntent().getStringArrayExtra("imageUrls");
+
+        Log.d(TAG, "initValue: urls" + imageUrls);
         initialedPositions = new int[imageUrls.length];
         Arrays.fill(initialedPositions, -1);
     }
