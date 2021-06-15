@@ -65,6 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:scaleX="-1"
             app:srcCompat="@drawable/abc_vector_test" />
 
         <ImageButton
