@@ -41,52 +41,61 @@
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:showAsAction="always">
+        app:queryBackground="@drawable/bg_searchview"
+        app:showAsAction="always"
 
-    </SearchView>
+
+        />
 
     <LinearLayout
-        android:layout_width="408dp"
-        android:layout_height="61dp"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/backButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/abc_vector_test" />
+            android:src="@drawable/search_back_icon" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/nextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/abc_vector_test" />
+            android:rotationY="180"
+            android:src="@drawable/search_back_icon" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/refreshButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            app:srcCompat="@android:drawable/stat_notify_sync" />
+            app:srcCompat="@drawable/home" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/fowardButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+            app:srcCompat="@drawable/pages" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/menuButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            app:srcCompat="@android:drawable/ic_input_get" />
+            app:srcCompat="@drawable/menu" />
 
     </LinearLayout>
 

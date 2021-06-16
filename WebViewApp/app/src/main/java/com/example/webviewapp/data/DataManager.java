@@ -39,7 +39,7 @@ public class DataManager {
     public List<Record> labelList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    DataManager(Context context) {
+    public DataManager(Context context) {
         if (instance == null) {
             synchronized (DataManager.class) {
                 if (instance == null) {
@@ -62,7 +62,8 @@ public class DataManager {
         //TODO:测试数据
         for (long i = 0; i < 10; i++) {
             addRecord(new Record(100, i, "test", "IS_HISTORY", "test", IS_HISTORY));
-            addRecord(new Record(100, i * 50, "test3", "IS_LABEL", "test3", IS_LABEL));
+            addRecord(new Record(100, i, "test", "IS_Lable", "test", IS_LABEL));
+            addUser(new User(100, 100));
         }
         loadHistories();
         loadLabels();
@@ -203,8 +204,7 @@ public class DataManager {
         if (permission == null) {
             return null;
         }
-        Permissions res = realm
-                .where(Permissions.class)
+        Permissions res = realm.where(Permissions.class)
                 .equalTo("permission", permission)
                 .findFirst();
         if (res == null) {
@@ -250,5 +250,36 @@ public class DataManager {
     }
 
     //////////////////////////////////权限相关/////////////////////////////////
+
+
+    //////////////////////////////////用户相关/////////////////////////////////
+
+    /**
+     * 根据id查询用户密码
+     *
+     * @param Uid
+     * @return long
+     */
+
+    public long queryUserByUid(long Uid) {
+        User res = realm.where(User.class).equalTo("uid", Uid).findFirst();
+        assert res != null;
+        return res.getPassword();
+    }
+
+    /**
+     * 往数据库写入数据：
+     *
+     * @param user
+     */
+    public void addUser(User user) {
+        realm.executeTransaction(realm1 -> {
+            user.setPrimaryKey(generatePrimaryKey(User.class));
+            realm.copyToRealmOrUpdate(user);
+        });
+    }
+
+
+    //////////////////////////////////用户相关/////////////////////////////////
 
 }
