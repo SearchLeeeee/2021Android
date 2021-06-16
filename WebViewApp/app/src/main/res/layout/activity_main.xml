@@ -18,9 +18,8 @@
 
     <WebView
         android:id="@+id/webview"
-        android:layout_width="411dp"
-        android:layout_height="565dp"
-        android:layout_marginTop="120dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -36,9 +35,9 @@
 
     <SearchView
         android:id="@+id/searchbar"
-        android:layout_width="409dp"
-        android:layout_height="78dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:showAsAction="always" />
@@ -46,8 +45,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_marginBottom="5dp"
+
         android:orientation="horizontal"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
