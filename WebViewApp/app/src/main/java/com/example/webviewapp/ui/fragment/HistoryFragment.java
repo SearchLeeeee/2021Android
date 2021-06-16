@@ -74,12 +74,7 @@ public class HistoryFragment extends Fragment implements HistoryContract.View {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy > 20) {
-                    viewBinding.editText.setVisibility(View.GONE);
-                }
-                if (dy < 0) {
-                    viewBinding.editText.setVisibility(View.VISIBLE);
-                }
+                presenter.checkScrolled(dy);
             }
         });
     }
@@ -114,5 +109,14 @@ public class HistoryFragment extends Fragment implements HistoryContract.View {
 
             }
         });
+    }
+
+    @Override
+    public void setEditTextVisibility(Boolean isVisible) {
+        if (isVisible) {
+            viewBinding.editText.setVisibility(View.VISIBLE);
+        } else {
+            viewBinding.editText.setVisibility(View.GONE);
+        }
     }
 }

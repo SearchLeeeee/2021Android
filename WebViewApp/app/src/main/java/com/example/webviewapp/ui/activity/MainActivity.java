@@ -24,14 +24,19 @@ import com.bumptech.glide.Glide;
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.CustomWebViewClient;
 import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
+import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
+import com.example.webviewapp.presenter.MainPresenter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
     private static final String TAG = "MainActivity";
+    private MainContract.Presenter presenter;
 
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
+//    public static final String DEFAULT_URL = "https://www.baidu.com/";
 
     WebView myWebView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
+        presenter = new MainPresenter(this);
 
         mainpage();
 

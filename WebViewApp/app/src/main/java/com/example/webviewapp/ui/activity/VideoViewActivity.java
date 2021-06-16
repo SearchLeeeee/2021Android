@@ -2,6 +2,7 @@ package com.example.webviewapp.ui.activity;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.MediaController;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ public class VideoViewActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         uri = getIntent().getStringExtra("video");
+        Log.d(TAG, "onCreate: " + uri);
         viewBinding.videoView.setVideoURI(Uri.parse(uri));
         MediaController mediaController = new MediaController(this);
         mediaController.setMediaPlayer(viewBinding.videoView);
