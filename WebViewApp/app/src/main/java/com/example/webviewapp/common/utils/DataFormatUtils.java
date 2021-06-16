@@ -14,7 +14,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class DataUtils {
+public class DataFormatUtils {
     /**
      * 获取Realm数据库64位秘钥
      *
@@ -31,6 +31,7 @@ public class DataUtils {
 
     /**
      * 毫秒转成 mm:ss 的字符串形式
+     *
      * @param time 毫秒数
      * @return
      */
@@ -96,7 +97,6 @@ public class DataUtils {
     }
 
     /**
-     *
      * @param name
      * @return
      */
@@ -105,4 +105,5 @@ public class DataUtils {
         return app.getResources().getIdentifier(
                 name, "drawable", app.getPackageName());
     }
+
 }

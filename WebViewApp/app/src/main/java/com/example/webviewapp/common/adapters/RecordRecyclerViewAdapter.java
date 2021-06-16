@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.webviewapp.R;
-import com.example.webviewapp.common.utils.DataUtils;
+import com.example.webviewapp.common.utils.DataFormatUtils;
 import com.example.webviewapp.data.Record;
 
 import java.util.ArrayList;
@@ -23,13 +23,13 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
     private static final String TAG = "RecordRecyclerViewAdapt";
     private OnItemClickListener onItemClickListener;
 
-    private LayoutInflater inflater;
-    private List<Record> records;
-    private Context context;
-    private Integer layoutResId;
+    private final LayoutInflater inflater;
+    private final List<Record> records;
+    private final Context context;
+    private final Integer layoutResId;
 
-    private Map<Integer, Boolean> checkboxMap = new HashMap<>();
-    private Map<Integer, Boolean> dateMap = new HashMap<>();
+    private final Map<Integer, Boolean> checkboxMap = new HashMap<>();
+    private final Map<Integer, Boolean> dateMap = new HashMap<>();
     // 判断RecyclerView是否正在计算layout或滑动，不在计算的时候通知适配器更新
     private boolean onBind;
 
@@ -38,6 +38,23 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         this.context = context;
         this.layoutResId = layoutResId;
         inflater = LayoutInflater.from(context);
+
+        initDateMap(records);
+    }
+
+    /**
+     * 记录不是一天中第一条记录的位置
+     *
+     * @param records
+     */
+    private void initDateMap(List<Record> records) {
+        for (int i = 0; i < records.size() - 1; i++) {
+            String today = DataFormatUtils.time2Date(records.get(i).getTime());
+            String lastDay = DataFormatUtils.time2Date(records.get(i + 1).getTime());
+            if (lastDay.equals(today)) {
+                dateMap.put(i + 1, true);
+            }
+        }
     }
 
     @NonNull
@@ -49,12 +66,8 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Record record = records.get(position);
-        holder.date.setText(DataUtils.time2Date(record.getTime()));
-        holder.title.setText(record.getTitle());
-        holder.details.setText(record.getDetails());
-        checkDate(holder, position, record);
-
-        // 关联点击行为
+        initItemView(holder, position, record);
+        initCheckBox(holder, position);
         if (onItemClickListener != null) {
             holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(v, position));
             holder.itemView.setOnLongClickListener(v -> {
@@ -62,10 +75,11 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
                 return true;
             });
         }
+    }
 
+    private void initCheckBox(@NonNull ViewHolder holder, int position) {
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                checkboxMap.clear();
                 checkboxMap.put(position, true);
             } else {
                 checkboxMap.remove(position);
@@ -79,25 +93,15 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         onBind = false;
     }
 
-    /**
-     * 检查这条记录日期是否和上一条的相同，实现按日期分组
-     * TODO：由于item会被回收，刷新页面会刷掉日期。从数据源入手？每个记录按日期分组。或者用map记录位置？
-     *
-     * @param holder
-     * @param position
-     * @param record
-     */
-    private void checkDate(ViewHolder holder, int position, Record record) {
-        if (position - 1 >= 0) {
-            String yesterday = DataUtils.time2Date(records.get(position - 1).getTime());
-            String now = DataUtils.time2Date(record.getTime());
-            if (now.equals(yesterday)) {
-                dateMap.put(position, true);
-            }
-        }
-        if (dateMap.containsKey(position)) {
+    private void initItemView(@NonNull ViewHolder holder, int position, Record record) {
+        if (!dateMap.containsKey(position)) {
+            holder.date.setVisibility(View.VISIBLE);
+            holder.date.setText(DataFormatUtils.time2Date(record.getTime()));
+        } else {
             holder.date.setVisibility(View.GONE);
         }
+        holder.title.setText(record.getTitle());
+        holder.details.setText(record.getDetails());
     }
 
     public long getSelectedPosition() {

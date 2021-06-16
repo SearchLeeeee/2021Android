@@ -32,7 +32,6 @@ public class LabelFragment extends Fragment implements LabelContract.View {
     private RecordRecyclerViewAdapter adapter;
     private LabelContract.Presenter presenter;
     private List<Record> records;
-    private boolean isEditing = false;
 
     @Nullable
     @Override
@@ -61,18 +60,13 @@ public class LabelFragment extends Fragment implements LabelContract.View {
         adapter.setOnItemClickListener(new RecordRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (isEditing) {
-
-                } else {
                     //TODO:书签点击处理
-                }
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
                 //TODO：书签长按处理
                 viewBinding.bottomBar.setVisibility(View.VISIBLE);
-                isEditing = true;
             }
         });
         viewBinding.recyclerView.setAdapter(adapter);
@@ -106,6 +100,14 @@ public class LabelFragment extends Fragment implements LabelContract.View {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initEditView();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void initEditView() {

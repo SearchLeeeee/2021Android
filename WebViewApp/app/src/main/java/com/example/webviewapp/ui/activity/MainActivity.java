@@ -1,6 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,8 +9,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -21,11 +21,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.webviewapp.R;
+import com.example.webviewapp.common.adapters.CustomWebViewClient;
+import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
 import com.example.webviewapp.data.DataManager;
 
-
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+
+    public static final String DEFAULT_URL = "file:///android_asset/index.html";
 
     WebView myWebView;
     @Override
@@ -35,11 +40,29 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
+
         mainpage();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // 子线程清空磁盘缓存
+                Glide.get(MainActivity.this).clearDiskCache();
+            }
+        }).start();
+        // 主线程清空内存缓存
+        Glide.get(this).clearMemory();
+        super.onDestroy();
+    }
         // startActivity(new Intent(MainActivity.this, UserActivity.class));
     }
 
     //处理返回键的监听事件
+
     public void mainpage() {
         // 组件注册
         myWebView = findViewById(R.id.webview);
@@ -51,20 +74,27 @@ public class MainActivity extends AppCompatActivity {
         SearchView searchView = findViewById(R.id.searchbar);
         myWebView.loadUrl("https://www.baidu.com/");
 
-        myWebView.setWebViewClient(new WebViewClient() {
-            //在webview里打开新链接
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return false;
-            }
-        });
+
+        initWebView(myWebView);
 
         /**
          * 初始化菜单栏
          */
         initButton(myWebView, menuButton, refreshButton, backButton, forwardButton);
         initSearchbar(searchView, listView, myWebView);
+    }
+
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
+    private void initWebView(WebView myWebView) {
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        myWebView.loadUrl(DEFAULT_URL);
+        JavaScripInterfaceAdapter javaScripInterface = new JavaScripInterfaceAdapter(this);
+        myWebView.addJavascriptInterface(javaScripInterface, "imagelistener");
+        myWebView.setWebViewClient(new CustomWebViewClient());
 
     }
 
