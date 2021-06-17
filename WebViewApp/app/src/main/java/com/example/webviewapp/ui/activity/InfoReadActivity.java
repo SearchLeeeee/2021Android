@@ -23,7 +23,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class InfoReadActivity extends AppCompatActivity {
-    public static final String URL_HOST = "https://v.juhe.cn/toutiao/index?key=8cc3761c4e5d283b49e8d5062ebc2ab6&?type=";
+    public static final String URL_HOST = "http://v.juhe.cn/toutiao/index?key=8cc3761c4e5d283b49e8d5062ebc2ab6&?type=";
     public static final String[] type_en = {"top", "guonei", "guoji", "yule", "tiyu", "junshi", "keji", "caijing", "shishang", "youxi", "qiche", "jiankang"};
     public static final String[] type_cn = {"推荐", "国内", "国际", "娱乐", "体育", "军事", "科技", "财经", "时尚", "游戏", "汽车", "健康"};
     private static final String TAG = "InfoReadActivity";
@@ -52,11 +52,31 @@ public class InfoReadActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        //TODO:修改创建数量
-        for (int i = 0; i < 2; i++) {
+        //TODO:修改创建数量 type_en.length
+        for (int i = 0; i < 1; i++) {
             query(type_en[i]);
             titles.add(type_cn[i]);
         }
+
+        //TODO:本地测试数据
+//        String input;
+//        try {
+//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.getAssets().open("news.json")));
+//            String line;
+//            StringBuilder builder = new StringBuilder();
+//            while ((line = bufferedReader.readLine()) != null) {
+//                builder.append(line);
+//            }
+//            input = builder.toString();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            input = "";
+//        }
+//        for (int i = 0; i < 12; i++) {
+//            fragments.add(new NewsFragment(input));
+//            titles.add("推荐");
+//        }
+
     }
 
     private void initViewPager() {

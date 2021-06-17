@@ -24,7 +24,7 @@ import java.util.List;
 
 public class NewsFragment extends Fragment {
     private static final String TAG = "NewsFragment";
-    FragmentNewsBinding viewbinding;
+    FragmentNewsBinding viewBinding;
     String jsonString;
 
     private List<NewsItem> news;
@@ -63,9 +63,9 @@ public class NewsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewbinding = FragmentNewsBinding.inflate(inflater, container, false);
-        viewbinding.newsList.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
-        viewbinding.newsList.setAdapter(new NewsAdapter(news, getActivity(), R.layout.news_item));
-        return viewbinding.getRoot();
+        viewBinding = FragmentNewsBinding.inflate(inflater, container, false);
+        viewBinding.newsList.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
+        viewBinding.newsList.setAdapter(new NewsAdapter(news, getActivity(), R.layout.news_item));
+        return viewBinding.getRoot();
     }
 }
