@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
         presenter = new MainPresenter(this);
+        startActivity(new Intent(MainActivity.this, InfoReadActivity.class));
 
         mainpage();
 
