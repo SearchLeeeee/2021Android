@@ -7,7 +7,7 @@ import com.example.webviewapp.data.Record;
 import java.util.List;
 
 public class LabelPresenter implements LabelContract.Presenter {
-    private LabelContract.View view;
+    private final LabelContract.View view;
 
     public LabelPresenter(LabelContract.View view) {
         this.view = view;
@@ -16,5 +16,15 @@ public class LabelPresenter implements LabelContract.Presenter {
     @Override
     public List<Record> getData() {
         return DataManager.get().labelList;
+    }
+
+    @Override
+    public void checkScrolled(int dy) {
+        if (dy > 20) {
+            view.setEditTextVisibility(false);
+        }
+        if (dy < 0) {
+            view.setEditTextVisibility(true);
+        }
     }
 }

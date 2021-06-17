@@ -47,7 +47,6 @@ public class PictureViewActivity extends AppCompatActivity {
         viewBinding = ActivityPictureViewBinding.inflate(getLayoutInflater());
         setContentView(viewBinding.getRoot());
         getSupportActionBar().hide();
-        Log.d(TAG, "onCreate: urls");
 
         initValue();
         initButton();
@@ -75,22 +74,17 @@ public class PictureViewActivity extends AppCompatActivity {
                     final PhotoView view = new PhotoView(PictureViewActivity.this);
                     view.enable();
                     view.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    Glide.with(PictureViewActivity.this)
-                            .load(imageUrls[position])
-                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                            .fitCenter()
-                            .crossFade()
-                            .listener(new RequestListener<String, GlideDrawable>() {
-                                @Override
-                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                    if (position == curPosition) {
-                                        hideLoadingAnimation();
-                                    }
-                                    showErrorLoading();
-                                    return false;
-                                }
+                    RequestListener<String, GlideDrawable> listener = new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            if (position == curPosition) {
+                                hideLoadingAnimation();
+                            }
+                            showErrorLoading();
+                            return false;
+                        }
 
-                                @Override
+                        @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                             initialedPositions[position] = position;
                             if (position == curPosition) {
@@ -98,7 +92,14 @@ public class PictureViewActivity extends AppCompatActivity {
                             }
                             return false;
                         }
-                    }).into(view);
+                    };
+                    Glide.with(PictureViewActivity.this)
+                            .load(imageUrls[position])
+                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .fitCenter()
+                            .crossFade()
+                            .listener(listener)
+                            .into(view);
                     container.addView(view);
                 }
                 return null;
@@ -185,14 +186,18 @@ public class PictureViewActivity extends AppCompatActivity {
                     });
                 }
             });
+        } else {
+            Log.d(TAG, "savePicture2Local: photoView null");
         }
     }
 
     private void initValue() {
         curImageUrl = getIntent().getStringExtra("curImageUrl");
         imageUrls = getIntent().getStringArrayExtra("imageUrls");
+//        imageUrls = new String[]{"file:///android_asset/img1.jpg", "file:///android_asset/img2.jpg"};
+        Log.d(TAG, "initValue: curImageUrls" + curImageUrl);
+        Log.d(TAG, "initValue: imageUrls" + imageUrls[0]);
 
-        Log.d(TAG, "initValue: urls" + imageUrls);
         initialedPositions = new int[imageUrls.length];
         Arrays.fill(initialedPositions, -1);
     }
