@@ -1,8 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -14,31 +12,24 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.webviewapp.databinding.ActivityInfoReadBinding;
 import com.example.webviewapp.ui.fragment.NewsFragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class InfoReadActivity extends AppCompatActivity {
-    public static final String URL_HOST = "http://v.juhe.cn/toutiao/index?key=8cc3761c4e5d283b49e8d5062ebc2ab6&?type=";
+    public static final String URL_HOST = "http://v.juhe.cn/toutiao/index?key=8cc3761c4e5d283b49e8d5062ebc2ab6&type=";
     public static final String[] type_en = {"top", "guonei", "guoji", "yule", "tiyu", "junshi", "keji", "caijing", "shishang", "youxi", "qiche", "jiankang"};
     public static final String[] type_cn = {"推荐", "国内", "国际", "娱乐", "体育", "军事", "科技", "财经", "时尚", "游戏", "汽车", "健康"};
     private static final String TAG = "InfoReadActivity";
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> titles = new ArrayList<>();
     ActivityInfoReadBinding viewBinding;
-    Handler queryResultHandler = new Handler() {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 1) {
-                fragments.add(new NewsFragment(msg.getData().getString("msg")));
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,28 +93,26 @@ public class InfoReadActivity extends AppCompatActivity {
     }
 
     private void query(String type) {
-        new Thread(() -> {
-            Message message = Message.obtain();
-            OkHttpClient client = new OkHttpClient();
-            try {
-                Log.d(TAG, "query: " + URL_HOST + type);
-                Request request = new Request.Builder()
-                        .url(URL_HOST + type)
-                        .build();
-                Call call = client.newCall(request);
-
-                Response response = call.execute();
-                Bundle bundle = new Bundle();
-                bundle.putString("msg", response.body().string());
-                message.setData(bundle);
-                message.what = 1;
-                //Log.d(TAG, "query: " + response.body().string());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d(TAG, "query: query fail");
+        OkHttpClient client = new OkHttpClient();
+        Log.d(TAG, "query: " + URL_HOST + type);
+        Request request = new Request.Builder()
+                .url(URL_HOST + type)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d(TAG, "onFailure: ");
             }
-            queryResultHandler.sendMessage(message);
-        }).start();
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (request.body() != null) {
+                    fragments.add(new NewsFragment(request.body().toString()));
+                    Log.d(TAG, "onResponse: not null");
+                }
+                Log.d(TAG, "onResponse: ");
+            }
+        });
     }
 }

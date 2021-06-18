@@ -1,6 +1,7 @@
 package com.example.webviewapp.ui.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class NewsFragment extends Fragment {
 
     public NewsFragment(String jsonString) {
         this.jsonString = jsonString;
+        Log.d(TAG, "NewsFragment: " + jsonString);
         initNewsData(jsonString);
     }
 
