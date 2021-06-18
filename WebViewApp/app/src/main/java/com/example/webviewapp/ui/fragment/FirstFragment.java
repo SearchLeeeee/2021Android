@@ -4,11 +4,11 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,15 +17,16 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.webviewapp.R;
-import com.example.webviewapp.data.DataManager;
+import com.example.webviewapp.contract.LoginContract;
 import com.example.webviewapp.databinding.FragmentFirstBinding;
+import com.example.webviewapp.presenter.LoginPresenter;
 import com.example.webviewapp.ui.activity.SignupActivity;
 
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class FirstFragment extends Fragment {
+public class FirstFragment extends Fragment implements LoginContract.View {
 
-    DataManager dataManager = new DataManager(getContext());
+    LoginContract.Presenter presenter = new LoginPresenter();
     private FragmentFirstBinding binding;
 
     @Override
@@ -42,7 +43,6 @@ public class FirstFragment extends Fragment {
 
 
         binding.buttonFirst.setOnClickListener(view1 -> loginwindows());
-
         binding.signupButton.setOnClickListener(v -> startActivity(new Intent(getContext(), SignupActivity.class)));
     }
 
@@ -53,22 +53,28 @@ public class FirstFragment extends Fragment {
      */
     private void loginwindows() {
 
-        //布局绘画：
+        /**
+         * 登录窗口的空间绑定
+         */
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         AlertDialog dialog = builder.create();
         View dialogview = View.inflate(getContext(), R.layout.loginwindow, null);
         Button loginButton = dialogview.findViewById(R.id.loginButton);
         Button cancelButton = dialogview.findViewById(R.id.cancelButton);
-        builder.setTitle("登录");
+        EditText uidtext = dialogview.findViewById(R.id.UserNumber);
+        EditText passwordtext = dialogview.findViewById(R.id.loginPassword);
+
         dialog.setView(dialogview);
         dialog.show();
 
-        //案件事件绑定
+        //
+        /**
+         * 登录事件绑定
+         *
+         */
 
         loginButton.setOnClickListener(v -> {
-            Log.d("TAG", "onClick: " + dataManager.queryUserByUid(100));
-            //留个接口写登录验证的
-            if (dataManager.queryUserByUid(100) == 100) {
+            if (presenter.Login(uidtext.getText(), passwordtext.getText())) {
                 dialog.dismiss();
                 NavHostFragment.findNavController(FirstFragment.this)
                         .navigate(R.id.action_FirstFragment_to_SecondFragment);

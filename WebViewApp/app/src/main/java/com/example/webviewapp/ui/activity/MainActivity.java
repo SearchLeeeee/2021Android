@@ -1,5 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,12 +27,15 @@ import com.example.webviewapp.common.adapters.CustomWebViewClient;
 import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
 import com.example.webviewapp.data.DataManager;
 
+//需求： 提取文字、代码重构、按键时事件的绑定,监听滚动事件
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
 
     WebView myWebView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,19 +43,16 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
-
         mainpage();
+        startActivity(new Intent(getApplication(), UserActivity.class));
 
     }
 
     @Override
     protected void onDestroy() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // 子线程清空磁盘缓存
-                Glide.get(MainActivity.this).clearDiskCache();
-            }
+        new Thread(() -> {
+            // 子线程清空磁盘缓存
+            Glide.get(MainActivity.this).clearDiskCache();
         }).start();
         // 主线程清空内存缓存
         Glide.get(this).clearMemory();
