@@ -78,6 +78,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
                 dialog.dismiss();
                 NavHostFragment.findNavController(FirstFragment.this)
                         .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                onDestroyView();
             } else {
                 Toast.makeText(getContext(), "密码错误", Toast.LENGTH_SHORT).show();
             }

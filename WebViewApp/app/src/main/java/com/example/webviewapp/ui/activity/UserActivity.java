@@ -1,7 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -33,8 +32,8 @@ public class UserActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         getSupportActionBar().hide();
-        binding.fab.setOnClickListener((View.OnClickListener) view ->
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        binding.fab.setOnClickListener(view ->
+                Snackbar.make(view, "没有收到讯息", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show());
     }
 
@@ -42,6 +41,12 @@ public class UserActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_user);
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
 

@@ -20,6 +20,7 @@ public class SignUpPresenter implements SignupContract.Presenter {
 
     @Override
     public Boolean ContainsUid(Editable uidText) {
+        if (uidText.toString().equals("")) return true;
         long uid = Long.parseLong(uidText.toString());
         return DataManager.get().queryUserPasswordByUid(uid) != -1;
     }
