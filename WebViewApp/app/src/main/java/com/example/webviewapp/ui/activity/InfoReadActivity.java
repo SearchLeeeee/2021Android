@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.webviewapp.databinding.ActivityInfoReadBinding;
 import com.example.webviewapp.ui.fragment.NewsFragment;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ public class InfoReadActivity extends AppCompatActivity {
     private static final String TAG = "InfoReadActivity";
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> titles = new ArrayList<>();
+    FragmentPagerAdapter pagerAdapter;
     ActivityInfoReadBinding viewBinding;
 
     @Override
@@ -44,34 +47,20 @@ public class InfoReadActivity extends AppCompatActivity {
 
     private void initData() {
         //TODO:修改创建数量 type_en.length
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < type_en.length; i++) {
             query(type_en[i]);
             titles.add(type_cn[i]);
         }
 
-        //TODO:本地测试数据
-//        String input;
-//        try {
-//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.getAssets().open("news.json")));
-//            String line;
-//            StringBuilder builder = new StringBuilder();
-//            while ((line = bufferedReader.readLine()) != null) {
-//                builder.append(line);
-//            }
-//            input = builder.toString();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            input = "";
-//        }
-//        for (int i = 0; i < 12; i++) {
-//            fragments.add(new NewsFragment(input));
-//            titles.add("推荐");
-//        }
-
     }
 
     private void initViewPager() {
-        viewBinding.viewpager.setAdapter(new FragmentPagerAdapter(this.getSupportFragmentManager()) {
+        viewBinding.viewpager.setAdapter(pagerAdapter);
+        viewBinding.tabs.setupWithViewPager(viewBinding.viewpager);
+    }
+
+    private void query(String type) {
+        pagerAdapter = new FragmentPagerAdapter(this.getSupportFragmentManager()) {
             @NonNull
             @Override
             public Fragment getItem(int position) {
@@ -88,11 +77,7 @@ public class InfoReadActivity extends AppCompatActivity {
             public CharSequence getPageTitle(int position) {
                 return titles.get(position);
             }
-        });
-        viewBinding.tabs.setupWithViewPager(viewBinding.viewpager);
-    }
-
-    private void query(String type) {
+        };
         OkHttpClient client = new OkHttpClient();
         Log.d(TAG, "query: " + URL_HOST + type);
         Request request = new Request.Builder()
@@ -101,14 +86,20 @@ public class InfoReadActivity extends AppCompatActivity {
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.d(TAG, "onFailure: ");
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (request.body() != null) {
-                    fragments.add(new NewsFragment(request.body().toString()));
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.body() != null) {
+                    fragments.add(new NewsFragment(response.body().string()));
+                    InfoReadActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pagerAdapter.notifyDataSetChanged();
+                        }
+                    });
                     Log.d(TAG, "onResponse: not null");
                 }
                 Log.d(TAG, "onResponse: ");

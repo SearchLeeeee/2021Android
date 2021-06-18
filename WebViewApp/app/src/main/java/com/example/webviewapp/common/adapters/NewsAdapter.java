@@ -1,6 +1,7 @@
 package com.example.webviewapp.common.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.webviewapp.R;
 import com.example.webviewapp.data.NewsItem;
+import com.example.webviewapp.ui.activity.MainActivity;
 
 import java.util.List;
 
@@ -60,6 +62,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             Glide.with(context).load(item.getThumbnailPics().get(1)).into(holder.newsImage2);
             Glide.with(context).load(item.getThumbnailPics().get(2)).into(holder.newsImage3);
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("url", item.getUrl());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
