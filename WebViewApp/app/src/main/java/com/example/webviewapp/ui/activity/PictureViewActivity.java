@@ -53,6 +53,24 @@ public class PictureViewActivity extends AppCompatActivity {
         initViewPager();
     }
 
+    private void initValue() {
+//        curImageUrl = getIntent().getStringExtra("curImageUrl");
+//        imageUrls = getIntent().getStringArrayExtra("imageUrls");
+        curImageUrl = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fyouimg1.c-ctrip.com%2Ftarget%2Ftg%2F004%2F531%2F381%2F4339f96900344574a0c8ca272a7b8f27.jpg&refer=http%3A%2F%2Fyouimg1.c-ctrip.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626491577&t=919ff00912ce95d69b1072acaf51d5ed";
+        imageUrls = new String[]{"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fyouimg1.c-ctrip.com%2Ftarget%2Ftg%2F004%2F531%2F381%2F4339f96900344574a0c8ca272a7b8f27.jpg&refer=http%3A%2F%2Fyouimg1.c-ctrip.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626491577&t=919ff00912ce95d69b1072acaf51d5ed",
+                "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcdn.duitang.com%2Fuploads%2Fitem%2F201409%2F08%2F20140908130732_kVXzh.jpeg&refer=http%3A%2F%2Fcdn.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626491577&t=5434f6258c1e89a728a37f84bdc8153c"};
+        Log.d(TAG, "initValue: curImageUrls" + curImageUrl);
+        Log.d(TAG, "initValue: imageUrls" + imageUrls[0]);
+
+        initialedPositions = new int[imageUrls.length];
+        Arrays.fill(initialedPositions, -1);
+    }
+
+    private void initButton() {
+        viewBinding.backButton.setOnClickListener(v -> finish());
+        viewBinding.save.setOnClickListener(v -> savePicture2Local());
+    }
+
     @SuppressLint("SetTextI18n")
     private void initViewPager() {
         viewBinding.viewPager.setPageMargin((int) (getResources().getDisplayMetrics().density * 15));
@@ -149,11 +167,6 @@ public class PictureViewActivity extends AppCompatActivity {
         });
     }
 
-    private void initButton() {
-        viewBinding.backButton.setOnClickListener(v -> finish());
-        viewBinding.save.setOnClickListener(v -> savePicture2Local());
-    }
-
     private void savePicture2Local() {
         PhotoView photoView = (PhotoView) curPage;
         if (photoView != null) {
@@ -189,17 +202,6 @@ public class PictureViewActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "savePicture2Local: photoView null");
         }
-    }
-
-    private void initValue() {
-        curImageUrl = getIntent().getStringExtra("curImageUrl");
-        imageUrls = getIntent().getStringArrayExtra("imageUrls");
-//        imageUrls = new String[]{"file:///android_asset/img1.jpg", "file:///android_asset/img2.jpg"};
-        Log.d(TAG, "initValue: curImageUrls" + curImageUrl);
-        Log.d(TAG, "initValue: imageUrls" + imageUrls[0]);
-
-        initialedPositions = new int[imageUrls.length];
-        Arrays.fill(initialedPositions, -1);
     }
 
     private void hideLoadingAnimation() {

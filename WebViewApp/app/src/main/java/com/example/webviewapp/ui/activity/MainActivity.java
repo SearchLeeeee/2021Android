@@ -51,6 +51,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        intent = getIntent();
+        String url = intent.getStringExtra("url");
+        myWebView.loadUrl(url);
+        super.onNewIntent(intent);
+    }
+
+    @Override
     protected void onDestroy() {
         new Thread(new Runnable() {
             @Override

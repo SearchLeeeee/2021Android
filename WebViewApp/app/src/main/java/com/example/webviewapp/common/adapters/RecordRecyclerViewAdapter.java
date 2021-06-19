@@ -88,6 +88,7 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
                 notifyDataSetChanged();
             }
         });
+        // 防止在刷新的时候notify
         onBind = true;
         holder.checkBox.setChecked(checkboxMap != null && checkboxMap.containsKey(position));
         onBind = false;
