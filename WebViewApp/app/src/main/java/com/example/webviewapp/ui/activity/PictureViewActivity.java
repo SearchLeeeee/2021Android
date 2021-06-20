@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -24,14 +23,15 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.webviewapp.R;
+import com.example.webviewapp.common.base.BaseActivity;
 import com.example.webviewapp.common.utils.DownloadUtils;
 import com.example.webviewapp.databinding.ActivityPictureViewBinding;
 
 import java.util.Arrays;
 
-public class PictureViewActivity extends AppCompatActivity {
+public class PictureViewActivity extends BaseActivity {
     private static final String TAG = "PictureViewActivity";
-    ActivityPictureViewBinding viewBinding;
+    public ActivityPictureViewBinding viewBinding;
 
     private String curImageUrl = "";
     private String[] imageUrls = new String[]{};
@@ -40,12 +40,11 @@ public class PictureViewActivity extends AppCompatActivity {
     private int[] initialedPositions = null;
     private ObjectAnimator objectAnimator;
     private View curPage;
+    private PagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewBinding = ActivityPictureViewBinding.inflate(getLayoutInflater());
-        setContentView(viewBinding.getRoot());
         getSupportActionBar().hide();
 
         initValue();
@@ -56,9 +55,9 @@ public class PictureViewActivity extends AppCompatActivity {
     private void initValue() {
 //        curImageUrl = getIntent().getStringExtra("curImageUrl");
 //        imageUrls = getIntent().getStringArrayExtra("imageUrls");
-        curImageUrl = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fyouimg1.c-ctrip.com%2Ftarget%2Ftg%2F004%2F531%2F381%2F4339f96900344574a0c8ca272a7b8f27.jpg&refer=http%3A%2F%2Fyouimg1.c-ctrip.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626491577&t=919ff00912ce95d69b1072acaf51d5ed";
-        imageUrls = new String[]{"https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fyouimg1.c-ctrip.com%2Ftarget%2Ftg%2F004%2F531%2F381%2F4339f96900344574a0c8ca272a7b8f27.jpg&refer=http%3A%2F%2Fyouimg1.c-ctrip.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626491577&t=919ff00912ce95d69b1072acaf51d5ed",
-                "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcdn.duitang.com%2Fuploads%2Fitem%2F201409%2F08%2F20140908130732_kVXzh.jpeg&refer=http%3A%2F%2Fcdn.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1626491577&t=5434f6258c1e89a728a37f84bdc8153c"};
+        curImageUrl = "https://dfzximg02.dftoutiao.com/news/20210308/20210308134708_d0216565f1d6fe1abdfa03efb4f3e23c_0_mwpm_03201609.png";
+        imageUrls = new String[]{"https://dfzximg02.dftoutiao.com/news/20210308/20210308134708_d0216565f1d6fe1abdfa03efb4f3e23c_0_mwpm_03201609.png",
+                "https://dfzximg02.dftoutiao.com/news/20210308/20210308134708_d0216565f1d6fe1abdfa03efb4f3e23c_1_mwpm_03201609.png"};
         Log.d(TAG, "initValue: curImageUrls" + curImageUrl);
         Log.d(TAG, "initValue: imageUrls" + imageUrls[0]);
 
@@ -74,7 +73,7 @@ public class PictureViewActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void initViewPager() {
         viewBinding.viewPager.setPageMargin((int) (getResources().getDisplayMetrics().density * 15));
-        viewBinding.viewPager.setAdapter(new PagerAdapter() {
+        pagerAdapter = new PagerAdapter() {
             @Override
             public int getCount() {
                 return imageUrls.length;
@@ -133,7 +132,8 @@ public class PictureViewActivity extends AppCompatActivity {
             public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
                 curPage = (View) object;
             }
-        });
+        };
+        viewBinding.viewPager.setAdapter(pagerAdapter);
 
         curPosition = returnClickedPosition() == -1 ? 0 : returnClickedPosition();
         viewBinding.viewPager.setCurrentItem(curPosition);

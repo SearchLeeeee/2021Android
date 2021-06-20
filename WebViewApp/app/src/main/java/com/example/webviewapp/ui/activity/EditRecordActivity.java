@@ -6,16 +6,15 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.example.webviewapp.common.base.BaseActivity;
 import com.example.webviewapp.contract.EditRecordContract;
 import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.ActivityEditRecordBinding;
 import com.example.webviewapp.presenter.EditRecordPresenter;
 
-public class EditRecordActivity extends AppCompatActivity implements EditRecordContract.View {
+public class EditRecordActivity extends BaseActivity implements EditRecordContract.View {
     private static final String TAG = "EditRecordActivity";
-    ActivityEditRecordBinding viewBinding;
+    public ActivityEditRecordBinding viewBinding;
     EditRecordContract.Presenter presenter;
 
     Record record;
@@ -23,8 +22,6 @@ public class EditRecordActivity extends AppCompatActivity implements EditRecordC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewBinding = ActivityEditRecordBinding.inflate(getLayoutInflater());
-        setContentView(viewBinding.getRoot());
         getSupportActionBar().hide();
 
         presenter = new EditRecordPresenter(this);

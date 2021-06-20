@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.RecordRecyclerViewAdapter;
+import com.example.webviewapp.common.base.BaseFragment;
 import com.example.webviewapp.contract.HistoryContract;
 import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.FragmentHistoryBinding;
@@ -24,9 +24,9 @@ import com.example.webviewapp.presenter.HistoryPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryFragment extends Fragment implements HistoryContract.View {
+public class HistoryFragment extends BaseFragment implements HistoryContract.View {
     private static final String TAG = "HistoryFragment";
-    FragmentHistoryBinding viewBinding;
+    public FragmentHistoryBinding viewBinding;
 
     private HistoryContract.Presenter presenter;
     private List<Record> records;
@@ -35,10 +35,9 @@ public class HistoryFragment extends Fragment implements HistoryContract.View {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         presenter = new HistoryPresenter(this);
-        viewBinding = FragmentHistoryBinding.inflate(inflater, container, false);
         initData();
         initButton();
-        return viewBinding.getRoot();
+        return root;
     }
 
     private void initData() {

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,15 +16,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.NewsAdapter;
+import com.example.webviewapp.common.base.BaseFragment;
 import com.example.webviewapp.data.NewsItem;
 import com.example.webviewapp.databinding.FragmentNewsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsFragment extends Fragment {
+public class NewsFragment extends BaseFragment {
     private static final String TAG = "NewsFragment";
-    FragmentNewsBinding viewBinding;
+    public FragmentNewsBinding viewBinding;
     String jsonString;
 
     private List<NewsItem> news;
@@ -65,9 +65,8 @@ public class NewsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewBinding = FragmentNewsBinding.inflate(inflater, container, false);
         viewBinding.newsList.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         viewBinding.newsList.setAdapter(new NewsAdapter(news, getActivity(), R.layout.news_item));
-        return viewBinding.getRoot();
+        return root;
     }
 }
