@@ -32,7 +32,7 @@ public class InfoReadActivity extends BaseActivity {
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> titles = new ArrayList<>();
     public FragmentPagerAdapter pagerAdapter;
-    ActivityInfoReadBinding viewBinding;
+    public ActivityInfoReadBinding viewBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class InfoReadActivity extends BaseActivity {
 
     private void initData() {
         //TODO:修改创建数量 type_en.length
-        for (int i = 0; i < type_en.length; i++) {
+        for (int i = 0; i < 2; i++) {
             query(type_en[i]);
             titles.add(type_cn[i]);
         }

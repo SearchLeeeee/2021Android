@@ -178,10 +178,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         });
 
         forwardButton.setOnClickListener(v -> {
-            if (myWebView.canGoForward())
-                myWebView.goForward();
-            //是前进捏
-
+           startActivity(new Intent(MainActivity.this, InfoReadActivity.class));
         });
 
     }
