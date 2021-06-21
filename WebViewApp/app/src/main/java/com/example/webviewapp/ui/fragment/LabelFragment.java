@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.RecordRecyclerViewAdapter;
+import com.example.webviewapp.common.base.BaseFragment;
 import com.example.webviewapp.contract.LabelContract;
 import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.FragmentLabelBinding;
@@ -25,9 +25,9 @@ import com.example.webviewapp.ui.activity.EditRecordActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LabelFragment extends Fragment implements LabelContract.View {
+public class LabelFragment extends BaseFragment implements LabelContract.View {
     private static final String TAG = "LabelFragment";
-    FragmentLabelBinding viewBinding;
+    public FragmentLabelBinding viewBinding;
 
     private RecordRecyclerViewAdapter adapter;
     private LabelContract.Presenter presenter;
@@ -37,10 +37,9 @@ public class LabelFragment extends Fragment implements LabelContract.View {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         presenter = new LabelPresenter(this);
-        viewBinding = FragmentLabelBinding.inflate(inflater, container, false);
         initData();
         initButton();
-        return viewBinding.getRoot();
+        return root;
     }
 
     @Override
@@ -74,12 +73,7 @@ public class LabelFragment extends Fragment implements LabelContract.View {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy > 20) {
-                    viewBinding.editText.setVisibility(View.GONE);
-                }
-                if (dy < 0) {
-                    viewBinding.editText.setVisibility(View.VISIBLE);
-                }
+                presenter.checkScrolled(dy);
             }
         });
     }
@@ -134,5 +128,14 @@ public class LabelFragment extends Fragment implements LabelContract.View {
 
             }
         });
+    }
+
+    @Override
+    public void setEditTextVisibility(Boolean isVisible) {
+        if (isVisible) {
+            viewBinding.editText.setVisibility(View.VISIBLE);
+        } else {
+            viewBinding.editText.setVisibility(View.GONE);
+        }
     }
 }
