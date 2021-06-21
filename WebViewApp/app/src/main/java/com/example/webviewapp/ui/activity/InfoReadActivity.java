@@ -5,10 +5,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.webviewapp.common.base.BaseActivity;
 import com.example.webviewapp.databinding.ActivityInfoReadBinding;
 import com.example.webviewapp.ui.fragment.NewsFragment;
 
@@ -24,21 +24,19 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class InfoReadActivity extends AppCompatActivity {
+public class InfoReadActivity extends BaseActivity {
     public static final String URL_HOST = "http://v.juhe.cn/toutiao/index?key=8cc3761c4e5d283b49e8d5062ebc2ab6&type=";
     public static final String[] type_en = {"top", "guonei", "guoji", "yule", "tiyu", "junshi", "keji", "caijing", "shishang", "youxi", "qiche", "jiankang"};
     public static final String[] type_cn = {"推荐", "国内", "国际", "娱乐", "体育", "军事", "科技", "财经", "时尚", "游戏", "汽车", "健康"};
     private static final String TAG = "InfoReadActivity";
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> titles = new ArrayList<>();
-    FragmentPagerAdapter pagerAdapter;
+    public FragmentPagerAdapter pagerAdapter;
     ActivityInfoReadBinding viewBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewBinding = ActivityInfoReadBinding.inflate(getLayoutInflater());
-        setContentView(viewBinding.getRoot());
         getSupportActionBar().hide();
 
         initData();
