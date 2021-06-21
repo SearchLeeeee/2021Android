@@ -118,6 +118,7 @@ public class PictureViewActivity extends BaseActivity {
                             .listener(listener)
                             .into(view);
                     container.addView(view);
+                    return view;
                 }
                 return null;
             }
@@ -213,6 +214,7 @@ public class PictureViewActivity extends BaseActivity {
         if (imageUrls == null || curImageUrl == null) {
             return -1;
         }
+        //TODO:有重复图片就不行
         for (int i = 0; i < imageUrls.length; i++) {
             if (curImageUrl.equals(imageUrls[i])) {
                 return i;
