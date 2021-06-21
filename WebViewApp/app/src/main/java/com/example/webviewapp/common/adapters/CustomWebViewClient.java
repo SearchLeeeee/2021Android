@@ -19,6 +19,7 @@ public class CustomWebViewClient extends WebViewClient {
         super.onPageStarted(view, url, favicon);
     }
 
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onPageFinished(WebView view, String url) {

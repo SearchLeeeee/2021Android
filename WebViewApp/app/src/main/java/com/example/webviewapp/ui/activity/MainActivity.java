@@ -1,5 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +29,10 @@ import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
 import com.example.webviewapp.presenter.MainPresenter;
 
+//需求： 提取文字、代码重构、按键时事件的绑定,监听滚动事件
+
 public class MainActivity extends AppCompatActivity implements MainContract.View {
+
     private static final String TAG = "MainActivity";
     private MainContract.Presenter presenter;
 
@@ -44,9 +48,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         getSupportActionBar().hide();
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
+
         presenter = new MainPresenter(this);
 
         mainpage();
+        startActivity(new Intent(getApplication(), UserActivity.class));
 
     }
 
@@ -60,12 +66,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     protected void onDestroy() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // 子线程清空磁盘缓存
-                Glide.get(MainActivity.this).clearDiskCache();
-            }
+        new Thread(() -> {
+            // 子线程清空磁盘缓存
+            Glide.get(MainActivity.this).clearDiskCache();
         }).start();
         // 主线程清空内存缓存
         Glide.get(this).clearMemory();
@@ -84,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         ImageView forwardButton = findViewById(R.id.fowardButton);
         SearchView searchView = findViewById(R.id.searchbar);
         myWebView.loadUrl("https://www.baidu.com/");
-
 
         initWebView(myWebView);
 
@@ -143,9 +145,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 return true;
             }
         });
-
-
-
     }
 
     /**
