@@ -30,13 +30,7 @@
             android:layout_margin="5dp"
             android:src="@drawable/bookmarkhistory" />
 
-        <ImageView
-            android:id="@+id/share"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:src="@drawable/share" />
+        \
 
         <ImageView
             android:id="@+id/refresh"
