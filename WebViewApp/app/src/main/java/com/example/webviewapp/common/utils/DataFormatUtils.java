@@ -62,6 +62,8 @@ public class DataFormatUtils {
     }
 
     /**
+     * 从本地assets读取json并格式化为JSONArray
+     *
      * @param assetManager
      * @param filename
      * @return
@@ -81,6 +83,13 @@ public class DataFormatUtils {
         }
     }
 
+    /**
+     * 从本地assets读取json并格式化为JSONObject
+     *
+     * @param assetManager
+     * @param filename
+     * @return
+     */
     public static JSONObject readJSONObject(AssetManager assetManager, String filename) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open(filename)));

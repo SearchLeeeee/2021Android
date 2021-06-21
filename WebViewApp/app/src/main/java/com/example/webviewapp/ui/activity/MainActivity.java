@@ -25,14 +25,19 @@ import com.bumptech.glide.Glide;
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.CustomWebViewClient;
 import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
+import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
+import com.example.webviewapp.presenter.MainPresenter;
 
 //需求： 提取文字、代码重构、按键时事件的绑定,监听滚动事件
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
+
     private static final String TAG = "MainActivity";
+    private MainContract.Presenter presenter;
 
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
+//    public static final String DEFAULT_URL = "https://www.baidu.com/";
 
     WebView myWebView;
 
@@ -43,9 +48,20 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
+
+        presenter = new MainPresenter(this);
+
         mainpage();
         startActivity(new Intent(getApplication(), UserActivity.class));
 
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        intent = getIntent();
+        String url = intent.getStringExtra("url");
+        myWebView.loadUrl(url);
+        super.onNewIntent(intent);
     }
 
     @Override
@@ -71,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         ImageView forwardButton = findViewById(R.id.fowardButton);
         SearchView searchView = findViewById(R.id.searchbar);
         myWebView.loadUrl("https://www.baidu.com/");
-
 
         initWebView(myWebView);
 
@@ -130,9 +145,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
-
     }
 
     /**

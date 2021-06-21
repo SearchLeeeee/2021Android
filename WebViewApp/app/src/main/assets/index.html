@@ -26,16 +26,18 @@
     <video controls height="auto" style="margin-top: 10px;" width="100%">
         <source src="video1.mp4" type="video/mp4">
     </video>
-    <video controls height="auto" style="margin-top: 10px;" width="100%">
+    <video controls height="auto" onclick="test()" style="margin-top: 10px;" width="100%">
         <source src="video2.mp4" type="video/mp4">
     </video>
 </div>
 </body>
 
+
 <script>
-    function imageCall()
+    function test()
     {
-        var objs = document.getElementsByTagName("img");
+       alert("221");
+               var objs = document.getElementsByTagName("img");
         var array=new Array();
         for(var j=0;j<objs.length;j++)
             {
@@ -45,26 +47,43 @@
             {
                 objs[i].οnclick=function()
                     {
-                        window.imagelistener.openImage(this.src,array);
+                        alert("222");
                     }
             }
     }
 
 </script>
+<script>
+    function imageCall()
+    {
+        var objs = document.getElementsByTagName('img');
+        var array=new Array();
+        for(var j=0;j<objs.length;j++)
+            {
+                array[j]=objs[j].src;
+            }
+        for(var i=0;i<objs.length;i++)
+            {
+                objs[i].onclick=function()
+                    {
+                        window.imagelistener.openImage(this.src,array);
+                    }
+            }
+    }
+</script>
 
 <script>
     function videoCall()
     {
-        var objs = document.getElementsByTagName("video");
+        var objs = document.getElementsByTagName('video');
         for(var i=0;i<objs.length;i++)
             {
-                objs[i].οnclick=function()
+                objs[i].onclick=function()
                     {
                         window.imagelistener.openVideo(this.src);
                     }
             }
     }
-
 </script>
 
 

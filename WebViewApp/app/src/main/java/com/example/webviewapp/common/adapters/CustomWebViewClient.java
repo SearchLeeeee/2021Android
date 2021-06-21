@@ -33,7 +33,7 @@ public class CustomWebViewClient extends WebViewClient {
         //TODO:获取img的url
         //通过js代码找到标签为img的代码块，设置点击的监听方法与本地的openImage方法进行连接
         view.loadUrl("javascript:imageCall()");
-        Log.d(TAG, "initUrl: urls");
+        Log.d(TAG, "initUrl: urls1");
         view.loadUrl("javascript:videoCall()");
     }
 }

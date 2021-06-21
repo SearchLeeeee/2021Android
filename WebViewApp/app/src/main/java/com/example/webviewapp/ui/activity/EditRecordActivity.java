@@ -6,26 +6,26 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.webviewapp.data.DataManager;
+import com.example.webviewapp.common.base.BaseActivity;
+import com.example.webviewapp.contract.EditRecordContract;
 import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.ActivityEditRecordBinding;
+import com.example.webviewapp.presenter.EditRecordPresenter;
 
-public class EditRecordActivity extends AppCompatActivity {
+public class EditRecordActivity extends BaseActivity implements EditRecordContract.View {
     private static final String TAG = "EditRecordActivity";
-    ActivityEditRecordBinding viewBinding;
+    public ActivityEditRecordBinding viewBinding;
+    EditRecordContract.Presenter presenter;
 
     Record record;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewBinding = ActivityEditRecordBinding.inflate(getLayoutInflater());
-        setContentView(viewBinding.getRoot());
         getSupportActionBar().hide();
 
-        record = DataManager.get().queryRecordByPrimaryKey(getIntent().getLongExtra("primaryKey", 0));
+        presenter = new EditRecordPresenter(this);
+        record = presenter.getData(getIntent().getLongExtra("primaryKey", 0));
 
         initButton();
         initEditView();
@@ -36,44 +36,36 @@ public class EditRecordActivity extends AppCompatActivity {
         viewBinding.title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                checkContent();
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                checkContent();
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                checkContent();
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
             }
         });
         viewBinding.details.setText(record.getDetails());
         viewBinding.details.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                checkContent();
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                checkContent();
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                checkContent();
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
             }
         });
-    }
-
-    private void checkContent() {
-        if (viewBinding.title.getText() != null && viewBinding.details.getText() != null) {
-            viewBinding.confirmButton.setVisibility(View.VISIBLE);
-        } else {
-            viewBinding.confirmButton.setVisibility(View.INVISIBLE);
-        }
     }
 
     private void initButton() {
@@ -87,9 +79,18 @@ public class EditRecordActivity extends AppCompatActivity {
             } else {
                 record.setTitle(viewBinding.title.getText().toString());
                 record.setDetails(viewBinding.details.getText().toString());
-                DataManager.get().updateRecord(record);
+                presenter.updateRecord(record);
                 finish();
             }
         });
+    }
+
+    @Override
+    public void setConfirmButtonVisibility(Boolean isVisible) {
+        if (isVisible) {
+            viewBinding.confirmButton.setVisibility(View.VISIBLE);
+        } else {
+            viewBinding.confirmButton.setVisibility(View.INVISIBLE);
+        }
     }
 }

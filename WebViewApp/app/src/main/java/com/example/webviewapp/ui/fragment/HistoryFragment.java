@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.RecordRecyclerViewAdapter;
+import com.example.webviewapp.common.base.BaseFragment;
 import com.example.webviewapp.contract.HistoryContract;
 import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.FragmentHistoryBinding;
@@ -24,9 +24,9 @@ import com.example.webviewapp.presenter.HistoryPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryFragment extends Fragment implements HistoryContract.View {
+public class HistoryFragment extends BaseFragment implements HistoryContract.View {
     private static final String TAG = "HistoryFragment";
-    FragmentHistoryBinding viewBinding;
+    public FragmentHistoryBinding viewBinding;
 
     private HistoryContract.Presenter presenter;
     private List<Record> records;
@@ -35,10 +35,9 @@ public class HistoryFragment extends Fragment implements HistoryContract.View {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         presenter = new HistoryPresenter(this);
-        viewBinding = FragmentHistoryBinding.inflate(inflater, container, false);
         initData();
         initButton();
-        return viewBinding.getRoot();
+        return root;
     }
 
     private void initData() {
@@ -74,12 +73,7 @@ public class HistoryFragment extends Fragment implements HistoryContract.View {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy > 20) {
-                    viewBinding.editText.setVisibility(View.GONE);
-                }
-                if (dy < 0) {
-                    viewBinding.editText.setVisibility(View.VISIBLE);
-                }
+                presenter.checkScrolled(dy);
             }
         });
     }
@@ -114,5 +108,14 @@ public class HistoryFragment extends Fragment implements HistoryContract.View {
 
             }
         });
+    }
+
+    @Override
+    public void setEditTextVisibility(Boolean isVisible) {
+        if (isVisible) {
+            viewBinding.editText.setVisibility(View.VISIBLE);
+        } else {
+            viewBinding.editText.setVisibility(View.GONE);
+        }
     }
 }
