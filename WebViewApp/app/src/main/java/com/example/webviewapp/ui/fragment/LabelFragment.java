@@ -36,6 +36,7 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        viewBinding = FragmentLabelBinding.inflate(getLayoutInflater());
         presenter = new LabelPresenter(this);
         initData();
         initButton();
@@ -95,6 +96,7 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
         super.onViewCreated(view, savedInstanceState);
         initEditView();
     }
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

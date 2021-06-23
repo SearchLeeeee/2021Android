@@ -3,6 +3,7 @@ package com.example.webviewapp.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -29,6 +31,8 @@ import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
 import com.example.webviewapp.presenter.MainPresenter;
 
+import java.util.List;
+
 //需求： 提取文字、代码重构、按键时事件的绑定,监听滚动事件
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
@@ -37,10 +41,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private MainContract.Presenter presenter;
 
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
-//    public static final String DEFAULT_URL = "https://www.baidu.com/";
 
     WebView myWebView;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +52,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         getSupportActionBar().hide();
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
-
-        presenter = new MainPresenter(this);
+        presenter = new MainPresenter();
 
         mainpage();
         startActivity(new Intent(getApplication(), UserActivity.class));
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         SearchView searchView = findViewById(R.id.searchbar);
         myWebView.loadUrl("https://www.baidu.com/");
 
+
         initWebView(myWebView);
 
         /**
@@ -113,8 +117,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void initSearchbar(SearchView searchView, ListView listView, WebView myWebView) {
         searchView.setIconifiedByDefault(false);
-        String[] note = {"人活着是为了什么1", "人活着是为了什么2", "人活着是为了什么3", "example1", "res"};
-        listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, note));
+        List<String> history = presenter.getHistory();
+        listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, history));
         listView.setTextFilterEnabled(true);
         listView.setVisibility(View.GONE);
 
@@ -145,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 return true;
             }
         });
+
+
     }
 
     /**
