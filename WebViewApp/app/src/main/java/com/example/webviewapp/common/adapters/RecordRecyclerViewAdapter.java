@@ -24,7 +24,7 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
     private OnItemClickListener onItemClickListener;
 
     private final LayoutInflater inflater;
-    private final List<Record> records;
+    private List<Record> records;
     private final Context context;
     private final Integer layoutResId;
 
@@ -138,6 +138,10 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         this.onItemClickListener = onItemClickListener;
     }
 
+    public void setRecords(List<Record> records) {
+        this.records = records;
+    }
+
     /**
      * 设置点按和长按回调
      */
@@ -146,4 +150,6 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
 
         void onItemLongClick(View view, int position);
     }
+
+
 }

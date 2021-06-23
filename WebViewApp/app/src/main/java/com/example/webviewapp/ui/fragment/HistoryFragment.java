@@ -30,19 +30,25 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
 
     private HistoryContract.Presenter presenter;
     private List<Record> records;
+    private RecordRecyclerViewAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         presenter = new HistoryPresenter(this);
+        viewBinding = FragmentHistoryBinding.inflate(getLayoutInflater());
         initData();
+        initEditView();
         initButton();
-        return root;
+        return viewBinding.getRoot();
+
     }
+
 
     private void initData() {
         records = presenter.getData();
         initView(records);
+        Log.d(TAG, "initData: ");
     }
 
     private void initButton() {
@@ -56,7 +62,7 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
             Log.d(TAG, "initView: " + re.get(i).getTitle() + i);
         }
         viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        RecordRecyclerViewAdapter adapter = new RecordRecyclerViewAdapter(re, getActivity(), R.layout.record_item);
+        adapter = new RecordRecyclerViewAdapter(re, getActivity(), R.layout.record_item);
         adapter.setOnItemClickListener(new RecordRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -76,12 +82,21 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
                 presenter.checkScrolled(dy);
             }
         });
+
     }
 
     @Override
+
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initEditView();
+    }
+
+
+    public void onResume() {
+        super.onResume();
+        presenter.refreshRecord();
+        adapter.notifyDataSetChanged();
     }
 
     private void initEditView() {
