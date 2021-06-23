@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginVertical="10dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="新闻标题新闻标题新闻标题新闻标题新闻标题新闻标题新闻标题"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/news_image1"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_below="@+id/title"
+        android:paddingHorizontal="4dp" />
+
+    <ImageView
+        android:id="@+id/news_image2"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_below="@+id/title"
+        android:layout_toRightOf="@id/news_image1"
+        android:paddingHorizontal="4dp" />
+
+    <ImageView
+        android:id="@+id/news_image3"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_below="@+id/title"
+        android:layout_toRightOf="@id/news_image2"
+        android:paddingHorizontal="4dp" />
+
+    <TextView
+        android:id="@+id/author_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/news_image1"
+        android:paddingVertical="10dp"
+        android:text="新闻来源"
+        android:textColor="#A8A8A8" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/author_name"
+        android:background="#502222" />
+
+</RelativeLayout>

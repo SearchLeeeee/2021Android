@@ -8,6 +8,7 @@ import java.util.List;
 
 public class HistoryPresenter implements HistoryContract.Presenter {
     private final HistoryContract.View view;
+
     public HistoryPresenter(HistoryContract.View view) {
         this.view = view;
     }
@@ -15,5 +16,15 @@ public class HistoryPresenter implements HistoryContract.Presenter {
     @Override
     public List<Record> getData() {
         return DataManager.get().historyList;
+    }
+
+    @Override
+    public void checkScrolled(int dy) {
+        if (dy > 20) {
+            view.setEditTextVisibility(false);
+        }
+        if (dy < 0) {
+            view.setEditTextVisibility(true);
+        }
     }
 }

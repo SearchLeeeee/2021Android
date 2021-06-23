@@ -1,5 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,12 +30,19 @@ import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.CustomWebViewClient;
 import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
 import com.example.webviewapp.common.utils.AdBlocker;
+import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
+import com.example.webviewapp.presenter.MainPresenter;
 
-public class MainActivity extends AppCompatActivity {
+//需求： 提取文字、代码重构、按键时事件的绑定,监听滚动事件
+
+public class MainActivity extends AppCompatActivity implements MainContract.View {
+
     private static final String TAG = "MainActivity";
+    private MainContract.Presenter presenter;
 
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
+//    public static final String DEFAULT_URL = "https://www.baidu.com/";
 
     private ProgressBar progressBar;
     WebView myWebView;
@@ -50,19 +58,27 @@ public class MainActivity extends AppCompatActivity {
 
         progressBar= (ProgressBar)findViewById(R.id.progressbar);//进度条
 
-        mainpage();
+        presenter = new MainPresenter(this);
 
+        mainpage();
+        startActivity(new Intent(getApplication(), UserActivity.class));
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        intent = getIntent();
+        String url = intent.getStringExtra("url");
+        myWebView.loadUrl(url);
+        super.onNewIntent(intent);
 
     }
 
     @Override
     protected void onDestroy() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // 子线程清空磁盘缓存
-                Glide.get(MainActivity.this).clearDiskCache();
-            }
+        new Thread(() -> {
+            // 子线程清空磁盘缓存
+            Glide.get(MainActivity.this).clearDiskCache();
         }).start();
         // 主线程清空内存缓存
         Glide.get(this).clearMemory();
@@ -81,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         ImageView forwardButton = findViewById(R.id.fowardButton);
         SearchView searchView = findViewById(R.id.searchbar);
         myWebView.loadUrl("https://www.baidu.com/");
-
 
         initWebView(myWebView);
 
@@ -154,9 +169,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
-
     }
 
     /**
@@ -195,10 +207,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         forwardButton.setOnClickListener(v -> {
-            if (myWebView.canGoForward())
-                myWebView.goForward();
-            //是前进捏
-
+           startActivity(new Intent(MainActivity.this, InfoReadActivity.class));
         });
 
     }

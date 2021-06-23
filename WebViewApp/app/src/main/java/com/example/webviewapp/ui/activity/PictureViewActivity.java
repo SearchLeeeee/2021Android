@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -24,14 +23,15 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.webviewapp.R;
+import com.example.webviewapp.common.base.BaseActivity;
 import com.example.webviewapp.common.utils.DownloadUtils;
 import com.example.webviewapp.databinding.ActivityPictureViewBinding;
 
 import java.util.Arrays;
 
-public class PictureViewActivity extends AppCompatActivity {
+public class PictureViewActivity extends BaseActivity {
     private static final String TAG = "PictureViewActivity";
-    ActivityPictureViewBinding viewBinding;
+    public ActivityPictureViewBinding viewBinding;
 
     private String curImageUrl = "";
     private String[] imageUrls = new String[]{};
@@ -40,24 +40,40 @@ public class PictureViewActivity extends AppCompatActivity {
     private int[] initialedPositions = null;
     private ObjectAnimator objectAnimator;
     private View curPage;
+    private PagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewBinding = ActivityPictureViewBinding.inflate(getLayoutInflater());
-        setContentView(viewBinding.getRoot());
         getSupportActionBar().hide();
-        Log.d(TAG, "onCreate: urls");
 
         initValue();
         initButton();
         initViewPager();
     }
 
+    private void initValue() {
+//        curImageUrl = getIntent().getStringExtra("curImageUrl");
+//        imageUrls = getIntent().getStringArrayExtra("imageUrls");
+        curImageUrl = "https://dfzximg02.dftoutiao.com/news/20210308/20210308134708_d0216565f1d6fe1abdfa03efb4f3e23c_0_mwpm_03201609.png";
+        imageUrls = new String[]{"https://dfzximg02.dftoutiao.com/news/20210308/20210308134708_d0216565f1d6fe1abdfa03efb4f3e23c_0_mwpm_03201609.png",
+                "https://dfzximg02.dftoutiao.com/news/20210308/20210308134708_d0216565f1d6fe1abdfa03efb4f3e23c_1_mwpm_03201609.png"};
+        Log.d(TAG, "initValue: curImageUrls" + curImageUrl);
+        Log.d(TAG, "initValue: imageUrls" + imageUrls[0]);
+
+        initialedPositions = new int[imageUrls.length];
+        Arrays.fill(initialedPositions, -1);
+    }
+
+    private void initButton() {
+        viewBinding.backButton.setOnClickListener(v -> finish());
+        viewBinding.save.setOnClickListener(v -> savePicture2Local());
+    }
+
     @SuppressLint("SetTextI18n")
     private void initViewPager() {
         viewBinding.viewPager.setPageMargin((int) (getResources().getDisplayMetrics().density * 15));
-        viewBinding.viewPager.setAdapter(new PagerAdapter() {
+        pagerAdapter = new PagerAdapter() {
             @Override
             public int getCount() {
                 return imageUrls.length;
@@ -75,22 +91,17 @@ public class PictureViewActivity extends AppCompatActivity {
                     final PhotoView view = new PhotoView(PictureViewActivity.this);
                     view.enable();
                     view.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    Glide.with(PictureViewActivity.this)
-                            .load(imageUrls[position])
-                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                            .fitCenter()
-                            .crossFade()
-                            .listener(new RequestListener<String, GlideDrawable>() {
-                                @Override
-                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                    if (position == curPosition) {
-                                        hideLoadingAnimation();
-                                    }
-                                    showErrorLoading();
-                                    return false;
-                                }
+                    RequestListener<String, GlideDrawable> listener = new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            if (position == curPosition) {
+                                hideLoadingAnimation();
+                            }
+                            showErrorLoading();
+                            return false;
+                        }
 
-                                @Override
+                        @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                             initialedPositions[position] = position;
                             if (position == curPosition) {
@@ -98,8 +109,16 @@ public class PictureViewActivity extends AppCompatActivity {
                             }
                             return false;
                         }
-                    }).into(view);
+                    };
+                    Glide.with(PictureViewActivity.this)
+                            .load(imageUrls[position])
+                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .fitCenter()
+                            .crossFade()
+                            .listener(listener)
+                            .into(view);
                     container.addView(view);
+                    return view;
                 }
                 return null;
             }
@@ -114,7 +133,8 @@ public class PictureViewActivity extends AppCompatActivity {
             public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
                 curPage = (View) object;
             }
-        });
+        };
+        viewBinding.viewPager.setAdapter(pagerAdapter);
 
         curPosition = returnClickedPosition() == -1 ? 0 : returnClickedPosition();
         viewBinding.viewPager.setCurrentItem(curPosition);
@@ -146,11 +166,6 @@ public class PictureViewActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void initButton() {
-        viewBinding.backButton.setOnClickListener(v -> finish());
-        viewBinding.save.setOnClickListener(v -> savePicture2Local());
     }
 
     private void savePicture2Local() {
@@ -185,16 +200,9 @@ public class PictureViewActivity extends AppCompatActivity {
                     });
                 }
             });
+        } else {
+            Log.d(TAG, "savePicture2Local: photoView null");
         }
-    }
-
-    private void initValue() {
-        curImageUrl = getIntent().getStringExtra("curImageUrl");
-        imageUrls = getIntent().getStringArrayExtra("imageUrls");
-
-        Log.d(TAG, "initValue: urls" + imageUrls);
-        initialedPositions = new int[imageUrls.length];
-        Arrays.fill(initialedPositions, -1);
     }
 
     private void hideLoadingAnimation() {
@@ -206,6 +214,7 @@ public class PictureViewActivity extends AppCompatActivity {
         if (imageUrls == null || curImageUrl == null) {
             return -1;
         }
+        //TODO:有重复图片就不行
         for (int i = 0; i < imageUrls.length; i++) {
             if (curImageUrl.equals(imageUrls[i])) {
                 return i;

@@ -37,6 +37,7 @@ public class DataManager {
     Context context;
     public List<Record> historyList = new ArrayList<>();
     public List<Record> labelList = new ArrayList<>();
+    public List<User> userList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public DataManager(Context context) {
@@ -63,10 +64,10 @@ public class DataManager {
         for (long i = 0; i < 10; i++) {
             addRecord(new Record(100, i, "test", "IS_HISTORY", "test", IS_HISTORY));
             addRecord(new Record(100, i, "test", "IS_Lable", "test", IS_LABEL));
-            addUser(new User(100, 100));
         }
         loadHistories();
         loadLabels();
+        loadUsers();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -95,6 +96,13 @@ public class DataManager {
                 return (int) (o1.getTime() - o2.getTime());
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void loadUsers() {
+        RealmResults<User> res = realm.where(User.class)
+                .findAll();
+        userList = realm.copyFromRealm(res);
     }
 
     ////////////////////////记录相关/////////////////////////
@@ -261,11 +269,13 @@ public class DataManager {
      * @return long
      */
 
-    public long queryUserByUid(long Uid) {
+    public long queryUserPasswordByUid(long Uid) {
         User res = realm.where(User.class).equalTo("uid", Uid).findFirst();
-        assert res != null;
-        return res.getPassword();
+        if (res != null)
+            return res.getPassword();
+        else return -1;
     }
+
 
     /**
      * 往数据库写入数据：
