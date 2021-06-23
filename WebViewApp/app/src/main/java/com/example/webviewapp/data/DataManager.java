@@ -29,16 +29,6 @@ public class DataManager {
         return instance;
     }
 
-    public static void init(Context context) {
-        instance = new DataManager(context);
-    }
-
-    Realm realm;
-    Context context;
-    public List<Record> historyList = new ArrayList<>();
-    public List<Record> labelList = new ArrayList<>();
-    public List<User> userList = new ArrayList<>();
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public DataManager(Context context) {
         if (instance == null) {
@@ -63,25 +53,31 @@ public class DataManager {
         //TODO:测试数据
         for (long i = 0; i < 10; i++) {
             addRecord(new Record(100, i, "test", "IS_HISTORY", "test", IS_HISTORY));
-            addRecord(new Record(100, i, "test", "IS_Lable", "test", IS_LABEL));
+            //    addRecord(new Record(100, i, "test", "IS_Lable", "test", IS_LABEL));
         }
         loadHistories();
         loadLabels();
         loadUsers();
     }
 
+    Realm realm;
+    Context context;
+    public List<Record> historyList = new ArrayList<>();
+    public List<Record> labelList = new ArrayList<>();
+    public List<User> userList = new ArrayList<>();
+
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void loadHistories() {
+    public static void init(Context context) {
+        instance = new DataManager(context);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void loadHistories() {
         RealmResults<Record> res = realm.where(Record.class)
                 .equalTo("isHistory", IS_HISTORY)
                 .findAll();
         historyList = realm.copyFromRealm(res);
-        historyList.sort(new Comparator<Record>() {
-            @Override
-            public int compare(Record o1, Record o2) {
-                return (int) (o1.getTime() - o2.getTime());
-            }
-        });
+        historyList.sort((o1, o2) -> (int) (o2.getTime() - o1.getTime()));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -159,6 +155,7 @@ public class DataManager {
      * @param record
      */
     public void addRecord(Record record) {
+
         realm.executeTransaction(realm1 -> {
             record.setPrimaryKey(generatePrimaryKey(Record.class));
             realm.copyToRealmOrUpdate(record);

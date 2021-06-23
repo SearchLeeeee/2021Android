@@ -13,12 +13,19 @@ import com.example.webviewapp.common.base.BaseApplication;
 import com.example.webviewapp.common.utils.AdBlocker;
 import com.example.webviewapp.ui.activity.MainActivity;
 
+import com.example.webviewapp.contract.MainContract;
+import com.example.webviewapp.presenter.MainPresenter;
+
+
 /**
  * 监听webview
  */
 public class CustomWebViewClient extends WebViewClient {
     private static final String TAG = "CustomWebViewClient";
+
     public String blockUrl="";
+
+    MainContract.Presenter presenter = new MainPresenter();
 
 
     @Override
@@ -36,6 +43,9 @@ public class CustomWebViewClient extends WebViewClient {
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         view.getSettings().setJavaScriptEnabled(true);
         super.onPageStarted(view, url, favicon);
+        String title = view.getTitle();
+        presenter.addHistory(url, title);
+        Log.d(TAG, "onPageStarted: 页面初始化" + title);
     }
 
 
@@ -54,5 +64,10 @@ public class CustomWebViewClient extends WebViewClient {
         view.loadUrl("javascript:imageCall()");
         Log.d(TAG, "initUrl: urls1");
         view.loadUrl("javascript:videoCall()");
+    }
+
+    @Override
+    public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+        super.doUpdateVisitedHistory(view, url, isReload);
     }
 }

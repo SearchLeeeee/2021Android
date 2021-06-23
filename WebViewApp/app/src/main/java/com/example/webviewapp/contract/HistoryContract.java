@@ -12,6 +12,8 @@ public interface HistoryContract {
     interface Presenter {
         List<Record> getData();
 
+        List<Record> refreshRecord();
+
         void checkScrolled(int dy);
     }
 }
