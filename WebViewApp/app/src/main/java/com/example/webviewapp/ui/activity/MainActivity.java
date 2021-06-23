@@ -2,6 +2,7 @@ package com.example.webviewapp.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,12 +10,15 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -24,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.CustomWebViewClient;
 import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
+import com.example.webviewapp.common.utils.AdBlocker;
 import com.example.webviewapp.data.DataManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
 
+    private ProgressBar progressBar;
     WebView myWebView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +46,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
+        AdBlocker.init(this);
+
+        progressBar= (ProgressBar)findViewById(R.id.progressbar);//进度条
 
         mainpage();
+
 
     }
 
@@ -91,9 +102,23 @@ public class MainActivity extends AppCompatActivity {
         myWebView.loadUrl(DEFAULT_URL);
         JavaScripInterfaceAdapter javaScripInterface = new JavaScripInterfaceAdapter(this);
         myWebView.addJavascriptInterface(javaScripInterface, "imagelistener");
-        myWebView.setWebViewClient(new CustomWebViewClient());
-
+        myWebView.addJavascriptInterface(javaScripInterface,"blockListener");
+        myWebView.setWebViewClient(webViewClient);
+        myWebView.setWebChromeClient(webChromeClient);
     }
+
+    CustomWebViewClient webViewClient = new CustomWebViewClient(){
+        @Override
+        public void onPageFinished(WebView view, String url) {//页面加载完成
+            progressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {//页面开始加载
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    };
+
 
     private void initSearchbar(SearchView searchView, ListView listView, WebView myWebView) {
         searchView.setIconifiedByDefault(false);
@@ -161,6 +186,11 @@ public class MainActivity extends AppCompatActivity {
             if (myWebView.canGoBack()) myWebView.goBack();
             else myWebView.goBack();
             //返回键还是好做啊
+            if (myWebView.getUrl().equals("file:///android_asset/askToJump.html")){//在风险访问h5页面需要两次goback才能回去
+                Log.i("TAG", "same");
+                myWebView.goBack();
+                myWebView.goBack();
+            }
             Log.d("TAG", "mainpage: backward ");
         });
 
@@ -193,7 +223,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        if (myWebView.getUrl().equals("file:///android_asset/askToJump.html") && keyCode == KeyEvent.KEYCODE_BACK ){
+            Log.i("TAG", "same");
+            myWebView.goBack();
+            myWebView.goBack();
+            return false;
+        }
+        else if (keyCode == KeyEvent.KEYCODE_BACK) {
             Log.e("TAG", "onBackPressed  22222 : 按下了返回键");
             myWebView.goBack();
             return false;
@@ -201,6 +237,32 @@ public class MainActivity extends AppCompatActivity {
             return super.onKeyDown(keyCode, event);
         }
     }
+
+    //WebChromeClient主要辅助WebView处理Javascript的对话框、网站图标、网站title、加载进度等
+    private WebChromeClient webChromeClient=new WebChromeClient(){
+        //监听js alert弹窗事件
+        @Override
+        public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
+            Log.i("get到的参数", message);
+            if (message.equals("1")){
+                Log.i("弹窗", "继续访问:" + webViewClient.blockUrl);
+                webView.loadUrl(webViewClient.blockUrl);
+            } else {
+                Log.i("弹窗", "停止访问");
+                webView.goBack();
+                webView.goBack();
+            }
+
+            result.confirm();
+            return true;
+        }
+
+        //加载进度回调
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            progressBar.setProgress(newProgress);
+        }
+    };
 
 }
 
