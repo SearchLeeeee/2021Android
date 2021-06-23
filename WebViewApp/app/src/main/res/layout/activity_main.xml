@@ -43,6 +43,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:showAsAction="always" />
 
+    <ProgressBar
+        android:id="@+id/progressbar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dip"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchbar"
+        android:max="100"
+        android:progress="0"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:layout_width="405dp"
         android:layout_height="32dp"

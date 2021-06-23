@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .askText {
+            width: 100%;
+            /* margin-top: 50px; */
+            font-size: large;
+            text-align: center;
+        }
+
+        .btnBox {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .btn1 {
+            background-color: white;
+            /* Green */
+            border: none;
+            color: #4CAF50;
+            border-radius: 10px;
+            border: 2px solid #4CAF50;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+        .btn2 {
+            background-color: white;
+            /* Green */
+            border: none;
+            color: red;
+            border-radius: 10px;
+            border: 2px solid red;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="askText">该网页有风险，是否继续访问?</div>
+        <div class="btnBox">
+            <button class="btn1" onclick="confirmView()">继续访问</button>
+            <button class="btn2" style="margin-top:50px" onclick="cancelView()">取消访问</button>
+        </div>
+    </div>
+</body>
+<script>
+
+    function confirmView() {
+        alert("1");//弹窗
+        javascript: blockListener.confirmView("1");//继续访问,传值给安卓
+    }
+    function cancelView() {
+        alert("0");//弹窗
+        javascript: blockListener.cancelView("0");//停止访问,传值给安卓
+    }
+</script>
+
+</html>
