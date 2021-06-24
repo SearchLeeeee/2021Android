@@ -12,6 +12,7 @@ import java.util.List;
 public class MainPresenter implements MainContract.Presenter {
 
     public static final int IS_HISTORY = 1;
+    public static final int IS_LABLE = 2;
 
 
     @Override
@@ -29,5 +30,12 @@ public class MainPresenter implements MainContract.Presenter {
             history.add(note.get(i).getTitle());
         }
         return history;
+    }
+
+    @Override
+    public void addLable(String url, String title) {
+        Record record = new Record(100, System.currentTimeMillis(), url, title, "test", IS_LABLE);
+        DataManager.get().addRecord(record);
+        //  Log.d("TAG", "addLable: " + DataManager.get().labelList.get(0).getTitle());
     }
 }

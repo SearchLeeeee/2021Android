@@ -58,9 +58,6 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
     }
 
     private void initView(List<Record> re) {
-        for (int i = 0; i < re.size(); i++) {
-            Log.d(TAG, "initView: " + re.get(i).getTitle() + i);
-        }
         viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new RecordRecyclerViewAdapter(re, getActivity(), R.layout.record_item);
         adapter.setOnItemClickListener(new RecordRecyclerViewAdapter.OnItemClickListener() {

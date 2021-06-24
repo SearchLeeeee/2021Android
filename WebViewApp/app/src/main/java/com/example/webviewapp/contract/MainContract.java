@@ -11,5 +11,7 @@ public interface MainContract {
         void addHistory(String url, String title);
 
         List<String> getHistory();
+
+        void addLable(String url, String title);
     }
 }

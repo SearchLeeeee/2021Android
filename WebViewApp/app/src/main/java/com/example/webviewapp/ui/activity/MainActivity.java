@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         presenter = new MainPresenter();
 
         mainpage();
-        startActivity(new Intent(getApplication(), UserActivity.class));
+      //  startActivity(new Intent(getApplication(), UserActivity.class));
 
     }
 
@@ -164,8 +164,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         //设置按钮的点击事件
         menuButton.setOnClickListener(v -> {
             Log.d("TAG", "菜单栏点击");
-            Intent intent = new Intent(MainActivity.this, RecordActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+//            startActivity(intent);
             popwindow();
 
         });
@@ -199,15 +199,29 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void popwindow() {
         // PopWindow 布局发
         View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
+
         final PopupWindow popWindow = new PopupWindow(view,
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popWindow.setTouchable(true);
         popWindow.setTouchInterceptor((v, event) -> {
-                    Log.d("TAG", "onTouch: popwindowss");
-                    return false;
-                }
-        );
+            return false;
+        });
         popWindow.showAtLocation(view, 80, 0, 0);
+        ImageView userButton = view.findViewById(R.id.user_button);
+        ImageView historyButton = view.findViewById(R.id.lable_history);
+        ImageView addLable = view.findViewById(R.id.add_lable);
+        userButton.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, UserActivity.class));
+        });
+        historyButton.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, RecordActivity.class));
+        });
+        addLable.setOnClickListener(v -> addLable(myWebView));
+    }
+
+    public void addLable(WebView myWebView) {
+        presenter.addLable(myWebView.getTitle(), myWebView.getUrl());
+        Log.d(TAG, "addLable: " + myWebView.getTitle());
     }
 
     @Override

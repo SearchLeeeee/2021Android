@@ -35,7 +35,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public List<Record> refreshRecord() {
-        DataManager.get().loadHistories();
-        return DataManager.get().historyList;
+        DataManager.get().loadLabels();
+        return DataManager.get().labelList;
     }
 }

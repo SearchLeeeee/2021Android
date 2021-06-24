@@ -13,5 +13,7 @@ public interface LabelContract {
         List<Record> getData();
 
         void checkScrolled(int dy);
+
+        List<Record> refreshRecord();
     }
 }
