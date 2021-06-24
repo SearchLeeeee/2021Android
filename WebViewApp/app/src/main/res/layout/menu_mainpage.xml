@@ -13,10 +13,10 @@
         android:layout_height="50dp"
         android:orientation="horizontal"
         android:background="@color/white"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
 
         <RelativeLayout
             android:id="@+id/addbookmark"
@@ -119,11 +119,6 @@
                 android:layout_weight="1"
                 android:src="@drawable/yonghu" />
         </RelativeLayout>
-
-
-
-
-
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -54,7 +54,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
     private void loginwindows() {
 
         /**
-         * 登录窗口的空间绑定
+         * 登录窗口的控件绑定
          */
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         AlertDialog dialog = builder.create();

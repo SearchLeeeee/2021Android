@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,15 +40,11 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
         viewBinding = FragmentLabelBinding.inflate(getLayoutInflater());
         presenter = new LabelPresenter(this);
         initData();
+        initEditView();
         initButton();
-        return root;
+        return viewBinding.getRoot();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        adapter.notifyDataSetChanged();
-    }
 
     private void initData() {
         records = presenter.getData();
@@ -55,12 +52,15 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
     }
 
     private void initView(List<Record> re) {
+        for (int i = 0; i < re.size(); i++) {
+            Log.d(TAG, "initView: " + re.get(i).getTitle() + i);
+        }
         viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new RecordRecyclerViewAdapter(re, getActivity(), R.layout.record_item);
         adapter.setOnItemClickListener(new RecordRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                    //TODO:书签点击处理
+                //TODO:书签点击处理
             }
 
             @Override
@@ -95,6 +95,12 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initEditView();
+    }
+
+    public void onResume() {
+        super.onResume();
+        presenter.refreshRecord();
+        adapter.notifyDataSetChanged();
     }
 
 

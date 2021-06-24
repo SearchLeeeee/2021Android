@@ -1,5 +1,9 @@
 package com.example.webviewapp.presenter;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.example.webviewapp.contract.LabelContract;
 import com.example.webviewapp.data.DataManager;
 import com.example.webviewapp.data.Record;
@@ -27,4 +31,11 @@ public class LabelPresenter implements LabelContract.Presenter {
             view.setEditTextVisibility(true);
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public List<Record> refreshRecord() {
+        DataManager.get().loadHistories();
+        return DataManager.get().historyList;
+    }
+
 }

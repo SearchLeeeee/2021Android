@@ -81,7 +81,7 @@ public class DataManager {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void loadLabels() {
+    public void loadLabels() {
         RealmResults<Record> res = realm.where(Record.class)
                 .equalTo("isHistory", IS_LABEL)
                 .findAll();
