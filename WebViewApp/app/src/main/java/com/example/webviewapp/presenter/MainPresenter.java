@@ -13,7 +13,11 @@ public class MainPresenter implements MainContract.Presenter {
 
     public static final int IS_HISTORY = 1;
     public static final int IS_LABLE = 2;
+    private final MainContract.View view;
 
+    public MainPresenter(MainContract.View view) {
+        this.view = view;
+    }
 
     @Override
     public void addHistory(String url, String title) {
