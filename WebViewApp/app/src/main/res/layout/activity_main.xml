@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".ui.activity.MainActivity">
 
     <!--        <androidx.appcompat.widget.Toolbar-->
@@ -18,36 +19,46 @@
 
     <WebView
         android:id="@+id/webview"
-        android:layout_width="408dp"
-        android:layout_height="605dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </WebView>
 
+
+
+    <SearchView
+        android:id="@+id/searchbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:showAsAction="always" />
     <ListView
         android:id="@+id/listitem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/searchbar" />
+        app:layout_constraintTop_toBottomOf="@id/searchbar" />
 
-    <SearchView
-        android:id="@+id/searchbar"
-        android:layout_width="409dp"
-        android:layout_height="78dp"
-        android:layout_marginTop="4dp"
+    <ProgressBar
+        android:id="@+id/progressbar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dip"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:showAsAction="always" />
+        app:layout_constraintTop_toBottomOf="@+id/searchbar"
+        android:max="100"
+        android:progress="0"
+        android:visibility="gone"/>
 
     <LinearLayout
-        android:layout_width="405dp"
-        android:layout_height="32dp"
-        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:orientation="horizontal"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -83,7 +94,7 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/pages" />
+            app:srcCompat="@drawable/Fire" />
 
         <ImageView
             android:id="@+id/menuButton"

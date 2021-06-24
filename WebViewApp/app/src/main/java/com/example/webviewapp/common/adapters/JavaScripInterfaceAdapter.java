@@ -44,8 +44,15 @@ public class JavaScripInterfaceAdapter {
         Intent intent = new Intent(context, VideoViewActivity.class);
         intent.putExtra("video", video);
         Log.d(TAG, "openImage: urls" + video);
-
         context.startActivity(intent);
     }
 
+    @JavascriptInterface
+    public void  goonView(String str){
+        Log.i("goonView","继续访问:"+str);
+    }
+    @JavascriptInterface
+    public void  cancelView(String str){
+        Log.i("cancelView","继续访问:"+str);
+    }
 }

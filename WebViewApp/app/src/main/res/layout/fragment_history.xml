@@ -30,10 +30,10 @@
         <com.example.webviewapp.ui.view.RecordEditButton
             android:id="@+id/delete_all"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_height="282dp"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@color/white" />
 
         <com.example.webviewapp.ui.view.RecordEditButton
             android:id="@+id/delete"
