@@ -3,43 +3,33 @@ package com.example.webviewapp.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-
-import android.graphics.Bitmap;
-
-import android.os.Build;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.CustomWebViewClient;
 import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
-import com.example.webviewapp.common.utils.AdBlocker;
+import com.example.webviewapp.common.utils.ScreenUtils;
 import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
 import com.example.webviewapp.presenter.MainPresenter;
-
-import java.util.List;
 
 //需求： 提取文字、代码重构、按键时事件的绑定,监听滚动事件
 
@@ -49,27 +39,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private MainContract.Presenter presenter;
 
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
+//    public static final String DEFAULT_URL = "https://www.baidu.com/";
 
-    private ProgressBar progressBar;
     WebView myWebView;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         //TODO:未解决DataManager单例初始化问题
-        DataManager.init(this);
+        //DataManager.init(this);
 
-        AdBlocker.init(this);
-
-        progressBar= (ProgressBar)findViewById(R.id.progressbar);//进度条
-
-        presenter = new MainPresenter(this);
+        presenter = new MainPresenter();
 
         mainpage();
-      //  startActivity(new Intent(getApplication(), UserActivity.class));
+        startActivity(new Intent(getApplication(), UserActivity.class));
 
     }
 
@@ -79,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         String url = intent.getStringExtra("url");
         myWebView.loadUrl(url);
         super.onNewIntent(intent);
-
     }
 
     @Override
@@ -102,10 +86,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         ListView listView = findViewById(R.id.listitem);
         ImageView refreshButton = findViewById(R.id.refreshButton);
         ImageView backButton = findViewById(R.id.backButton);
-        ImageView forwardButton = findViewById(R.id.fowardButton);
+        ImageView forwardButton = findViewById(R.id.nextButton);
         SearchView searchView = findViewById(R.id.searchbar);
         myWebView.loadUrl("https://www.baidu.com/");
-
 
         initWebView(myWebView);
 
@@ -126,28 +109,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         myWebView.loadUrl(DEFAULT_URL);
         JavaScripInterfaceAdapter javaScripInterface = new JavaScripInterfaceAdapter(this);
         myWebView.addJavascriptInterface(javaScripInterface, "imagelistener");
-        myWebView.addJavascriptInterface(javaScripInterface,"blockListener");
-        myWebView.setWebViewClient(webViewClient);
-        myWebView.setWebChromeClient(webChromeClient);
+        myWebView.setWebViewClient(new CustomWebViewClient());
+
     }
-
-    CustomWebViewClient webViewClient = new CustomWebViewClient(){
-        @Override
-        public void onPageFinished(WebView view, String url) {//页面加载完成
-            progressBar.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {//页面开始加载
-            progressBar.setVisibility(View.VISIBLE);
-        }
-    };
-
 
     private void initSearchbar(SearchView searchView, ListView listView, WebView myWebView) {
         searchView.setIconifiedByDefault(false);
-        List<String> history = presenter.getHistory();
-        listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, history));
+        String[] note = {"人活着是为了什么1", "人活着是为了什么2", "人活着是为了什么3", "example1", "res"};
+        listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, note));
         listView.setTextFilterEnabled(true);
         listView.setVisibility(View.GONE);
 
@@ -178,8 +147,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 return true;
             }
         });
-
-
     }
 
     /**
@@ -195,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             Log.d("TAG", "菜单栏点击");
 //            Intent intent = new Intent(MainActivity.this, RecordActivity.class);
 //            startActivity(intent);
-            popwindow();
+            popwindow(menuButton);
 
         });
 
@@ -209,11 +176,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             if (myWebView.canGoBack()) myWebView.goBack();
             else myWebView.goBack();
             //返回键还是好做啊
-            if (myWebView.getUrl().equals("file:///android_asset/askToJump.html")){//在风险访问h5页面需要两次goback才能回去
-                Log.i("TAG", "same");
-                myWebView.goBack();
-                myWebView.goBack();
-            }
             Log.d("TAG", "mainpage: backward ");
         });
 
@@ -227,43 +189,63 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     /**
      * 菜单栏的实现
      */
-    public void popwindow() {
+    public void popwindow(ImageView img) {
         // PopWindow 布局发
         View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
-
         final PopupWindow popWindow = new PopupWindow(view,
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popWindow.setTouchable(true);
         popWindow.setTouchInterceptor((v, event) -> {
-            return false;
-        });
-        popWindow.showAtLocation(view, 80, 0, 0);
-        ImageView userButton = view.findViewById(R.id.user_button);
-        ImageView historyButton = view.findViewById(R.id.lable_history);
-        ImageView addLable = view.findViewById(R.id.add_lable);
-        userButton.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, UserActivity.class));
-        });
-        historyButton.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, RecordActivity.class));
-        });
-        addLable.setOnClickListener(v -> addLable(myWebView));
+                    Log.d("TAG", "onTouch: popwindowss");
+                    return false;
+                }
+        );
+
+        int windowPos[] = calculatePopWindowPos(img, view);
+        int xOff = 0;// 可以自己调整偏移
+        windowPos[0] -= xOff;
+        popWindow.showAtLocation(view, Gravity.TOP | Gravity.START, windowPos[0], windowPos[1]);
+// windowContentViewRoot是根布局View
+
+    }
+    /**
+     * 计算出来的位置，y方向就在anchorView的上面和下面对齐显示，x方向就是与屏幕右边对齐显示
+     * 如果anchorView的位置有变化，就可以适当自己额外加入偏移来修正
+     * @param anchorView 呼出window的view
+     * @param contentView  window的内容布局
+     * @return window显示的左上角的xOff,yOff坐标
+     */
+    private static int[] calculatePopWindowPos(final View anchorView, final View contentView) {
+        final int windowPos[] = new int[2];
+        final int anchorLoc[] = new int[2];
+//　　　　 获取锚点View在屏幕上的左上角坐标位置
+        anchorView.getLocationOnScreen(anchorLoc);
+        final int anchorHeight = anchorView.getHeight();
+        // 获取屏幕的高宽
+        final int screenHeight = ScreenUtils.getScreenHeight(anchorView.getContext());
+        final int screenWidth = ScreenUtils.getScreenWidth(anchorView.getContext());
+        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        // 计算contentView的高宽
+        final int windowHeight = contentView.getMeasuredHeight();
+        final int windowWidth = contentView.getMeasuredWidth();
+        // 判断需要向上弹出还是向下弹出显示
+        final boolean isNeedShowUp = (screenHeight - anchorLoc[1] - anchorHeight < windowHeight);
+        if (isNeedShowUp) {
+            windowPos[0] = screenWidth - windowWidth;
+            windowPos[1] = anchorLoc[1] - windowHeight;
+        } else {
+            windowPos[0] = screenWidth - windowWidth;
+            windowPos[1] = anchorLoc[1] + anchorHeight;
+        }
+        return windowPos;
     }
 
-    public void addLable(WebView myWebView) {
-        presenter.addLable(myWebView.getTitle(), myWebView.getUrl());
-        Log.d(TAG, "addLable: " + myWebView.getTitle());
-    }
+
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (myWebView.getUrl().equals("file:///android_asset/askToJump.html") && keyCode == KeyEvent.KEYCODE_BACK ){
-            Log.i("TAG", "same");
-            myWebView.goBack();
-            myWebView.goBack();
-            return false;
-        }
-        else if (keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             Log.e("TAG", "onBackPressed  22222 : 按下了返回键");
             myWebView.goBack();
             return false;
@@ -271,32 +253,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             return super.onKeyDown(keyCode, event);
         }
     }
-
-    //WebChromeClient主要辅助WebView处理Javascript的对话框、网站图标、网站title、加载进度等
-    private WebChromeClient webChromeClient=new WebChromeClient(){
-        //监听js alert弹窗事件
-        @Override
-        public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
-            Log.i("get到的参数", message);
-            if (message.equals("1")){
-                Log.i("弹窗", "继续访问:" + webViewClient.blockUrl);
-                webView.loadUrl(webViewClient.blockUrl);
-            } else {
-                Log.i("弹窗", "停止访问");
-                webView.goBack();
-                webView.goBack();
-            }
-
-            result.confirm();
-            return true;
-        }
-
-        //加载进度回调
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            progressBar.setProgress(newProgress);
-        }
-    };
 
 }
 

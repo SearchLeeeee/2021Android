@@ -32,10 +32,16 @@
         android:id="@+id/searchbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white"
+        app:showAsAction="always"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:showAsAction="always" />
+        android:background="#eeebeb"
+        />
+
+
+
+
+
     <ListView
         android:id="@+id/listitem"
         android:layout_width="wrap_content"
@@ -58,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
-        android:background="@color/white"
+        android:background="#eeebeb"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -89,12 +95,12 @@
             app:srcCompat="@drawable/home" />
 
         <ImageView
-            android:id="@+id/fowardButton"
+            android:id="@+id/newsButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/Fire" />
+            app:srcCompat="@drawable/fire" />
 
         <ImageView
             android:id="@+id/menuButton"

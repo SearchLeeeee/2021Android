@@ -19,6 +19,7 @@ import com.example.webviewapp.common.base.BaseFragment;
 import com.example.webviewapp.contract.HistoryContract;
 import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.FragmentHistoryBinding;
+import com.example.webviewapp.databinding.FragmentLabelBinding;
 import com.example.webviewapp.presenter.HistoryPresenter;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        viewBinding = FragmentHistoryBinding.inflate(getLayoutInflater());
         presenter = new HistoryPresenter(this);
         viewBinding = FragmentHistoryBinding.inflate(getLayoutInflater());
         initData();
