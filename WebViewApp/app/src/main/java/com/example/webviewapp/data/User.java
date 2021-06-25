@@ -3,6 +3,8 @@ package com.example.webviewapp.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.sql.Struct;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -30,12 +32,18 @@ public class User extends RealmObject implements Parcelable {
     private long primaryKey;
     private long uid;
     private long password;
+    private String Email;
 
     public User() {
     }
 
     public User(long uid) {
         this.uid = uid;
+    }
+
+    //fb
+    public User(String Email){
+        this.Email = Email;
     }
 
 
