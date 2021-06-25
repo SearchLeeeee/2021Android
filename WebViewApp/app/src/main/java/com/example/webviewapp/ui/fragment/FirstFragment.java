@@ -1,9 +1,12 @@
 package com.example.webviewapp.ui.fragment;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,11 @@ import com.example.webviewapp.contract.LoginContract;
 import com.example.webviewapp.databinding.FragmentFirstBinding;
 import com.example.webviewapp.presenter.LoginPresenter;
 import com.example.webviewapp.ui.activity.SignupActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -28,6 +36,11 @@ public class FirstFragment extends Fragment implements LoginContract.View {
 
     LoginContract.Presenter presenter = new LoginPresenter();
     private FragmentFirstBinding binding;
+
+    //fb
+    FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListner;
+    FirebaseUser mUser;
 
     @Override
     public View onCreateView(
@@ -51,13 +64,14 @@ public class FirstFragment extends Fragment implements LoginContract.View {
      * 还有登录逻辑
      * 数据可以与数据库交互
      */
+    AlertDialog dialog;
     private void loginwindows() {
 
         /**
          * 登录窗口的控件绑定
          */
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         View dialogview = View.inflate(getContext(), R.layout.loginwindow, null);
         Button loginButton = dialogview.findViewById(R.id.loginButton);
         Button cancelButton = dialogview.findViewById(R.id.cancelButton);
@@ -67,6 +81,26 @@ public class FirstFragment extends Fragment implements LoginContract.View {
         dialog.setView(dialogview);
         dialog.show();
 
+        //fb
+        mAuth = FirebaseAuth.getInstance();
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mAuthListner = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (mUser != null) {
+                    dialog.dismiss();
+                    NavHostFragment.findNavController(FirstFragment.this)
+                            .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                    onDestroyView();
+                }
+                else
+                {
+                    Log.d("TAG","AuthStateChanged:Logout");
+                }
+
+            }
+        };
+
         //
         /**
          * 登录事件绑定
@@ -74,18 +108,23 @@ public class FirstFragment extends Fragment implements LoginContract.View {
          */
 
         loginButton.setOnClickListener(v -> {
-            if (presenter.Login(uidtext.getText(), passwordtext.getText())) {
-                dialog.dismiss();
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
-                onDestroyView();
-            } else {
-                Toast.makeText(getContext(), "密码错误", Toast.LENGTH_SHORT).show();
-            }
+//            if (presenter.Login(uidtext.getText(), passwordtext.getText())) {
+//                dialog.dismiss();
+//                NavHostFragment.findNavController(FirstFragment.this)
+//                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+//                onDestroyView();
+//            } else {
+//                Toast.makeText(getContext(), "密码错误", Toast.LENGTH_SHORT).show();
+//            }
+
+            String email, password;
+            email = uidtext.getText().toString().trim();
+            password = passwordtext.getText().toString().trim();
+            userSign(email, password);
+            boolean isLogin;
         });
 
         cancelButton.setOnClickListener(v -> dialog.dismiss());
-
 
     }
 
@@ -94,5 +133,55 @@ public class FirstFragment extends Fragment implements LoginContract.View {
         super.onDestroyView();
         binding = null;
     }
+
+    //fb
+    private void userSign(String email, String password) {
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(getContext(), "Enter the correct Email", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (TextUtils.isEmpty(password)) {
+            Toast.makeText(getContext(), "Enter the correct password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //fb
+        ProgressDialog mDialog;
+        mDialog = new ProgressDialog(getContext());
+
+
+        mDialog.setMessage("Loging in please wait...");
+        mDialog.setIndeterminate(true);
+        mDialog.show();
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (!task.isSuccessful()) {
+                    mDialog.dismiss();
+                    Toast.makeText(getContext(), "Login not successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    mDialog.dismiss();
+                    checkIfEmailVerified();
+                }
+            }
+        });
+    }
+
+    //This function helps in verifying whether the email is verified or not.
+    private void checkIfEmailVerified(){
+        FirebaseUser users= FirebaseAuth.getInstance().getCurrentUser();
+        boolean emailVerified=users.isEmailVerified();
+        if(!emailVerified){
+            Toast.makeText(getContext(),"Verify the Email Id",Toast.LENGTH_SHORT).show();
+            mAuth.signOut();
+//            finish();
+        }
+        else {
+            dialog.dismiss();
+            NavHostFragment.findNavController(FirstFragment.this)
+                    .navigate(R.id.action_FirstFragment_to_SecondFragment);
+            onDestroyView();
+        }
+    }
+
 
 }
