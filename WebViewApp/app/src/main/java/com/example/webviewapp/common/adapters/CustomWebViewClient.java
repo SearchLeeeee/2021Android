@@ -3,19 +3,11 @@ package com.example.webviewapp.common.adapters;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.example.webviewapp.common.base.BaseApplication;
 import com.example.webviewapp.common.utils.AdBlocker;
-import com.example.webviewapp.ui.activity.MainActivity;
-
 import com.example.webviewapp.contract.MainContract;
-import com.example.webviewapp.presenter.MainPresenter;
-
 
 /**
  * 监听webview
@@ -23,18 +15,21 @@ import com.example.webviewapp.presenter.MainPresenter;
 public class CustomWebViewClient extends WebViewClient {
     private static final String TAG = "CustomWebViewClient";
 
-    public String blockUrl="";
+    public String blockUrl = "";
 
-    MainContract.Presenter presenter = new MainPresenter();
+    private final MainContract.Presenter presenter;
 
+    public CustomWebViewClient(MainContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        Log.i("clientCheckUrl","拦截url:"+url);
-        if (AdBlocker.isAd(url)){
+        if (AdBlocker.isAd(url)) {
             blockUrl = url;
             view.loadUrl("file:///android_asset/askToJump.html");
-            return true;//表示我已经处理过了
+            //表示我已经处理过了
+            return true;
         }
         return super.shouldOverrideUrlLoading(view, url);
     }

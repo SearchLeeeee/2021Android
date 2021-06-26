@@ -30,6 +30,7 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
 
     private final Map<Integer, Boolean> checkboxMap = new HashMap<>();
     private final Map<Integer, Boolean> dateMap = new HashMap<>();
+
     // 判断RecyclerView是否正在计算layout或滑动，不在计算的时候通知适配器更新
     private boolean onBind;
 

@@ -37,7 +37,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:showAsAction="always" />
     <ListView
-        android:id="@+id/listitem"
+        android:id="@+id/list_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +94,7 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/Fire" />
+            app:srcCompat="@drawable/fire" />
 
         <ImageView
             android:id="@+id/menuButton"

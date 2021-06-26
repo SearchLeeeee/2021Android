@@ -29,7 +29,6 @@ public class RecordActivity extends BaseActivity {
         viewBinding.backBtn.setOnClickListener(v -> finish());
     }
 
-
     private void initViewPager() {
         mFragmentList.add(new LabelFragment());
         mTitleList.add("书签");

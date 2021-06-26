@@ -12,6 +12,6 @@ public interface MainContract {
 
         List<String> getHistory();
 
-        void addLable(String url, String title);
+        void addLabel(String url, String title);
     }
 }
