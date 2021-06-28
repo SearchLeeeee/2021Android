@@ -8,9 +8,10 @@ import androidx.annotation.RequiresApi;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.webviewapp.common.base.BaseApplication;
+import com.example.webviewapp.data.EventManager;
 import com.example.webviewapp.data.User;
 import com.example.webviewapp.databinding.ActivityCloudBinding;
-import com.example.webviewapp.ui.activity.SignUpActivity;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
@@ -28,6 +29,8 @@ import com.tencent.cos.xml.transfer.TransferStateListener;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
 import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -40,12 +43,24 @@ import java.nio.charset.StandardCharsets;
 
 public class CloudUser {
     private static final String TAG = "CloudAddUser";
+    private volatile static CloudUser instance;
+
     private final String bucket = "webview-1306366413"; //存储桶，格式：BucketName-APPID
     public ActivityCloudBinding vb;
     CosXmlService cosXmlService;
     private Context context;
     private String region;
 
+    public static CloudUser get() {
+        if (instance == null) {
+            synchronized (CloudUser.class) {
+                if (instance == null) {
+                    instance = new CloudUser(BaseApplication.getInstance());
+                }
+            }
+        }
+        return instance;
+    }
 
     public CloudUser(Context context) {
         this.context = context;
@@ -211,6 +226,7 @@ public class CloudUser {
                 user.setEmail(object.getString("email"));
                 Log.i(TAG, "onSuccess: " + object.getString("email"));
                 Log.i(TAG, "onSuccess: " + user.getEmail());
+                EventBus.getDefault().post(new EventManager.EmailEvent(user.getEmail()));
             }
 
             @Override

@@ -7,7 +7,6 @@ import com.example.webviewapp.data.DataManager;
 public class BaseApplication extends Application {
 
     private static BaseApplication applicationContext;
-  //  private static Handler handler;
 
     public static BaseApplication getInstance() {
         return applicationContext;
@@ -15,8 +14,8 @@ public class BaseApplication extends Application {
 
     @Override
     public void onCreate() {
-        applicationContext = this;
         super.onCreate();
+        applicationContext = this;
 
         initApplication();
     }
