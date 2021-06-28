@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -176,6 +177,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         viewBinding.webview.setWebChromeClient(webChromeClient);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void initUtils() {
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
@@ -200,14 +202,13 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public void popWindow() {
         // PopWindow 布局发
         View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
-
         final PopupWindow popWindow = new PopupWindow(view,
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popWindow.setTouchable(true);
         popWindow.setTouchInterceptor((v, event) -> {
             return false;
         });
-        popWindow.showAtLocation(view, 80, 0, 0);
+        popWindow.showAtLocation(view,Gravity.BOTTOM|Gravity.LEFT,0,-40);
         ImageView userButton = view.findViewById(R.id.user_image);
         ImageView historyButton = view.findViewById(R.id.history_image);
         ImageView addLabel = view.findViewById(R.id.addbookmark_image);
@@ -219,6 +220,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         });
         addLabel.setOnClickListener(v -> addLabel(viewBinding.webview));
     }
+
+
 
     public void addLabel(WebView myWebView) {
         presenter.addLabel(myWebView.getTitle(), myWebView.getUrl());

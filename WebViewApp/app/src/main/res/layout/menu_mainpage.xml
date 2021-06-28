@@ -2,121 +2,175 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@color/black"
     android:layout_height="match_parent">
-
-    <LinearLayout
-        android:id="@+id/menu"
+    <RelativeLayout
+        android:id="@+id/menu_whole"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <RelativeLayout
-            android:id="@+id/addbookmark"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginVertical="5dp"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/addbookmark_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:text="添加"
-                android:textColor="@color/black"
-                android:textSize="14sp"/>
+        <ImageView
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/line"
+            android:paddingVertical="10dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/menu1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_below="@id/line">
 
             <ImageView
-                android:id="@+id/addbookmark_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/addbookmark_text"
-                android:layout_marginBottom="3dp"
-                android:layout_weight="1"
-                android:src="@drawable/uncollected" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/bookmarkAndhistory"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginVertical="5dp"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/history_text"
-                android:layout_width="match_parent"
+                android:id="@+id/user"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:text="书签历史"
-                android:textColor="@color/black"
-                android:textSize="14sp"/>
-            <ImageView
-                android:id="@+id/history_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/history_text"
-                android:layout_weight="1"
-                android:src="@drawable/record" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/refresh"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginVertical="5dp"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/refresh_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:text="刷新"
-                android:textColor="@color/black"
-                android:textSize="14sp"/>
-            <ImageView
-                android:id="@+id/refresh_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/refresh_text"
-                android:layout_weight="1"
-                android:src="@drawable/refresh" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/user_button"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginVertical="5dp"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/user_button_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:text="刷新"
-                android:textColor="@color/black"
-                android:textSize="14sp"/>
-
-            <ImageView
-                android:id="@+id/user_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/user_button_text"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:src="@drawable/user" />
-        </RelativeLayout>
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/user_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center_vertical"
+                android:text="用户中心"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_below="@id/menu1">
+
+            <RelativeLayout
+                android:id="@+id/addbookmark"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/addbookmark_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="添加"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/addbookmark_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/addbookmark_text"
+                    android:layout_weight="1"
+                    android:src="@drawable/uncollected" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/bookmarkAndhistory"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/history_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="书签历史"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/history_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/history_text"
+                    android:layout_weight="1"
+                    android:src="@drawable/record" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/refresh"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/refresh_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="刷新"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/refresh_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/refresh_text"
+                    android:layout_weight="1"
+                    android:src="@drawable/refresh" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/user_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/user_button_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="退出"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/user_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/user_button_text"
+                    android:layout_weight="1"
+                    android:src="@drawable/quit" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
