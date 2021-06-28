@@ -7,9 +7,9 @@
     android:orientation="vertical"
     tools:context=".ui.activity.RecordActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:background="@color/white">
 
         <ImageButton
@@ -40,8 +40,10 @@
             android:layout_width="match_parent"
             android:layout_toRightOf="@id/back_btn"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="9"
             android:background="@color/white"
-            android:scrollbarSize="22dp" />
+            android:scrollbarSize="20dp" />
 
         <!--        </com.google.android.material.appbar.AppBarLayout>-->
 
@@ -64,7 +66,7 @@
         <!--            app:srcCompat="@drawable/search"-->
         <!--            android:visibility="gone"/>-->
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"

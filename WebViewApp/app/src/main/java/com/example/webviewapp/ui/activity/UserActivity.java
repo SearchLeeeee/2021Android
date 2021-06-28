@@ -32,9 +32,9 @@ public class UserActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         getSupportActionBar().hide();
-        binding.fab.setOnClickListener(view ->
-                Snackbar.make(view, "没有收到讯息", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show());
+//        binding.fab.setOnClickListener(view ->
+//                Snackbar.make(view, "没有收到讯息", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show());
     }
 
     @Override

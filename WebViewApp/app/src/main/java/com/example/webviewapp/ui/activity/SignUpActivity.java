@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.webviewapp.contract.SignupContract;
 import com.example.webviewapp.data.User;
-import com.example.webviewapp.databinding.SignupactivityBinding;
+import com.example.webviewapp.databinding.FragmentRegisterBinding;
 import com.example.webviewapp.presenter.SignUpPresenter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity implements SignupContract.View {
     private static final String TAG = "SignUpActivity";
-    public SignupactivityBinding viewBinding;
+    public FragmentRegisterBinding viewBinding;
     SignupContract.Presenter presenter;
     //fb
     String Email, Password;
@@ -39,7 +39,7 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new SignUpPresenter();
-        viewBinding = SignupactivityBinding.inflate(getLayoutInflater());
+        viewBinding = FragmentRegisterBinding.inflate(getLayoutInflater());
         setContentView(viewBinding.getRoot());
 
         //fb
