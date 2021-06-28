@@ -23,18 +23,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Date;
-
-public class SignupActivity extends AppCompatActivity implements SignupContract.View {
-
-    private static final String TAG = "SignupActivity";
+public class SignUpActivity extends AppCompatActivity implements SignupContract.View {
+    private static final String TAG = "SignUpActivity";
     public SignupactivityBinding viewBinding;
     SignupContract.Presenter presenter;
     //fb
-    String Email,Password;
+    String Email, Password;
     ProgressDialog mDialog;
     FirebaseAuth mAuth;
-    DatabaseReference mdatabase;
+    DatabaseReference mDatabase;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -48,10 +45,9 @@ public class SignupActivity extends AppCompatActivity implements SignupContract.
         //fb
         mDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
-        mdatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        init();
-
+        initButton();
     }
 
     /**
@@ -59,8 +55,8 @@ public class SignupActivity extends AppCompatActivity implements SignupContract.
      */
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void init() {
-        viewBinding.signupButton.setOnClickListener(v -> signup());
+    public void initButton() {
+        viewBinding.signupButton.setOnClickListener(v -> signUp());
         viewBinding.cancelButton.setOnClickListener(v -> back());
     }
 
@@ -69,7 +65,7 @@ public class SignupActivity extends AppCompatActivity implements SignupContract.
      * 将注册数据写进数据库中
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void signup() {
+    public void signUp() {
 //        if (!presenter.ContainsUid(viewBinding.UserNumber.getText())) {
 //            presenter.SignUp(viewBinding.UserNumber.getText(), viewBinding.loginPassword.getText());
 //            Toast.makeText(getApplicationContext(), "注册成功", Toast.LENGTH_SHORT).show();
@@ -137,13 +133,12 @@ public class SignupActivity extends AppCompatActivity implements SignupContract.
     }
 
     private void createAnewUser(String uid) {
-        User user = BuildNewuser();
-        //无法添加到数据库
-        mdatabase.child(uid).setValue(user);
+        User user = BuildNewUser();
+        //TODO:无法添加到数据库
+        mDatabase.child(uid).setValue(user);
     }
 
-
-    private User BuildNewuser(){
+    private User BuildNewUser() {
         return new User(
                 getUserEmail()
         );

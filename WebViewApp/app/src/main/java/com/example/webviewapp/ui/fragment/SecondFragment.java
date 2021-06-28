@@ -1,6 +1,5 @@
 package com.example.webviewapp.ui.fragment;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,13 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.webviewapp.databinding.FragmentSecondBinding;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-
-
-//import com.example.webviewapp.ui.activity.databinding.FragmentSecondBinding;
 
 public class SecondFragment extends Fragment {
 
@@ -29,7 +23,6 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState) {
         binding = FragmentSecondBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -56,6 +49,4 @@ public class SecondFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
 }

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.example.webviewapp.ui.activity.SignUpActivity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -23,13 +24,11 @@ import com.example.webviewapp.R;
 import com.example.webviewapp.contract.LoginContract;
 import com.example.webviewapp.databinding.FragmentFirstBinding;
 import com.example.webviewapp.presenter.LoginPresenter;
-import com.example.webviewapp.ui.activity.SignupActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class FirstFragment extends Fragment implements LoginContract.View {
@@ -47,16 +46,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
     ) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
-
         return binding.getRoot();
-    }
-
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-        binding.buttonFirst.setOnClickListener(view1 -> loginwindows());
-        binding.signupButton.setOnClickListener(v -> startActivity(new Intent(getContext(), SignupActivity.class)));
     }
 
     /**
@@ -64,21 +54,26 @@ public class FirstFragment extends Fragment implements LoginContract.View {
      * 还有登录逻辑
      * 数据可以与数据库交互
      */
-    AlertDialog dialog;
-    private void loginwindows() {
+    private AlertDialog dialog;
 
-        /**
-         * 登录窗口的控件绑定
-         */
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.buttonFirst.setOnClickListener(view1 -> loginWindow());
+        binding.buttonSignup.setOnClickListener(v -> startActivity(new Intent(getActivity(),SignUpActivity.class)));
+    }
+
+    private void loginWindow() {
+        // 登录窗口的控件绑定
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.create();
-        View dialogview = View.inflate(getContext(), R.layout.loginwindow, null);
-        Button loginButton = dialogview.findViewById(R.id.loginButton);
-        Button cancelButton = dialogview.findViewById(R.id.cancelButton);
-        EditText uidtext = dialogview.findViewById(R.id.UserNumber);
-        EditText passwordtext = dialogview.findViewById(R.id.loginPassword);
+        View dialogView = View.inflate(getContext(), R.layout.loginwindow, null);
+        Button loginButton = dialogView.findViewById(R.id.loginButton);
+        Button cancelButton = dialogView.findViewById(R.id.cancelButton);
+        EditText uidtext = dialogView.findViewById(R.id.UserNumber);
+        EditText passwordtext = dialogView.findViewById(R.id.loginPassword);
 
-        dialog.setView(dialogview);
+        dialog.setView(dialogView);
         dialog.show();
 
         //fb
@@ -92,21 +87,14 @@ public class FirstFragment extends Fragment implements LoginContract.View {
                     NavHostFragment.findNavController(FirstFragment.this)
                             .navigate(R.id.action_FirstFragment_to_SecondFragment);
                     onDestroyView();
-                }
-                else
-                {
-                    Log.d("TAG","AuthStateChanged:Logout");
+                } else {
+                    Log.d("TAG", "AuthStateChanged:Logout");
                 }
 
             }
         };
 
-        //
-        /**
-         * 登录事件绑定
-         *
-         */
-
+        // 登录事件绑定
         loginButton.setOnClickListener(v -> {
 //            if (presenter.Login(uidtext.getText(), passwordtext.getText())) {
 //                dialog.dismiss();
@@ -125,7 +113,6 @@ public class FirstFragment extends Fragment implements LoginContract.View {
         });
 
         cancelButton.setOnClickListener(v -> dialog.dismiss());
-
     }
 
     @Override
@@ -148,7 +135,6 @@ public class FirstFragment extends Fragment implements LoginContract.View {
         ProgressDialog mDialog;
         mDialog = new ProgressDialog(getContext());
 
-
         mDialog.setMessage("Loging in please wait...");
         mDialog.setIndeterminate(true);
         mDialog.show();
@@ -166,22 +152,21 @@ public class FirstFragment extends Fragment implements LoginContract.View {
         });
     }
 
-    //This function helps in verifying whether the email is verified or not.
-    private void checkIfEmailVerified(){
-        FirebaseUser users= FirebaseAuth.getInstance().getCurrentUser();
-        boolean emailVerified=users.isEmailVerified();
-        if(!emailVerified){
-            Toast.makeText(getContext(),"Verify the Email Id",Toast.LENGTH_SHORT).show();
+    /**
+     * 检查将要注册的email是否已经注册了
+     */
+    private void checkIfEmailVerified() {
+        FirebaseUser users = FirebaseAuth.getInstance().getCurrentUser();
+        boolean emailVerified = users.isEmailVerified();
+        if (!emailVerified) {
+            Toast.makeText(getContext(), "Verify the Email Id", Toast.LENGTH_SHORT).show();
             mAuth.signOut();
 //            finish();
-        }
-        else {
+        } else {
             dialog.dismiss();
             NavHostFragment.findNavController(FirstFragment.this)
                     .navigate(R.id.action_FirstFragment_to_SecondFragment);
             onDestroyView();
         }
     }
-
-
 }

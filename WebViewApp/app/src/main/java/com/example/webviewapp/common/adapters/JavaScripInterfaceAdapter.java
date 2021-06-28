@@ -47,6 +47,7 @@ public class JavaScripInterfaceAdapter {
         context.startActivity(intent);
     }
 
+    //TODO:为什么要打日志？不需要相应操作吗
     @JavascriptInterface
     public void  goonView(String str){
         Log.i("goonView","继续访问:"+str);

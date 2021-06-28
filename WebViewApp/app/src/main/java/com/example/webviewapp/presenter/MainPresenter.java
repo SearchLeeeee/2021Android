@@ -12,7 +12,7 @@ import java.util.List;
 public class MainPresenter implements MainContract.Presenter {
 
     public static final int IS_HISTORY = 1;
-    public static final int IS_LABLE = 2;
+    public static final int IS_LABEL = 2;
     private final MainContract.View view;
 
     public MainPresenter(MainContract.View view) {
@@ -37,9 +37,8 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void addLable(String url, String title) {
-        Record record = new Record(100, System.currentTimeMillis(), url, title, "test", IS_LABLE);
+    public void addLabel(String url, String title) {
+        Record record = new Record(100, System.currentTimeMillis(), url, title, "test", IS_LABEL);
         DataManager.get().addRecord(record);
-        //  Log.d("TAG", "addLable: " + DataManager.get().labelList.get(0).getTitle());
     }
 }

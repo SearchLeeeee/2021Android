@@ -10,7 +10,7 @@ import com.example.webviewapp.data.User;
 import java.util.List;
 
 public class SignUpPresenter implements SignupContract.Presenter {
-
+//TODO：改正确MVP
     @Override
     public void SignUp(Editable uidText, Editable passwordText) {
         long uid = Long.parseLong(uidText.toString());

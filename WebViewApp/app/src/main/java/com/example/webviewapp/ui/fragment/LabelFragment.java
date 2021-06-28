@@ -45,7 +45,6 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
         return viewBinding.getRoot();
     }
 
-
     private void initData() {
         records = presenter.getData();
         initView(records);
@@ -102,7 +101,6 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
         presenter.refreshRecord();
         adapter.notifyDataSetChanged();
     }
-
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
