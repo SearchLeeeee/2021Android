@@ -30,6 +30,7 @@ import com.example.webviewapp.common.base.BaseActivity;
 import com.example.webviewapp.common.utils.AdBlocker;
 import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
+import com.example.webviewapp.data.cloud.CloudActivity;
 import com.example.webviewapp.databinding.ActivityMainBinding;
 import com.example.webviewapp.presenter.MainPresenter;
 
@@ -94,7 +95,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         initButton();
         initSearchBar();
 
-        //  startActivity(new Intent(getApplication(), UserActivity.class));
+        startActivity(new Intent(getApplication(), CloudActivity.class));
     }
 
     private void initSearchBar() {
