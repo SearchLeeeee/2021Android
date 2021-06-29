@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.webviewapp.common.utils.Cloud.CloudUser;
 import com.example.webviewapp.contract.SignupContract;
 import com.example.webviewapp.data.User;
 import com.example.webviewapp.databinding.SignupactivityBinding;
@@ -136,6 +137,9 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
         User user = BuildNewUser();
         //TODO:无法添加到数据库
         mDatabase.child(uid).setValue(user);
+        //腾讯云存储
+        CloudUser cloudUser = new CloudUser(this);
+        cloudUser.uploadUser(uid, user);
     }
 
     private User BuildNewUser() {

@@ -1,17 +1,16 @@
-package com.example.webviewapp.data.cloud;
+package com.example.webviewapp.common.utils.Cloud;
 
 import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.webviewapp.common.base.BaseActivity;
-import com.example.webviewapp.data.Record;
+import com.example.webviewapp.data.User;
 import com.example.webviewapp.databinding.ActivityCloudBinding;
+import com.example.webviewapp.ui.activity.SignUpActivity;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
@@ -39,15 +38,18 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
-import static com.example.webviewapp.data.DataManager.IS_HISTORY;
-
-public class CloudActivity extends BaseActivity {
-    private static final String TAG = "CloudActivity";
+public class CloudUser {
+    private static final String TAG = "CloudAddUser";
     private final String bucket = "webview-1306366413"; //存储桶，格式：BucketName-APPID
     public ActivityCloudBinding vb;
     CosXmlService cosXmlService;
     private Context context;
     private String region;
+
+
+    public CloudUser(Context context) {
+        this.context = context;
+    }
 
     /**
      * 从文件路径读取字符流
@@ -77,30 +79,6 @@ public class CloudActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        initCloud();
-        initData();
-//        transferUploadBytes();
-        transferDownloadObject();
-    }
-
-    private void initData() {
-        try {
-            // 写入一个记录对象
-            Record record = new Record(100, 1, "test2", "IS_HISTORY", "test", IS_HISTORY);
-            FileWriter fileWriter = new FileWriter(context.getExternalCacheDir().toString() + "/testLocal.json");
-            PrintWriter printWriter = new PrintWriter(fileWriter);
-            printWriter.write(JSON.toJSONString(record));
-            fileWriter.close();
-            printWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void initCloud() {
         String secretId = "AKIDKTO5WgYAVZNuAAuNZU8VcS0HOEn55pIg"; // 密钥id SecretId
         String secretKey = "92ez5vVopa5IEtHOEn68tNaWBYeU2JJ2"; // 密钥key SecretKey
@@ -108,7 +86,7 @@ public class CloudActivity extends BaseActivity {
                 new ShortTimeCredentialProvider(secretId, secretKey, 300);
         region = "ap-guangzhou";
         // 创建 CosXmlServiceConfig 对象，根据需要修改默认的配置参数
-        context = CloudActivity.this;
+        context = context.getApplicationContext();
         CosXmlServiceConfig serviceConfig = new CosXmlServiceConfig.Builder()
                 .setRegion(region)
                 .isHttps(true) // 使用 HTTPS 请求, 默认为 HTTP 请求
@@ -117,20 +95,35 @@ public class CloudActivity extends BaseActivity {
         cosXmlService = new CosXmlService(context, serviceConfig, myCredentialProvider);
     }
 
-    private void transferUploadBytes() {
+    private void initData(User user) {
+        try {
+            FileWriter fileWriter = new FileWriter(context.getExternalCacheDir().toString() + "/userLocal.json");
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            printWriter.write(JSON.toJSONString(user));
+            fileWriter.close();
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //新增用户、更新用户
+    public void uploadUser(String uid, User user) {
+        initCloud();
+        initData(user);
         // 初始化 TransferConfig，这里使用默认配置，如果需要定制，请参考 SDK 接口文档
         TransferConfig transferConfig = new TransferConfig.Builder().build();
         // 初始化 TransferManager
         TransferManager transferManager = new TransferManager(cosXmlService,
                 transferConfig);
 
-        String cosPath = "test.json"; //对象在存储桶中的位置标识符，即称对象键
-        String srcPath = new File(context.getExternalCacheDir(), "testLocal.json")
+        String srcPath = new File(context.getExternalCacheDir(), "userLocal.json")
                 .toString(); //本地文件的绝对路径
         //若存在初始化分块上传的 UploadId，则赋值对应的 uploadId 值用于续传；否则，赋值 null
         String uploadId = null;
         // 上传文件
-        COSXMLUploadTask cosxmlUploadTask = transferManager.upload(bucket, cosPath,
+        //uid是对象在存储桶中的位置标识符，即称对象键，桶中没有对象键--新增；桶中有对象键--修改
+        COSXMLUploadTask cosxmlUploadTask = transferManager.upload(bucket, uid,
                 srcPath, uploadId);
         //设置上传进度回调
         cosxmlUploadTask.setCosXmlProgressListener(new CosXmlProgressListener() {
@@ -172,7 +165,8 @@ public class CloudActivity extends BaseActivity {
     /**
      * 高级接口下载对象
      */
-    private void transferDownloadObject() {
+    public User getUserCloud(String uid) {
+        initCloud();
         //.cssg-snippet-body-start:[transfer-download-object]
         // 高级下载接口支持断点续传，所以会在下载前先发起 HEAD 请求获取文件信息。
         // 如果您使用的是临时密钥或者使用子账号访问，请确保权限列表中包含 HeadObject 的权限。
@@ -183,17 +177,17 @@ public class CloudActivity extends BaseActivity {
         TransferManager transferManager = new TransferManager(cosXmlService,
                 transferConfig);
 
-        String cosPath = "test.json"; //对象在存储桶中的位置标识符，即称对象键
         //本地目录路径
         String savePathDir = context.getExternalCacheDir().toString();
         //本地保存的文件名，若不填（null），则与 COS 上的文件名一样
         String savedFileName = "testFromDownload.json";
+        User user = new User();
 
         Context applicationContext = context.getApplicationContext(); // application
         // context
         COSXMLDownloadTask cosxmlDownloadTask =
                 transferManager.download(applicationContext,
-                        bucket, cosPath, savePathDir, savedFileName);
+                        bucket, uid, savePathDir, savedFileName);
 
         //设置下载进度回调
         cosxmlDownloadTask.setCosXmlProgressListener(new CosXmlProgressListener() {
@@ -214,20 +208,9 @@ public class CloudActivity extends BaseActivity {
                 String json = readJsonFile(uri);
                 // fastjson过程
                 JSONObject object = JSON.parseObject(json);
-                Record record = new Record();
-                record.setDetails(object.getString("details"));
-                record.setTitle(object.getString("title"));
-                record.setTime(object.getLong("time"));
-                record.setPrimaryKey(object.getLong("primaryKey"));
-                record.setUid(object.getLong("uid"));
-                record.setUrl(object.getString("url"));
-                // 更新必须在ui线程
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        vb.text.setText(record.getDetails());
-                    }
-                });
+                user.setEmail(object.getString("email"));
+                Log.i(TAG, "onSuccess: " + object.getString("email"));
+                Log.i(TAG, "onSuccess: " + user.getEmail());
             }
 
             @Override
@@ -250,6 +233,7 @@ public class CloudActivity extends BaseActivity {
             }
         });
         //.cssg-snippet-body-end
+        return user;
     }
 
 }
