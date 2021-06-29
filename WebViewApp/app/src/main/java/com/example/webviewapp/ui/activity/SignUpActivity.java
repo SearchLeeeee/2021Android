@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -11,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.webviewapp.R;
 import com.example.webviewapp.contract.SignupContract;
 import com.example.webviewapp.data.User;
 import com.example.webviewapp.databinding.FragmentRegisterBinding;
@@ -27,6 +30,8 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
     private static final String TAG = "SignUpActivity";
     public FragmentRegisterBinding viewBinding;
     SignupContract.Presenter presenter;
+    private int clicked_image;
+    boolean flag=false;
     //fb
     String Email, Password;
     ProgressDialog mDialog;
@@ -58,6 +63,12 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
     public void initButton() {
         viewBinding.signupButton.setOnClickListener(v -> signUp());
         viewBinding.cancelButton.setOnClickListener(v -> back());
+        viewBinding.includeAvatarPicker.imageView.setOnClickListener(v ->click(viewBinding.includeAvatarPicker.imageView));
+        viewBinding.includeAvatarPicker.imageView2.setOnClickListener(v->click(viewBinding.includeAvatarPicker.imageView2));
+        viewBinding.includeAvatarPicker.imageView3.setOnClickListener(v->click(viewBinding.includeAvatarPicker.imageView3));
+        viewBinding.includeAvatarPicker.imageView4.setOnClickListener(v->click(viewBinding.includeAvatarPicker.imageView4));
+        viewBinding.includeAvatarPicker.imageView5.setOnClickListener(v->click(viewBinding.includeAvatarPicker.imageView5));
+        viewBinding.includeAvatarPicker.imageView6.setOnClickListener(v->click(viewBinding.includeAvatarPicker.imageView6));
     }
 
     /**
@@ -150,5 +161,57 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
 
     public void back() {
         this.finish();
+    }
+
+    public void click(View v) {
+        if(flag==true)
+        {
+            switch (clicked_image){
+            case R.id.imageView:
+                viewBinding.includeAvatarPicker.imageView.setImageResource(R.drawable.circle);
+                break;
+            case R.id.imageView2:
+                viewBinding.includeAvatarPicker.imageView2.setImageResource(R.drawable.circle);
+                break;
+            case R.id.imageView3:
+                viewBinding.includeAvatarPicker.imageView3.setImageResource(R.drawable.circle);
+                break;
+            case R.id.imageView4:
+                viewBinding.includeAvatarPicker.imageView4.setImageResource(R.drawable.circle);
+                break;
+            case R.id.imageView5:
+                viewBinding.includeAvatarPicker.imageView5.setImageResource(R.drawable.circle);
+                break;
+            case R.id.imageView6:
+                viewBinding.includeAvatarPicker.imageView6.setImageResource(R.drawable.circle);
+                break;
+            default:
+                break;
+            }
+        }
+        switch (v.getId()) {
+            case R.id.imageView:
+                viewBinding.includeAvatarPicker.imageView.setImageResource(R.drawable.purple_frame);
+                break;
+            case R.id.imageView2:
+                viewBinding.includeAvatarPicker.imageView2.setImageResource(R.drawable.purple_frame);
+                break;
+            case R.id.imageView3:
+                viewBinding.includeAvatarPicker.imageView3.setImageResource(R.drawable.purple_frame);
+                break;
+            case R.id.imageView4:
+                viewBinding.includeAvatarPicker.imageView4.setImageResource(R.drawable.purple_frame);
+                break;
+            case R.id.imageView5:
+                viewBinding.includeAvatarPicker.imageView5.setImageResource(R.drawable.purple_frame);
+                break;
+            case R.id.imageView6:
+                viewBinding.includeAvatarPicker.imageView6.setImageResource(R.drawable.purple_frame);
+                break;
+            default:
+                break;
+        }
+        clicked_image=v.getId();
+        flag=true;
     }
 }
