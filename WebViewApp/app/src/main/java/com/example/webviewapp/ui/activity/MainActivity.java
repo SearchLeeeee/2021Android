@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             if (message.equals("1")) {
                 Log.i("弹窗", "继续访问:" + webViewClient.blockUrl);
                 webView.loadUrl(webViewClient.blockUrl);
-            } else {
+            } else if (message.equals("0")){
                 Log.i("弹窗", "停止访问");
                 webView.goBack();
                 webView.goBack();
@@ -96,7 +96,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         initButton();
         initSearchBar();
 
-        startActivity(new Intent(getApplication(), CloudActivity.class));
+//        startActivity(new Intent(getApplication(), CloudActivity.class));
     }
 
     private void initSearchBar() {

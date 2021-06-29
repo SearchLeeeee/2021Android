@@ -45,7 +45,7 @@
             }
         for(var i=0;i<objs.length;i++)
             {
-                objs[i].οnclick=function()
+                objs[i].onclick=function()
                     {
                         alert("222");
                     }
@@ -67,9 +67,12 @@
                 objs[i].onclick=function()
                     {
                         window.imagelistener.openImage(this.src,array);
+                        //javascript: imagelistener.openImage(this.src,array);
+                        //alert('image')
                     }
             }
     }
+    imageCall()
 </script>
 
 <script>
@@ -78,12 +81,12 @@
         var objs = document.getElementsByTagName('video');
         for(var i=0;i<objs.length;i++)
             {
-                objs[i].onclick=function()
-                    {
-                        window.imagelistener.openVideo(this.src);
-                    }
+                objs[i].addEventListener('play', function () { //播放开始执行的函数
+                    window.imagelistener.openVideo(this.currentSrc);
+                });
             }
     }
+    videoCall()
 </script>
 
 

@@ -56,7 +56,26 @@ public class CustomWebViewClient extends WebViewClient {
     private void initUrl(WebView view) {
         //TODO:获取img的url
         //通过js代码找到标签为img的代码块，设置点击的监听方法与本地的openImage方法进行连接
-        view.loadUrl("javascript:imageCall()");
+        view.loadUrl("javascript:function imageCall()\n" +
+                "    {\n" +
+                "        var objs = document.getElementsByTagName('img');\n" +
+                "        var array=new Array();\n" +
+                "        for(var j=0;j<objs.length;j++)\n" +
+                "            {\n" +
+                "                array[j]=objs[j].src;\n" +
+                "            }\n" +
+                "        for(var i=0;i<objs.length;i++)\n" +
+                "            {\n" +
+                "                objs[i].onclick=function()\n" +
+                "                    {\n" +
+                "                        window.imagelistener.openImage(this.src,array);\n" +
+                "                        //javascript: imagelistener.openImage(this.src,array);\n" +
+                "                        //alert('image')\n" +
+                "                    }\n" +
+                "            }\n" +
+                "    }\n" +
+                "    imageCall()");
+//        view.loadUrl("javascript:imageCall()");
         Log.d(TAG, "initUrl: urls1");
         view.loadUrl("javascript:videoCall()");
     }
