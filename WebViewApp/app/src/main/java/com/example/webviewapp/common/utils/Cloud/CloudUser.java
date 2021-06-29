@@ -182,19 +182,11 @@ public class CloudUser {
      */
     public User getUserCloud(String uid) {
         initCloud();
-        //.cssg-snippet-body-start:[transfer-download-object]
-        // 高级下载接口支持断点续传，所以会在下载前先发起 HEAD 请求获取文件信息。
-        // 如果您使用的是临时密钥或者使用子账号访问，请确保权限列表中包含 HeadObject 的权限。
-
-        // 初始化 TransferConfig，这里使用默认配置，如果需要定制，请参考 SDK 接口文档
         TransferConfig transferConfig = new TransferConfig.Builder().build();
-        //初始化 TransferManager
         TransferManager transferManager = new TransferManager(cosXmlService,
                 transferConfig);
 
-        //本地目录路径
         String savePathDir = context.getExternalCacheDir().toString();
-        //本地保存的文件名，若不填（null），则与 COS 上的文件名一样
         String savedFileName = "testFromDownload.json";
         User user = new User();
 
@@ -241,14 +233,6 @@ public class CloudUser {
                 }
             }
         });
-        //设置任务状态回调，可以查看任务过程
-        cosxmlDownloadTask.setTransferStateListener(new TransferStateListener() {
-            @Override
-            public void onStateChanged(TransferState state) {
-                // todo notify transfer state
-            }
-        });
-        //.cssg-snippet-body-end
         return user;
     }
 

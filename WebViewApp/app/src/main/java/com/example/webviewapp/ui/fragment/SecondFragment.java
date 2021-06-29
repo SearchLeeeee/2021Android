@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class SecondFragment extends Fragment {
+    private static final String TAG = "SecondFragment";
 
     private FragmentSecondBinding binding;
     String email;
@@ -29,14 +30,13 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState) {
         binding = FragmentSecondBinding.inflate(inflater, container, false);
         EventBus.getDefault().register(this);
+        getUserShow();
         return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getUserShow();
-//        binding.textviewSecond.setText(email);
     }
 
 
@@ -49,9 +49,8 @@ public class SecondFragment extends Fragment {
             uid = user.getUid();
 //            email = user.getEmail();
             CloudUser cloudUser = new CloudUser(getContext());
-            cloudUser.getUserCloud(uid);
-            Log.i("TAG", "id: " + uid);
-            Log.i("TAG", "onViewCreated: " + email);
+            CloudUser.get().getUserCloud(uid);
+            Log.i(TAG, "id: " + uid);
         } else {
             uid = "";
             email = "";
@@ -60,7 +59,7 @@ public class SecondFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEmailEvent(EventManager.EmailEvent event) {
-        binding.textviewSecond.setText(email);
+        binding.textviewSecond.setText(event.email);
     }
 
     @Override
