@@ -33,6 +33,8 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
     ProgressDialog mDialog;
     FirebaseAuth mAuth;
     DatabaseReference mDatabase;
+    //TODO:注册时选择头像对应id，代码未合并
+    int avatarId;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -100,12 +102,6 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                     mDialog.dismiss();
                     OnAuth(task.getResult().getUser());
                     mAuth.signOut();
-                    // Write a message to the database
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("message");
-
-                    myRef.setValue("Hello, World!");
-
                 }else{
                     Toast.makeText(getApplicationContext(),"error on creating user",Toast.LENGTH_SHORT).show();
                 }
@@ -144,12 +140,17 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
 
     private User BuildNewUser() {
         return new User(
-                getUserEmail()
+                getUserEmail(),
+                getUserAvatarId()
         );
     }
 
     public String getUserEmail() {
         return Email;
+    }
+
+    public int getUserAvatarId() {
+        return avatarId;
     }
 
     public void back() {
