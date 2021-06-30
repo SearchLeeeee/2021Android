@@ -28,7 +28,7 @@
         <activity android:name=".ui.activity.InfoReadActivity" />
         <activity android:name=".ui.activity.VideoViewActivity" />
         <activity android:name=".ui.activity.PictureViewActivity" />
-        <activity android:name=".ui.activity.SignUpActivity" />
+        <activity android:name=".ui.activity.SignUpActivity" android:label="@string/sign_up"/>
         <activity
             android:name=".ui.activity.UserActivity"
             android:label="@string/title_activity_user"

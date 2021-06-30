@@ -1,16 +1,15 @@
 package com.example.webviewapp.presenter;
 
-import android.util.Log;
-
 import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
 import com.example.webviewapp.data.Record;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainPresenter implements MainContract.Presenter {
-
+    private static final String TAG = "MainPresenter";
     public static final int IS_HISTORY = 1;
     public static final int IS_LABEL = 2;
     private final MainContract.View view;
@@ -21,17 +20,21 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void addHistory(String url, String title) {
+        if (title.equals("")) return;
         Record record = new Record(100, System.currentTimeMillis(), url, title, "test", IS_HISTORY);
         DataManager.get().addRecord(record);
-        Log.d("TAG", "addHistory: " + DataManager.get().historyList.get(0).getTitle());
     }
 
     @Override
     public List<String> getHistory() {
         List<Record> note = DataManager.get().historyList;
         List<String> history = new ArrayList<>();
+        HashMap<String, Integer> hm = new HashMap<>();
         for (int i = 0; i < note.size(); i++) {
-            history.add(note.get(i).getTitle());
+            if (!hm.containsKey(note.get(i).getTitle())) {
+                hm.put(note.get(i).getTitle(), i);
+                history.add(note.get(i).getTitle());
+            }
         }
         return history;
     }
@@ -39,6 +42,23 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void addLabel(String url, String title) {
         Record record = new Record(100, System.currentTimeMillis(), url, title, "test", IS_LABEL);
+        List<Record> note = DataManager.get().labelList;
         DataManager.get().addRecord(record);
     }
+
+    @Override
+    public List<String> getLabelUrl() {
+        List<Record> note = DataManager.get().labelList;
+        List<String> label = new ArrayList<>();
+        HashMap<String, Integer> hm = new HashMap<>();
+        for (int i = 0; i < note.size(); i++) {
+            if (!hm.containsKey(note.get(i).getUrl())) {
+                hm.put(note.get(i).getUrl(), i);
+                label.add(note.get(i).getUrl());
+            }
+        }
+        return label;
+    }
+
+
 }

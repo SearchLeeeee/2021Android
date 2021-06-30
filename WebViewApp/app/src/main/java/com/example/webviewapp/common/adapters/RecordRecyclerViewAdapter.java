@@ -102,8 +102,18 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         } else {
             holder.date.setVisibility(View.GONE);
         }
-        holder.title.setText(record.getTitle());
-        holder.details.setText(record.getDetails());
+        String title;
+        if (record.getTitle().length() > 20) {
+            title = record.getTitle().substring(0, 20);
+            title = title + "...";
+        } else title = record.getTitle();
+        holder.title.setText(title);
+        String url;
+        if (record.getUrl().length() > 40) {
+            url = record.getUrl().substring(0, 40);
+            url = url + "...";
+        } else url = record.getUrl();
+        holder.url.setText(url);
     }
 
     public long getSelectedPosition() {
@@ -114,24 +124,29 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         return 0;
     }
 
+    public List<String> getSelectedPositions() {
+        List<String> res = new ArrayList<>();
+        if (checkboxMap != null) {
+            List<Integer> list = new ArrayList<>(checkboxMap.keySet());
+            for (int i = 0; i < list.size(); i++)
+                res.add(records.get(list.get(i)).getUrl());
+//            return records.get(list.get(0)).getPrimaryKey();
+        }
+        return res;
+    }
+
     @Override
     public int getItemCount() {
         return records.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView date;
-        public TextView title;
-        public TextView details;
-        public CheckBox checkBox;
+    /**
+     * 设置点按和长按回调
+     */
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            date = itemView.findViewById(R.id.date);
-            title = itemView.findViewById(R.id.title);
-            details = itemView.findViewById(R.id.details);
-            checkBox = itemView.findViewById(R.id.checkbox);
-        }
+        void onItemLongClick(View view, int position);
 
     }
 
@@ -143,13 +158,24 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         this.records = records;
     }
 
-    /**
-     * 设置点按和长按回调
-     */
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
+    public interface CheckBoxSelectoe {
+        List<Long> recordId(View view, int position);
+    }
 
-        void onItemLongClick(View view, int position);
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView date;
+        public TextView title;
+        public TextView url;
+        public CheckBox checkBox;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            date = itemView.findViewById(R.id.date);
+            title = itemView.findViewById(R.id.title);
+            url = itemView.findViewById(R.id.url);
+            checkBox = itemView.findViewById(R.id.checkbox);
+        }
+
     }
 
 
