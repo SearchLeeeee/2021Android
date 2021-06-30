@@ -1,9 +1,9 @@
 package com.example.webviewapp.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +20,7 @@ import com.example.webviewapp.contract.HistoryContract;
 import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.FragmentHistoryBinding;
 import com.example.webviewapp.presenter.HistoryPresenter;
+import com.example.webviewapp.ui.activity.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +49,32 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
     private void initData() {
         records = presenter.getData();
         initView(records);
-        Log.d(TAG, "initData: ");
     }
 
     private void initButton() {
         viewBinding.delete.setText("删除");
         viewBinding.selectAll.setText("全选");
         viewBinding.deleteAll.setText("清空");
+        viewBinding.deleteAll.setOnClickListener(v -> {
+            presenter.deleteAllHistory();
+            records = presenter.refreshRecord();
+            initView(records);
+        });
+
+        viewBinding.delete.setOnClickListener(v -> {
+            List<String> temp = adapter.getSelectedPositions();
+            presenter.deleteHistoryByUrl(temp);
+//            for (int i=0;i<viewBinding.recyclerView.getAdapter().getItemCount();i++) {
+//                View view = viewBinding.recyclerView.getLayoutManager().findViewByPosition(i);
+//                CheckBox checkBox = view.findViewById(R.id.checkbox);
+//                TextView textView = view.findViewById(R.id.url);
+//                if (checkBox.isChecked()) {
+//                    presenter.deleteHistoryByUrl(textView.getText().toString());
+//                }
+//            }
+            records = presenter.refreshRecord();
+            initView(records);
+        });
     }
 
     private void initView(List<Record> re) {
@@ -64,11 +84,15 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
             @Override
             public void onItemClick(View view, int position) {
                 //TODO:历史点击处理
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.putExtra("url", re.get(position).getUrl());
+                startActivity(intent);
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
                 //TODO：历史长按处理
+
             }
         });
         viewBinding.recyclerView.setAdapter(adapter);
@@ -92,8 +116,8 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
 
     public void onResume() {
         super.onResume();
-        presenter.refreshRecord();
-        adapter.notifyDataSetChanged();
+        records = presenter.refreshRecord();
+        initView(records);
     }
 
     private void initEditView() {
@@ -130,4 +154,5 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
             viewBinding.editText.setVisibility(View.GONE);
         }
     }
+
 }

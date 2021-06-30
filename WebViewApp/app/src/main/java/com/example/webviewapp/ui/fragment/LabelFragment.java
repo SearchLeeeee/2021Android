@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.example.webviewapp.data.Record;
 import com.example.webviewapp.databinding.FragmentLabelBinding;
 import com.example.webviewapp.presenter.LabelPresenter;
 import com.example.webviewapp.ui.activity.EditRecordActivity;
+import com.example.webviewapp.ui.activity.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +62,9 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
             @Override
             public void onItemClick(View view, int position) {
                 //TODO:书签点击处理
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.putExtra("url", re.get(position).getUrl());
+                startActivity(intent);
             }
 
             @Override
@@ -85,9 +90,22 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
         viewBinding.edit.setText("编辑");
         viewBinding.edit.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), EditRecordActivity.class);
-            intent.putExtra("primaryKey", adapter.getSelectedPosition());
-            startActivity(intent);
+            if (adapter.getSelectedPosition() == 0)
+                Toast.makeText(getActivity(), "无点击书签", Toast.LENGTH_SHORT).show();
+            else {
+                intent.putExtra("primaryKey", adapter.getSelectedPosition());
+                startActivity(intent);
+            }
         });
+        viewBinding.cancel.setOnClickListener(v -> viewBinding.bottomBar.setVisibility(View.GONE));
+
+        viewBinding.delete.setOnClickListener(v -> {
+            List<String> temp = adapter.getSelectedPositions();
+            presenter.deleteLabel(temp);
+            records = presenter.refreshRecord();
+            initView(records);
+        });
+
     }
 
     @Override
@@ -98,8 +116,8 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
 
     public void onResume() {
         super.onResume();
-        presenter.refreshRecord();
-        adapter.notifyDataSetChanged();
+        records = presenter.refreshRecord();
+        initView(records);
     }
 
     @Override

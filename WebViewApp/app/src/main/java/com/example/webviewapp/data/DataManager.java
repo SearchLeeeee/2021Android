@@ -8,7 +8,6 @@ import androidx.annotation.RequiresApi;
 import com.example.webviewapp.common.utils.DataFormatUtils;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +27,14 @@ public class DataManager {
     public static DataManager get() {
         return instance;
     }
+
+    public long primaryKey = 1;
+
+    Realm realm;
+    Context context;
+    public List<Record> historyList = new ArrayList<>();
+    public List<Record> labelList = new ArrayList<>();
+    public List<User> userList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public DataManager(Context context) {
@@ -51,20 +58,14 @@ public class DataManager {
                 .build());
 
         //TODO:测试数据
-        for (long i = 0; i < 10; i++) {
-            addRecord(new Record(100, i, "test", "IS_HISTORY", "test", IS_HISTORY));
-            //    addRecord(new Record(100, i, "test", "IS_Lable", "test", IS_LABEL));
-        }
+//        for (long i = 0; i < 10; i++) {
+//            //addRecord(new Record(100, i, "test", "IS_HISTORY", "test", IS_HISTORY));
+//            //    addRecord(new Record(100, i, "test", "IS_Lable", "test", IS_LABEL));
+//        }
         loadHistories();
         loadLabels();
         loadUsers();
     }
-
-    Realm realm;
-    Context context;
-    public List<Record> historyList = new ArrayList<>();
-    public List<Record> labelList = new ArrayList<>();
-    public List<User> userList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static void init(Context context) {
@@ -86,12 +87,7 @@ public class DataManager {
                 .equalTo("isHistory", IS_LABEL)
                 .findAll();
         labelList = realm.copyFromRealm(res);
-        labelList.sort(new Comparator<Record>() {
-            @Override
-            public int compare(Record o1, Record o2) {
-                return (int) (o1.getTime() - o2.getTime());
-            }
-        });
+        labelList.sort((o1, o2) -> (int) (o2.getTime() - o1.getTime()));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -112,11 +108,25 @@ public class DataManager {
      */
     private <T extends RealmObject> long generatePrimaryKey(Class<T> clazz) {
         RealmResults<T> results = realm.where(clazz).findAll();
+        T record = results.get(results.size() - 1);
         if (results == null) return 1;
-        return results.size() + 1;
+        else primaryKey++;
+        return primaryKey;
     }
 
     // endregion
+    private long generateRecodePrimaryKey() {
+        RealmResults<Record> results = realm.where(Record.class).findAll();
+        if (results == null) return 1;
+        long pk = 0;
+        Record record;
+        for (int i = 0; i < results.size(); i++) {
+            record = results.get(i);
+            pk = Math.max(record.getPrimaryKey(), pk);
+        }
+        return pk + 1;
+    }
+
 
     /**
      * 删掉所有的书签/历史记录
@@ -129,6 +139,38 @@ public class DataManager {
                 .findAll();
         realm.executeTransaction(realm1 -> {
             res.deleteAllFromRealm();
+        });
+    }
+
+    /**
+     * 根据Url删掉书签/历史记录
+     *
+     * @param url
+     * @param isHistory
+     */
+    public void deleteRecordsByUrl(String url, int isHistory) {
+        RealmResults<Record> res = realm.where(Record.class)
+                .equalTo("url", url)
+                .equalTo("isHistory", isHistory)
+                .findAll();
+        realm.executeTransaction(realm1 -> {
+            res.deleteAllFromRealm();
+        });
+    }
+
+    /**
+     * 根据Url删掉书签/历史记录
+     *
+     * @param primaryKey
+     * @param isHistory
+     */
+    public void deleteRecordsByPrimaryKey(long primaryKey, int isHistory) {
+        Record res = realm.where(Record.class)
+                .equalTo("primaryKey", primaryKey)
+                .equalTo("isHistory", isHistory)
+                .findFirst();
+        realm.executeTransaction(realm1 -> {
+            res.deleteFromRealm();
         });
     }
 
@@ -150,14 +192,31 @@ public class DataManager {
     }
 
     /**
+     * 根据标题、url查询书签/历史记录
+     *
+     * @param url
+     * @param isHistory
+     * @return
+     */
+    public String queryRecordTitleByUrl(String url, int isHistory) {
+        Record res = realm.where(Record.class)
+                .equalTo("url", url)
+                .equalTo("isHistory", isHistory)
+                .findFirst();
+        if (res == null) return null;
+        return res.getTitle();
+    }
+
+
+    /**
      * 往数据库中添加记录
      *
      * @param record
      */
     public void addRecord(Record record) {
-
         realm.executeTransaction(realm1 -> {
-            record.setPrimaryKey(generatePrimaryKey(Record.class));
+//            record.setPrimaryKey(generatePrimaryKey(Record.class));
+            record.setPrimaryKey(generateRecodePrimaryKey());
             realm.copyToRealmOrUpdate(record);
         });
     }

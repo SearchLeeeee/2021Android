@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -47,12 +49,16 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     CustomWebViewClient webViewClient = new CustomWebViewClient(presenter) {
         @Override
         public void onPageFinished(WebView view, String url) {//页面加载完成
+            presenter.addHistory(url, view.getTitle());
+            Log.d(TAG, "onPageStarted: " + view.getTitle());
             viewBinding.progressbar.setVisibility(View.GONE);
         }
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {//页面开始加载
+
             viewBinding.progressbar.setVisibility(View.VISIBLE);
+
         }
     };
     /**
@@ -81,6 +87,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         public void onProgressChanged(WebView view, int newProgress) {
             viewBinding.progressbar.setProgress(newProgress);
         }
+
+
     };
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -94,7 +102,16 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         initButton();
         initSearchBar();
 
-        //  startActivity(new Intent(getApplication(), UserActivity.class));
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        if (intent.getStringExtra("url") != null) {
+            viewBinding.webview.loadUrl(intent.getStringExtra("url"));
+        }
     }
 
     private void initSearchBar() {
@@ -134,16 +151,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private void initButton() {
         //设置按钮的点击事件
         viewBinding.menuButton.setOnClickListener(v -> {
-            Log.d("TAG", "菜单栏点击");
-//            Intent intent = new Intent(MainActivity.this, RecordActivity.class);
-//            startActivity(intent);
             popWindow();
         });
 
         viewBinding.refreshButton.setOnClickListener(v -> {
-            Log.d("TAG", "onClick:refresh");
-            viewBinding.webview.clearCache(true);
-            viewBinding.webview.reload();
+            viewBinding.webview.loadUrl(DEFAULT_URL);
         });
 
         viewBinding.backButton.setOnClickListener(v -> {
@@ -154,7 +166,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 viewBinding.webview.goBack();
                 viewBinding.webview.goBack();
             }
-            Log.d("TAG", "mainpage: backward ");
         });
         viewBinding.fowardButton.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, InfoReadActivity.class));
@@ -176,6 +187,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         viewBinding.webview.setWebChromeClient(webChromeClient);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void initUtils() {
         //TODO:未解决DataManager单例初始化问题
         DataManager.init(this);
@@ -204,30 +216,42 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         final PopupWindow popWindow = new PopupWindow(view,
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popWindow.setTouchable(true);
-        popWindow.setTouchInterceptor((v, event) -> {
-            return false;
-        });
-        popWindow.showAtLocation(view, 80, 0, 0);
+        popWindow.setTouchInterceptor((v, event) -> false);
+        popWindow.showAtLocation(view, Gravity.BOTTOM, 0, -40);
         ImageView userButton = view.findViewById(R.id.user_image);
         ImageView historyButton = view.findViewById(R.id.history_image);
         ImageView addLabel = view.findViewById(R.id.addbookmark_image);
+        TextView tx = view.findViewById(R.id.addbookmark_text);
+        if (presenter.getLabelUrl().contains(viewBinding.webview.getUrl())) {
+            tx.setText("已添加");
+            addLabel.setImageResource(R.drawable.collected);
+        } else {
+            tx.setText("添加");
+            addLabel.setImageResource(R.drawable.uncollected);
+        }
         userButton.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, UserActivity.class));
         });
         historyButton.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, RecordActivity.class));
         });
-        addLabel.setOnClickListener(v -> addLabel(viewBinding.webview));
+        addLabel.setOnClickListener(v -> {
+            addLabel();
+            tx.setText("已添加");
+            addLabel.setImageResource(R.drawable.collected);
+        });
     }
 
-    public void addLabel(WebView myWebView) {
-        presenter.addLabel(myWebView.getTitle(), myWebView.getUrl());
+    public void addLabel() {
+        Toast.makeText(this, "书签添加成功", Toast.LENGTH_SHORT).show();
+        presenter.addLabel(viewBinding.webview.getUrl(), viewBinding.webview.getTitle());
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (!viewBinding.webview.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK)
+            finish();
         if (viewBinding.webview.getUrl().equals("file:///android_asset/askToJump.html") && keyCode == KeyEvent.KEYCODE_BACK) {
-            Log.i("TAG", "same");
             viewBinding.webview.goBack();
             viewBinding.webview.goBack();
             return false;
