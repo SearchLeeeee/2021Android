@@ -68,4 +68,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
     implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation ('com.qcloud.cos:cos-android:5.6.12'){
+        exclude group: 'com.tencent.qcloud', module: 'beacon-android-release'
+    }
 }

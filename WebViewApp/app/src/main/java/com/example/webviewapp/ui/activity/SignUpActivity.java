@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.webviewapp.common.utils.Cloud.CloudUser;
 import com.example.webviewapp.contract.SignupContract;
 import com.example.webviewapp.data.User;
 import com.example.webviewapp.databinding.SignupactivityBinding;
@@ -32,6 +33,8 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
     ProgressDialog mDialog;
     FirebaseAuth mAuth;
     DatabaseReference mDatabase;
+    //TODO:注册时选择头像对应id，代码未合并
+    int avatarId;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -99,12 +102,6 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                     mDialog.dismiss();
                     OnAuth(task.getResult().getUser());
                     mAuth.signOut();
-                    // Write a message to the database
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("message");
-
-                    myRef.setValue("Hello, World!");
-
                 }else{
                     Toast.makeText(getApplicationContext(),"error on creating user",Toast.LENGTH_SHORT).show();
                 }
@@ -136,16 +133,24 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
         User user = BuildNewUser();
         //TODO:无法添加到数据库
         mDatabase.child(uid).setValue(user);
+        //腾讯云存储
+        CloudUser cloudUser = new CloudUser(this);
+        cloudUser.uploadUser(uid, user);
     }
 
     private User BuildNewUser() {
         return new User(
-                getUserEmail()
+                getUserEmail(),
+                getUserAvatarId()
         );
     }
 
     public String getUserEmail() {
         return Email;
+    }
+
+    public int getUserAvatarId() {
+        return avatarId;
     }
 
     public void back() {
