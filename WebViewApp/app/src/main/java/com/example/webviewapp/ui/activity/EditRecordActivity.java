@@ -36,34 +36,34 @@ public class EditRecordActivity extends BaseActivity implements EditRecordContra
         viewBinding.title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.url.getText().toString());
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.url.getText().toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.url.getText().toString());
             }
         });
-        viewBinding.details.setText(record.getDetails());
-        viewBinding.details.addTextChangedListener(new TextWatcher() {
+        viewBinding.url.setText(record.getUrl());
+        viewBinding.url.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.url.getText().toString());
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.url.getText().toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.details.getText().toString());
+                presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.url.getText().toString());
             }
         });
     }
@@ -74,11 +74,11 @@ public class EditRecordActivity extends BaseActivity implements EditRecordContra
             //TODO:把修改写回数据库
             if (viewBinding.title.getText().toString().isEmpty()) {
                 Toast.makeText(this, "书签标题不能为空！", Toast.LENGTH_SHORT).show();
-            } else if (viewBinding.details.getText().toString().isEmpty()) {
+            } else if (viewBinding.url.getText().toString().isEmpty()) {
                 Toast.makeText(this, "书签详情不能为空！", Toast.LENGTH_SHORT).show();
             } else {
                 record.setTitle(viewBinding.title.getText().toString());
-                record.setDetails(viewBinding.details.getText().toString());
+                record.setDetails(viewBinding.url.getText().toString());
                 presenter.updateRecord(record);
                 finish();
             }

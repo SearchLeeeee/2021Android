@@ -15,5 +15,9 @@ public interface HistoryContract {
         List<Record> refreshRecord();
 
         void checkScrolled(int dy);
+
+        void deleteAllHistory();
+
+        void deleteHistoryByUrl(List<String> url);
     }
 }

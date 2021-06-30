@@ -15,5 +15,7 @@ public interface LabelContract {
         void checkScrolled(int dy);
 
         List<Record> refreshRecord();
+
+        void deleteLabel(List<String> pri);
     }
 }
