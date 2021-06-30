@@ -37,7 +37,7 @@
         <activity android:name=".ui.activity.RecordActivity" />
         <activity
             android:name=".ui.activity.MainActivity"
-            android:hardwareAccelerated="true">
+            android:hardwareAccelerated="true"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
