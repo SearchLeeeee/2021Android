@@ -115,4 +115,11 @@ public class DataFormatUtils {
                 name, "drawable", app.getPackageName());
     }
 
+
+    public String text2Show(int len, String str) {
+        if (str.length() <= 20) return str;
+        String res = str.substring(0, len) + "...";
+        return res;
+    }
+
 }

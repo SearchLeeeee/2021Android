@@ -1,5 +1,7 @@
 package com.example.webviewapp.contract;
 
+import com.example.webviewapp.data.Record;
+
 import java.util.List;
 
 public interface MainContract {
@@ -15,5 +17,7 @@ public interface MainContract {
         void addLabel(String url, String title);
 
         List<String> getLabelUrl();
+
+        List<Record> getHistoryRecord();
     }
 }

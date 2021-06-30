@@ -22,6 +22,7 @@ public class DataManager {
     public static final int IS_HISTORY = 1;
     public static final int IS_LABEL = 2;
 
+
     private volatile static DataManager instance;
 
     public static DataManager get() {
@@ -29,6 +30,8 @@ public class DataManager {
     }
 
     public long primaryKey = 1;
+    public Boolean isLogin = false;
+    public long LoginUserId;
 
     Realm realm;
     Context context;

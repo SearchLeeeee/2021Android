@@ -74,7 +74,6 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
 //            Toast.makeText(getApplicationContext(), "用户已存在，注册失败", Toast.LENGTH_SHORT).show();
 //        }
 
-        //fb
         Email = viewBinding.UserNumber.getText().toString().trim();
         Password = viewBinding.loginPassword.getText().toString().trim();
 
@@ -102,9 +101,8 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                     // Write a message to the database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference("message");
-
                     myRef.setValue("Hello, World!");
-
+                    presenter.SignUp();
                 }else{
                     Toast.makeText(getApplicationContext(),"error on creating user",Toast.LENGTH_SHORT).show();
                 }

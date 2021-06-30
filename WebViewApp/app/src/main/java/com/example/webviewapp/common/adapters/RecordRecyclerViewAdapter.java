@@ -1,6 +1,7 @@
 package com.example.webviewapp.common.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
     private List<Record> records;
     private final Context context;
     private final Integer layoutResId;
+    DataFormatUtils dataFormatUtils = new DataFormatUtils();
 
     private final Map<Integer, Boolean> checkboxMap = new HashMap<>();
     private final Map<Integer, Boolean> dateMap = new HashMap<>();
@@ -102,23 +104,17 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         } else {
             holder.date.setVisibility(View.GONE);
         }
-        String title;
-        if (record.getTitle().length() > 20) {
-            title = record.getTitle().substring(0, 20);
-            title = title + "...";
-        } else title = record.getTitle();
+        String title = dataFormatUtils.text2Show(20, record.getTitle());
         holder.title.setText(title);
-        String url;
-        if (record.getUrl().length() > 40) {
-            url = record.getUrl().substring(0, 40);
-            url = url + "...";
-        } else url = record.getUrl();
+        String url = dataFormatUtils.text2Show(40, record.getUrl());
         holder.url.setText(url);
     }
 
     public long getSelectedPosition() {
-        if (checkboxMap != null) {
+        Log.d(TAG, "getSelectedPosition: ");
+        if (checkboxMap.size() != 0) {
             List<Integer> list = new ArrayList<>(checkboxMap.keySet());
+            Log.d(TAG, "getSelectedPosition: " + list.get(0));
             return records.get(list.get(0)).getPrimaryKey();
         }
         return 0;
@@ -126,7 +122,7 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
 
     public List<String> getSelectedPositions() {
         List<String> res = new ArrayList<>();
-        if (checkboxMap != null) {
+        if (checkboxMap.size() != 0) {
             List<Integer> list = new ArrayList<>(checkboxMap.keySet());
             for (int i = 0; i < list.size(); i++)
                 res.add(records.get(list.get(i)).getUrl());

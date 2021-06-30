@@ -17,6 +17,7 @@ public class UserActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityUserBinding binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +36,7 @@ public class UserActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(view ->
                 Snackbar.make(view, "没有收到讯息", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show());
+
     }
 
     @Override
