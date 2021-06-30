@@ -15,8 +15,8 @@ public class SignUpPresenter implements SignupContract.Presenter {
     public void SignUp(Editable uidText, Editable passwordText) {
         long uid = Long.parseLong(uidText.toString());
         long password = Long.parseLong(passwordText.toString());
-        User user = new User(uid, password);
-        DataManager.get().addUser(user);
+//        User user = new User(uid, password);
+//        DataManager.get().addUser(user);
     }
 
     @Override
@@ -25,7 +25,8 @@ public class SignUpPresenter implements SignupContract.Presenter {
         if (uidText.toString().equals("")) return true;
         long uid = Long.parseLong(uidText.toString());
         Log.d("TAG", "ContainsUid: "+DataManager.get());
-        return DataManager.get().queryUserPasswordByUid(uid) != -1;
+//        return DataManager.get().queryUserPasswordByUid(uid) != -1;
+        return true;
     }
 
     @Override

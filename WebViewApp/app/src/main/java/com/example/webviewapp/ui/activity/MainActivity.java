@@ -31,6 +31,7 @@ import com.example.webviewapp.common.base.BaseActivity;
 import com.example.webviewapp.common.utils.AdBlocker;
 import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
+import com.example.webviewapp.data.cloud.CloudActivity;
 import com.example.webviewapp.databinding.ActivityMainBinding;
 import com.example.webviewapp.presenter.MainPresenter;
 
@@ -67,7 +68,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             if (message.equals("1")) {
                 Log.i("弹窗", "继续访问:" + webViewClient.blockUrl);
                 webView.loadUrl(webViewClient.blockUrl);
-            } else {
+            } else if (message.equals("0")){
                 Log.i("弹窗", "停止访问");
                 webView.goBack();
                 webView.goBack();
@@ -95,7 +96,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         initButton();
         initSearchBar();
 
-        //  startActivity(new Intent(getApplication(), UserActivity.class));
+//        startActivity(new Intent(getApplication(), CloudActivity.class));
     }
 
     private void initSearchBar() {

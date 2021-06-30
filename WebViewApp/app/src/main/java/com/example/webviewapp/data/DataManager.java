@@ -57,7 +57,6 @@ public class DataManager {
         }
         loadHistories();
         loadLabels();
-        loadUsers();
     }
 
     Realm realm;
@@ -94,12 +93,7 @@ public class DataManager {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void loadUsers() {
-        RealmResults<User> res = realm.where(User.class)
-                .findAll();
-        userList = realm.copyFromRealm(res);
-    }
+
 
     ////////////////////////记录相关/////////////////////////
 
@@ -257,34 +251,10 @@ public class DataManager {
     //////////////////////////////////权限相关/////////////////////////////////
 
 
-    //////////////////////////////////用户相关/////////////////////////////////
-
-    /**
-     * 根据id查询用户密码
-     *
-     * @param Uid
-     * @return long
-     */
-
-    public long queryUserPasswordByUid(long Uid) {
-        User res = realm.where(User.class).equalTo("uid", Uid).findFirst();
-        if (res != null)
-            return res.getPassword();
-        else return -1;
-    }
 
 
-    /**
-     * 往数据库写入数据：
-     *
-     * @param user
-     */
-    public void addUser(User user) {
-        realm.executeTransaction(realm1 -> {
-            user.setPrimaryKey(generatePrimaryKey(User.class));
-            realm.copyToRealmOrUpdate(user);
-        });
-    }
+
+
 
 
     //////////////////////////////////用户相关/////////////////////////////////
