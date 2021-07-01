@@ -19,8 +19,10 @@ public class VideoViewActivity extends BaseActivity {
         getSupportActionBar().hide();
 
         uri = getIntent().getStringExtra("video");
+        //本地视频无法播放
+        uri = "file:///android_asset/video1.mp4";
         //TODO:测试用uri
-        uri = "https://media.w3.org/2010/05/sintel/trailer.mp4";
+//        uri = "https://media.w3.org/2010/05/sintel/trailer.mp4";
         Log.d(TAG, "onCreate: " + uri);
         viewBinding.videoView.setVideoPath(uri);
         MediaController mediaController = new MediaController(this);

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.example.webviewapp.ui.activity.SignUpActivity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -23,7 +24,6 @@ import com.example.webviewapp.R;
 import com.example.webviewapp.contract.LoginContract;
 import com.example.webviewapp.databinding.FragmentFirstBinding;
 import com.example.webviewapp.presenter.LoginPresenter;
-import com.example.webviewapp.ui.activity.SignUpActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -60,7 +60,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
         super.onViewCreated(view, savedInstanceState);
 
         binding.buttonFirst.setOnClickListener(view1 -> loginWindow());
-        binding.signupButton.setOnClickListener(v -> startActivity(new Intent(getContext(), SignUpActivity.class)));
+        binding.buttonSignup.setOnClickListener(v -> startActivity(new Intent(getActivity(),SignUpActivity.class)));
     }
 
     @Override

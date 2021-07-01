@@ -16,15 +16,10 @@
             android:id="@+id/back_btn"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="16dp"
+            android:layout_margin="10dp"
             android:adjustViewBounds="true"
             android:background="@android:color/white"
             android:scaleType="centerInside"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/search_back_icon" />
 
         <!--        <com.google.android.material.appbar.AppBarLayout-->
@@ -43,6 +38,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
+            android:layout_toRightOf="@id/back_btn"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:scrollbarSize="22dp" />

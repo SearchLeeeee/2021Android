@@ -34,6 +34,7 @@ import com.example.webviewapp.common.base.BaseActivity;
 import com.example.webviewapp.common.utils.AdBlocker;
 import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
+import com.example.webviewapp.data.cloud.CloudActivity;
 import com.example.webviewapp.databinding.ActivityMainBinding;
 import com.example.webviewapp.presenter.MainPresenter;
 
@@ -74,7 +75,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             if (message.equals("1")) {
                 Log.i("弹窗", "继续访问:" + webViewClient.blockUrl);
                 webView.loadUrl(webViewClient.blockUrl);
-            } else {
+            } else if (message.equals("0")){
                 Log.i("弹窗", "停止访问");
                 webView.goBack();
                 webView.goBack();
@@ -105,8 +106,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         initSearchBar();
 
     }
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -218,12 +217,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public void popWindow() {
         // PopWindow 布局发
         View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
-
         final PopupWindow popWindow = new PopupWindow(view,
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popWindow.setTouchable(true);
         popWindow.setTouchInterceptor((v, event) -> false);
         popWindow.showAtLocation(view, Gravity.BOTTOM, 0, -40);
+      
         ImageView userButton = view.findViewById(R.id.user_image);
         ImageView historyButton = view.findViewById(R.id.history_image);
         ImageView addLabel = view.findViewById(R.id.addbookmark_image);
@@ -251,6 +250,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public void addLabel() {
         Toast.makeText(this, "书签添加成功", Toast.LENGTH_SHORT).show();
         presenter.addLabel(viewBinding.webview.getUrl(), viewBinding.webview.getTitle());
+
     }
 
     @Override

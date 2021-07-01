@@ -26,7 +26,8 @@ public void SignUp() {
         if (uidText.toString().equals("")) return true;
         long uid = Long.parseLong(uidText.toString());
         Log.d("TAG", "ContainsUid: "+DataManager.get());
-        return DataManager.get().queryUserPasswordByUid(uid) != -1;
+//        return DataManager.get().queryUserPasswordByUid(uid) != -1;
+        return true;
     }
 
     @Override
