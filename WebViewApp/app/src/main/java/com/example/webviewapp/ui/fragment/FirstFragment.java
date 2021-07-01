@@ -54,13 +54,13 @@ public class FirstFragment extends Fragment implements LoginContract.View {
      * 还有登录逻辑
      * 数据可以与数据库交互
      */
-    private AlertDialog dialog;
+    //private AlertDialog dialog;
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        binding.buttonFirst.setOnClickListener(view1 -> loginWindow());
-        binding.buttonSignup.setOnClickListener(v -> startActivity(new Intent(getActivity(),SignUpActivity.class)));
+//        binding.loginButton.setOnClickListener(view1 -> loginWindow());
+        loginWindow();
+        binding.signupButton.setOnClickListener(v -> startActivity(new Intent(getActivity(),SignUpActivity.class)));
     }
 
     @Override
@@ -73,16 +73,16 @@ public class FirstFragment extends Fragment implements LoginContract.View {
 
     private void loginWindow() {
         // 登录窗口的控件绑定
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        dialog = builder.create();
-        View dialogView = View.inflate(getContext(), R.layout.loginwindow, null);
-        Button loginButton = dialogView.findViewById(R.id.loginButton);
-        Button cancelButton = dialogView.findViewById(R.id.cancelButton);
-        EditText uidtext = dialogView.findViewById(R.id.UserNumber);
-        EditText passwordtext = dialogView.findViewById(R.id.loginPassword);
+        //AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        //dialog = builder.create();
+        //View dialogView = View.inflate(getContext(), R.layout.fragment_first, null);
+        Button loginButton = binding.loginButton;
+        //Button cancelButton = dialogView.findViewById(R.id.cancelButton);
+        EditText uidtext = binding.UserNumber;
+        EditText passwordtext = binding.loginPassword;
 
-        dialog.setView(dialogView);
-        dialog.show();
+        //dialog.setView(dialogView);
+        //dialog.show();
 
         //fb
         mAuth = FirebaseAuth.getInstance();
@@ -91,7 +91,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (mUser != null) {
-                    dialog.dismiss();
+                    //dialog.dismiss();
                     NavHostFragment.findNavController(FirstFragment.this)
                             .navigate(R.id.action_FirstFragment_to_SecondFragment);
                     onDestroyView();
@@ -119,7 +119,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
             userSign(email, password);
         });
 
-        cancelButton.setOnClickListener(v -> dialog.dismiss());
+        //cancelButton.setOnClickListener(v -> dialog.dismiss());
     }
 
     @Override
@@ -171,7 +171,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
             mAuth.signOut();
 //            finish();
         } else {
-            dialog.dismiss();
+            //dialog.dismiss();
             NavHostFragment.findNavController(FirstFragment.this)
                     .navigate(R.id.action_FirstFragment_to_SecondFragment);
             onDestroyView();

@@ -28,7 +28,7 @@
         <activity android:name=".ui.activity.InfoReadActivity" />
         <activity android:name=".ui.activity.VideoViewActivity" />
         <activity android:name=".ui.activity.PictureViewActivity" />
-        <activity android:name=".ui.activity.SignUpActivity" />
+        <activity android:name=".ui.activity.SignUpActivity" android:label="@string/sign_up"/>
         <activity
             android:name=".ui.activity.UserActivity"
             android:label="@string/title_activity_user"
@@ -37,7 +37,7 @@
         <activity android:name=".ui.activity.RecordActivity" />
         <activity
             android:name=".ui.activity.MainActivity"
-            android:hardwareAccelerated="true">
+            android:hardwareAccelerated="true"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
