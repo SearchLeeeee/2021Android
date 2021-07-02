@@ -47,21 +47,52 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public ActivityMainBinding viewBinding;
 
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
+//    public static final String DEFAULT_URL = "https://mp.weixin.qq.com/s/IaBlqdpcw9cNF4oVTKHrRA";
     CustomWebViewClient webViewClient = new CustomWebViewClient(presenter) {
         @Override
         public void onPageFinished(WebView view, String url) {//页面加载完成
             presenter.addHistory(url, view.getTitle());
-            Log.d(TAG, "onPageStarted: " + view.getTitle());
+            Log.d(TAG, "onPageFinished: " + view.getTitle());
             viewBinding.progressbar.setVisibility(View.GONE);
+            initUrl(view);
         }
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {//页面开始加载
-
             viewBinding.progressbar.setVisibility(View.VISIBLE);
-
         }
     };
+
+    private void initUrl(WebView view) {
+        //TODO:部分img和video的url还是无法获取，视频跳转后需要点两次返回才能退出
+        view.loadUrl("javascript:(function()" +
+                "    {" +
+                "        var objs = document.getElementsByTagName('img');" +
+                "        var array=new Array();" +
+                "        for(var j=0;j<objs.length;j++)" +
+                "            {" +
+                "                array[j]=objs[j].src;" +
+                "            }" +
+                "        for(var i=0;i<objs.length;i++)" +
+                "            {" +
+                "                objs[i].onclick=function()" +
+                "                    {" +
+                "                        window.imagelistener.openImage(this.src,array);" +
+                "                    }" +
+                "            }" +
+                "    })()");
+        view.loadUrl("javascript:(function()" +
+                "    {" +
+                "        var objs = document.getElementsByTagName('video');" +
+                "        for(var i=0;i<objs.length;i++)" +
+                "            {" +
+                "                objs[i].addEventListener('play', function () {" +
+                "                   window.imagelistener.openVideo(this.currentSrc);" +
+                "                   this.pause();"+
+                "                });" +
+                "            }" +
+                "    })()");
+    }
     /**
      * WebChromeClient主要辅助WebView处理Javascript的对话框、网站图标、网站title、加载进度等
      */
