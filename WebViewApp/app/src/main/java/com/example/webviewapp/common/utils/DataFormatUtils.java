@@ -117,7 +117,7 @@ public class DataFormatUtils {
 
 
     public String text2Show(int len, String str) {
-        if (str.length() <= 20) return str;
+        if (str.length() <= len) return str;
         String res = str.substring(0, len) + "...";
         return res;
     }

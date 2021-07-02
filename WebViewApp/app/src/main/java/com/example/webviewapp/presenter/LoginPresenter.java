@@ -23,5 +23,10 @@ public class LoginPresenter implements LoginContract.Presenter {
         return DataManager.get().isLogin;
     }
 
+    @Override
+    public void logout() {
+        DataManager.get().isLogin = false;
+    }
+
 
 }

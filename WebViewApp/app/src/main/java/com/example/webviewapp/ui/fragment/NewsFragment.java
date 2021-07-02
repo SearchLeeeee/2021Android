@@ -1,6 +1,7 @@
 package com.example.webviewapp.ui.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class NewsFragment extends Fragment {
     private void initNewsData(String jsonString) {
         news = new ArrayList<>();
         JSONObject json = JSON.parseObject(jsonString);
+        Log.d(TAG, "initNewsData: " + json.toString());
         JSONObject result = json.getJSONObject("result");
         JSONArray data = result.getJSONArray("data");
         for (int i = 0; i < data.size(); i++) {

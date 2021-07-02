@@ -1,7 +1,6 @@
 package com.example.webviewapp.common.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.utils.DataFormatUtils;
 import com.example.webviewapp.data.Record;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
 
     private final Map<Integer, Boolean> checkboxMap = new HashMap<>();
     private final Map<Integer, Boolean> dateMap = new HashMap<>();
-
+    public final boolean[] visible = {false};
     // 判断RecyclerView是否正在计算layout或滑动，不在计算的时候通知适配器更新
     private boolean onBind;
 
@@ -75,9 +76,18 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
             holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(v, position));
             holder.itemView.setOnLongClickListener(v -> {
                 onItemClickListener.onItemLongClick(v, position);
+                visible[0] = true;
                 return true;
             });
         }
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull @NotNull ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if (visible[0]) holder.checkBox.setVisibility(View.VISIBLE);
+        else holder.checkBox.setVisibility(View.INVISIBLE);
+
     }
 
     private void initCheckBox(@NonNull ViewHolder holder, int position) {
@@ -104,6 +114,7 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         } else {
             holder.date.setVisibility(View.GONE);
         }
+        holder.checkBox.setVisibility(View.INVISIBLE);
         String title = dataFormatUtils.text2Show(20, record.getTitle());
         holder.title.setText(title);
         String url = dataFormatUtils.text2Show(40, record.getUrl());
@@ -111,10 +122,8 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
     }
 
     public long getSelectedPosition() {
-        Log.d(TAG, "getSelectedPosition: ");
         if (checkboxMap.size() != 0) {
             List<Integer> list = new ArrayList<>(checkboxMap.keySet());
-            Log.d(TAG, "getSelectedPosition: " + list.get(0));
             return records.get(list.get(0)).getPrimaryKey();
         }
         return 0;

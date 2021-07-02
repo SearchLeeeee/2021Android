@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -71,6 +72,8 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
             public void onItemLongClick(View view, int position) {
                 //TODO：书签长按处理
                 viewBinding.bottomBar.setVisibility(View.VISIBLE);
+                CheckBox checkBox = view.findViewById(R.id.checkbox);
+                checkBox.setVisibility(View.VISIBLE);
             }
         });
         viewBinding.recyclerView.setAdapter(adapter);

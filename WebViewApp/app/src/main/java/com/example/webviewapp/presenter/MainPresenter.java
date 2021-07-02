@@ -22,6 +22,8 @@ public class MainPresenter implements MainContract.Presenter {
     public void addHistory(String url, String title) {
         if (title.equals("")) return;
         Record record = new Record(100, System.currentTimeMillis(), url, title, "test", IS_HISTORY);
+        if (DataManager.get().queryRecordTitleByUrl(url, IS_HISTORY) != null)
+            DataManager.get().deleteRecordsByUrl(url, IS_HISTORY);
         DataManager.get().addRecord(record);
     }
 
@@ -47,11 +49,8 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void addLabel(String url, String title) {
         Record record = new Record(100, System.currentTimeMillis(), url, title, "test", IS_LABEL);
-        List<Record> note = DataManager.get().labelList;
-        for (int i = 0; i < note.size(); i++) {
-            if (DataManager.get().queryRecordTitleByUrl(url, IS_LABEL) != null)
-                DataManager.get().deleteRecordsByUrl(url, IS_LABEL);
-        }
+        if (DataManager.get().queryRecordTitleByUrl(url, IS_LABEL) != null)
+            DataManager.get().deleteRecordsByUrl(url, IS_LABEL);
         DataManager.get().addRecord(record);
     }
 

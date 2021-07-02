@@ -9,5 +9,7 @@ public interface LoginContract {
         void Login();
 
         Boolean isLogin();
+
+        void logout();
     }
 }

@@ -34,7 +34,6 @@ import com.example.webviewapp.common.base.BaseActivity;
 import com.example.webviewapp.common.utils.AdBlocker;
 import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
-import com.example.webviewapp.data.cloud.CloudActivity;
 import com.example.webviewapp.databinding.ActivityMainBinding;
 import com.example.webviewapp.presenter.MainPresenter;
 
@@ -222,8 +221,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         popWindow.setTouchable(true);
         popWindow.setTouchInterceptor((v, event) -> false);
         popWindow.showAtLocation(view, Gravity.BOTTOM, 0, -40);
-      
-        ImageView userButton = view.findViewById(R.id.user_image);
+
+        ImageView userButton = view.findViewById(R.id.user);
+        ImageView quitButton = view.findViewById(R.id.user_image);
         ImageView historyButton = view.findViewById(R.id.history_image);
         ImageView addLabel = view.findViewById(R.id.addbookmark_image);
         TextView tx = view.findViewById(R.id.addbookmark_text);
@@ -245,6 +245,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             tx.setText("已添加");
             addLabel.setImageResource(R.drawable.collected);
         });
+        quitButton.setOnClickListener(v -> finish());
     }
 
     public void addLabel() {
