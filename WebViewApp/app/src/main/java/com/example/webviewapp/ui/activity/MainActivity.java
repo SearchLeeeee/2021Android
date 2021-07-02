@@ -100,7 +100,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         //监听js alert弹窗事件
         @Override
         public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
-            Log.i("get到的参数", message);
             if (message.equals("1")) {
                 Log.i("弹窗", "继续访问:" + webViewClient.blockUrl);
                 webView.loadUrl(webViewClient.blockUrl);
@@ -189,13 +188,14 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         });
 
         viewBinding.backButton.setOnClickListener(v -> {
-            if (viewBinding.webview.canGoBack()) viewBinding.webview.goBack();
-            else viewBinding.webview.goBack();
             if (viewBinding.webview.getUrl().equals("file:///android_asset/askToJump.html")) {//在风险访问h5页面需要两次goback才能回去
                 Log.i("TAG", "same");
                 viewBinding.webview.goBack();
                 viewBinding.webview.goBack();
             }
+            else if (viewBinding.webview.canGoBack()) viewBinding.webview.goBack();
+            else viewBinding.webview.goBack();
+
         });
         viewBinding.fowardButton.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, InfoReadActivity.class));
