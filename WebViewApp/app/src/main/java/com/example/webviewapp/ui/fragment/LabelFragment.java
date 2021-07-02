@@ -72,8 +72,13 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
             public void onItemLongClick(View view, int position) {
                 //TODO：书签长按处理
                 viewBinding.bottomBar.setVisibility(View.VISIBLE);
-                CheckBox checkBox = view.findViewById(R.id.checkbox);
-                checkBox.setVisibility(View.VISIBLE);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) viewBinding.recyclerView.getLayoutManager();
+                assert layoutManager != null;
+                for (int i = layoutManager.findFirstVisibleItemPosition(); i <= layoutManager.findLastVisibleItemPosition(); i++) {
+                    RecyclerView.ViewHolder holder = viewBinding.recyclerView.findViewHolderForAdapterPosition(i);
+                    CheckBox checkBox = holder.itemView.findViewById(R.id.checkbox);
+                    checkBox.setVisibility(View.VISIBLE);
+                }
             }
         });
         viewBinding.recyclerView.setAdapter(adapter);
@@ -100,7 +105,17 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
                 startActivity(intent);
             }
         });
-        viewBinding.cancel.setOnClickListener(v -> viewBinding.bottomBar.setVisibility(View.GONE));
+        viewBinding.cancel.setOnClickListener(v -> {
+            adapter.visible[0] = false;
+            viewBinding.bottomBar.setVisibility(View.GONE);
+            LinearLayoutManager layoutManager = (LinearLayoutManager) viewBinding.recyclerView.getLayoutManager();
+            assert layoutManager != null;
+            for (int i = layoutManager.findFirstVisibleItemPosition(); i <= layoutManager.findLastVisibleItemPosition(); i++) {
+                RecyclerView.ViewHolder holder = viewBinding.recyclerView.findViewHolderForAdapterPosition(i);
+                CheckBox checkBox = holder.itemView.findViewById(R.id.checkbox);
+                checkBox.setVisibility(View.INVISIBLE);
+            }
+        });
 
         viewBinding.delete.setOnClickListener(v -> {
             List<String> temp = adapter.getSelectedPositions();
