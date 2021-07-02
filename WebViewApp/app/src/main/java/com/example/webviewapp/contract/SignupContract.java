@@ -13,7 +13,7 @@ public interface SignupContract {
     }
 
     interface Presenter {
-        void SignUp(Editable uidText, Editable passwordText);
+        void SignUp();
 
         Boolean ContainsUid(Editable uidtext);
 

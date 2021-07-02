@@ -113,6 +113,11 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                     mDialog.dismiss();
                     OnAuth(task.getResult().getUser());
                     mAuth.signOut();
+                    // Write a message to the database
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("message");
+                    myRef.setValue("Hello, World!");
+                    presenter.SignUp();
                 }else{
                     Toast.makeText(getApplicationContext(),"error on creating user",Toast.LENGTH_SHORT).show();
                 }

@@ -32,7 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class FirstFragment extends Fragment implements LoginContract.View {
-
+    private static final String TAG = "FirstFragment";
     LoginContract.Presenter presenter = new LoginPresenter();
     private FragmentFirstBinding binding;
 
@@ -61,6 +61,14 @@ public class FirstFragment extends Fragment implements LoginContract.View {
 //        binding.loginButton.setOnClickListener(view1 -> loginWindow());
         loginWindow();
         binding.signupButton.setOnClickListener(v -> startActivity(new Intent(getActivity(),SignUpActivity.class)));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: " + presenter.isLogin());
+        if (presenter.isLogin()) NavHostFragment.findNavController(FirstFragment.this)
+                .navigate(R.id.action_FirstFragment_to_SecondFragment);
     }
 
     private void loginWindow() {
@@ -109,7 +117,6 @@ public class FirstFragment extends Fragment implements LoginContract.View {
             email = uidtext.getText().toString().trim();
             password = passwordtext.getText().toString().trim();
             userSign(email, password);
-            boolean isLogin;
         });
 
         //cancelButton.setOnClickListener(v -> dialog.dismiss());
@@ -145,6 +152,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
                     mDialog.dismiss();
                     Toast.makeText(getContext(), "Login not successfully", Toast.LENGTH_SHORT).show();
                 } else {
+                    presenter.Login();
                     mDialog.dismiss();
                     checkIfEmailVerified();
                 }
