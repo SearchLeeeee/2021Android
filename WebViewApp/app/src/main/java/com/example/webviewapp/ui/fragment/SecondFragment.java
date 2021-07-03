@@ -48,7 +48,6 @@ public class SecondFragment extends Fragment {
         if (user != null) {
             uid = user.getUid();
 //            email = user.getEmail();
-            CloudUser cloudUser = new CloudUser(getContext());
             CloudUser.get().getUserCloud(uid);
             Log.i(TAG, "id: " + uid);
         } else {

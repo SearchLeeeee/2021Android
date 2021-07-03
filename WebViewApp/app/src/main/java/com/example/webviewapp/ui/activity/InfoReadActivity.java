@@ -39,8 +39,8 @@ public class InfoReadActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
 
-        initData();
-        initViewPager();
+//        initData();
+//        initViewPager();
     }
 
     private void initData() {

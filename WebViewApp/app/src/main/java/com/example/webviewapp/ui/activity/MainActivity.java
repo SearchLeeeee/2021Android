@@ -29,10 +29,7 @@ import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.CustomWebViewClient;
 import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
 import com.example.webviewapp.common.base.BaseActivity;
-import com.example.webviewapp.common.utils.AdBlocker;
 import com.example.webviewapp.contract.MainContract;
-import com.example.webviewapp.data.DataManager;
-import com.example.webviewapp.data.cloud.CloudActivity;
 import com.example.webviewapp.databinding.ActivityMainBinding;
 import com.example.webviewapp.presenter.MainPresenter;
 
@@ -97,8 +94,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
+        presenter = new MainPresenter(this);
 
-        initUtils();
         initWebView();
         initButton();
         initSearchBar();
@@ -184,14 +181,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         viewBinding.webview.addJavascriptInterface(javaScripInterface, "blockListener");
         viewBinding.webview.setWebViewClient(webViewClient);
         viewBinding.webview.setWebChromeClient(webChromeClient);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void initUtils() {
-        //TODO:未解决DataManager单例初始化问题
-        DataManager.init(this);
-        AdBlocker.init(this);
-        presenter = new MainPresenter(this);
     }
 
     @Override

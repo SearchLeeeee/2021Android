@@ -1,7 +1,11 @@
 package com.example.webviewapp.common.base;
 
 import android.app.Application;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
+
+import com.example.webviewapp.common.utils.AdBlocker;
 import com.example.webviewapp.data.DataManager;
 
 public class BaseApplication extends Application {
@@ -12,6 +16,7 @@ public class BaseApplication extends Application {
         return applicationContext;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate() {
         super.onCreate();
@@ -20,8 +25,10 @@ public class BaseApplication extends Application {
         initApplication();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void initApplication() {
         DataManager.init(getInstance());
+        AdBlocker.init(getInstance());
     }
 
 }
