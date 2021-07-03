@@ -22,6 +22,8 @@ public class MainPresenter implements MainContract.Presenter {
     public void addHistory(String url, String title) {
         if (title.equals("")) return;
         Record record = new Record(100, System.currentTimeMillis(), url, title, "test", IS_HISTORY);
+        if (DataManager.get().queryRecordTitleByUrl(url, IS_HISTORY) != null)
+            DataManager.get().deleteRecordsByUrl(url, IS_HISTORY);
         DataManager.get().addRecord(record);
     }
 
@@ -30,19 +32,25 @@ public class MainPresenter implements MainContract.Presenter {
         List<Record> note = DataManager.get().historyList;
         List<String> history = new ArrayList<>();
         HashMap<String, Integer> hm = new HashMap<>();
+        String temp;
         for (int i = 0; i < note.size(); i++) {
             if (!hm.containsKey(note.get(i).getTitle())) {
                 hm.put(note.get(i).getTitle(), i);
-                history.add(note.get(i).getTitle());
+                if (note.get(i).getTitle().contains("百度")) {
+                    temp = note.get(i).getTitle().replaceAll("百度", "");
+                    history.add(temp);
+                }
             }
         }
+
         return history;
     }
 
     @Override
     public void addLabel(String url, String title) {
         Record record = new Record(100, System.currentTimeMillis(), url, title, "test", IS_LABEL);
-        List<Record> note = DataManager.get().labelList;
+        if (DataManager.get().queryRecordTitleByUrl(url, IS_LABEL) != null)
+            DataManager.get().deleteRecordsByUrl(url, IS_LABEL);
         DataManager.get().addRecord(record);
     }
 
@@ -58,6 +66,11 @@ public class MainPresenter implements MainContract.Presenter {
             }
         }
         return label;
+    }
+
+    @Override
+    public List<Record> getHistoryRecord() {
+        return DataManager.get().historyList;
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -113,7 +115,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private void initSearchBar() {
         viewBinding.searchbar.setIconifiedByDefault(false);
         List<String> history = presenter.getHistory();
-        viewBinding.listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, history));
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, history);
+        viewBinding.listView.setAdapter(adapter);
         viewBinding.listView.setTextFilterEnabled(true);
         viewBinding.listView.setVisibility(View.GONE);
 
@@ -125,6 +128,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         viewBinding.searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 String url = "https://wap.baidu.com/s?word=" + query;
                 viewBinding.webview.loadUrl(url);
                 return true;
@@ -137,7 +142,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                     viewBinding.listView.clearTextFilter();
                 } else {
                     viewBinding.listView.setVisibility(View.VISIBLE);
-                    viewBinding.listView.setFilterText(newText);
+                    adapter.getFilter().filter(newText);
                 }
                 return true;
             }
@@ -155,8 +160,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         });
 
         viewBinding.backButton.setOnClickListener(v -> {
-            if (viewBinding.webview.canGoBack()) viewBinding.webview.goBack();
-            else viewBinding.webview.goBack();
+            if (viewBinding.webview.canGoBack())
+                viewBinding.webview.goBack();
+            else onBackPressed();
             if (viewBinding.webview.getUrl().equals("file:///android_asset/askToJump.html")) {//在风险访问h5页面需要两次goback才能回去
                 Log.i("TAG", "same");
                 viewBinding.webview.goBack();
@@ -205,8 +211,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         popWindow.setTouchable(true);
         popWindow.setTouchInterceptor((v, event) -> false);
         popWindow.showAtLocation(view, Gravity.BOTTOM, 0, -40);
-      
-        ImageView userButton = view.findViewById(R.id.user_image);
+
+        ImageView userButton = view.findViewById(R.id.user);
+        ImageView quitButton = view.findViewById(R.id.user_image);
         ImageView historyButton = view.findViewById(R.id.history_image);
         ImageView addLabel = view.findViewById(R.id.addbookmark_image);
         TextView tx = view.findViewById(R.id.addbookmark_text);
@@ -228,6 +235,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             tx.setText("已添加");
             addLabel.setImageResource(R.drawable.collected);
         });
+        quitButton.setOnClickListener(v -> finish());
     }
 
     public void addLabel() {

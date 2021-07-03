@@ -151,4 +151,10 @@ public class DataFormatUtils {
             return null;
         }
     }
+
+    public String text2Show(int len, String str) {
+        if (str.length() <= len) return str;
+        String res = str.substring(0, len) + "...";
+        return res;
+    }
 }

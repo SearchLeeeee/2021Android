@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,25 +54,30 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
 
     private void initButton() {
         viewBinding.delete.setText("删除");
-        viewBinding.selectAll.setText("全选");
+        viewBinding.selectAll.setText("取消");
         viewBinding.deleteAll.setText("清空");
         viewBinding.deleteAll.setOnClickListener(v -> {
             presenter.deleteAllHistory();
             records = presenter.refreshRecord();
             initView(records);
         });
+        viewBinding.selectAll.setOnClickListener(v -> {
+            adapter.visible[0] = false;
+            viewBinding.deleteAll.setVisibility(View.VISIBLE);
+            viewBinding.selectAll.setVisibility(View.GONE);
+            viewBinding.delete.setVisibility(View.GONE);
+            LinearLayoutManager layoutManager = (LinearLayoutManager) viewBinding.recyclerView.getLayoutManager();
+            assert layoutManager != null;
+            for (int i = layoutManager.findFirstVisibleItemPosition(); i <= layoutManager.findLastVisibleItemPosition(); i++) {
+                RecyclerView.ViewHolder holder = viewBinding.recyclerView.findViewHolderForAdapterPosition(i);
+                CheckBox checkBox = holder.itemView.findViewById(R.id.checkbox);
+                checkBox.setVisibility(View.INVISIBLE);
+            }
 
+        });
         viewBinding.delete.setOnClickListener(v -> {
             List<String> temp = adapter.getSelectedPositions();
             presenter.deleteHistoryByUrl(temp);
-//            for (int i=0;i<viewBinding.recyclerView.getAdapter().getItemCount();i++) {
-//                View view = viewBinding.recyclerView.getLayoutManager().findViewByPosition(i);
-//                CheckBox checkBox = view.findViewById(R.id.checkbox);
-//                TextView textView = view.findViewById(R.id.url);
-//                if (checkBox.isChecked()) {
-//                    presenter.deleteHistoryByUrl(textView.getText().toString());
-//                }
-//            }
             records = presenter.refreshRecord();
             initView(records);
         });
@@ -92,7 +98,16 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
             @Override
             public void onItemLongClick(View view, int position) {
                 //TODO：历史长按处理
-
+                LinearLayoutManager layoutManager = (LinearLayoutManager) viewBinding.recyclerView.getLayoutManager();
+                assert layoutManager != null;
+                for (int i = layoutManager.findFirstVisibleItemPosition(); i <= layoutManager.findLastVisibleItemPosition(); i++) {
+                    RecyclerView.ViewHolder holder = viewBinding.recyclerView.findViewHolderForAdapterPosition(i);
+                    CheckBox checkBox = holder.itemView.findViewById(R.id.checkbox);
+                    checkBox.setVisibility(View.VISIBLE);
+                }
+                viewBinding.deleteAll.setVisibility(View.GONE);
+                viewBinding.selectAll.setVisibility(View.VISIBLE);
+                viewBinding.delete.setVisibility(View.VISIBLE);
             }
         });
         viewBinding.recyclerView.setAdapter(adapter);

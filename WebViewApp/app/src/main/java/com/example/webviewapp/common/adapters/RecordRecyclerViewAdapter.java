@@ -14,6 +14,8 @@ import com.example.webviewapp.R;
 import com.example.webviewapp.common.utils.DataFormatUtils;
 import com.example.webviewapp.data.Record;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,10 +29,11 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
     private List<Record> records;
     private final Context context;
     private final Integer layoutResId;
+    DataFormatUtils dataFormatUtils = new DataFormatUtils();
 
     private final Map<Integer, Boolean> checkboxMap = new HashMap<>();
     private final Map<Integer, Boolean> dateMap = new HashMap<>();
-
+    public final boolean[] visible = {false};
     // 判断RecyclerView是否正在计算layout或滑动，不在计算的时候通知适配器更新
     private boolean onBind;
 
@@ -73,9 +76,18 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
             holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(v, position));
             holder.itemView.setOnLongClickListener(v -> {
                 onItemClickListener.onItemLongClick(v, position);
+                visible[0] = true;
                 return true;
             });
         }
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull @NotNull ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if (visible[0]) holder.checkBox.setVisibility(View.VISIBLE);
+        else holder.checkBox.setVisibility(View.INVISIBLE);
+
     }
 
     private void initCheckBox(@NonNull ViewHolder holder, int position) {
@@ -102,22 +114,15 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         } else {
             holder.date.setVisibility(View.GONE);
         }
-        String title;
-        if (record.getTitle().length() > 20) {
-            title = record.getTitle().substring(0, 20);
-            title = title + "...";
-        } else title = record.getTitle();
+        holder.checkBox.setVisibility(View.INVISIBLE);
+        String title = dataFormatUtils.text2Show(20, record.getTitle());
         holder.title.setText(title);
-        String url;
-        if (record.getUrl().length() > 40) {
-            url = record.getUrl().substring(0, 40);
-            url = url + "...";
-        } else url = record.getUrl();
+        String url = dataFormatUtils.text2Show(40, record.getUrl());
         holder.url.setText(url);
     }
 
     public long getSelectedPosition() {
-        if (checkboxMap != null) {
+        if (checkboxMap.size() != 0) {
             List<Integer> list = new ArrayList<>(checkboxMap.keySet());
             return records.get(list.get(0)).getPrimaryKey();
         }
@@ -126,7 +131,7 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
 
     public List<String> getSelectedPositions() {
         List<String> res = new ArrayList<>();
-        if (checkboxMap != null) {
+        if (checkboxMap.size() != 0) {
             List<Integer> list = new ArrayList<>(checkboxMap.keySet());
             for (int i = 0; i < list.size(); i++)
                 res.add(records.get(list.get(i)).getUrl());
