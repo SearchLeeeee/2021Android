@@ -1,15 +1,14 @@
 package com.example.webviewapp.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,20 +29,19 @@ import com.google.firebase.database.FirebaseDatabase;
 public class SignUpActivity extends AppCompatActivity implements SignupContract.View {
     private static final String TAG = "SignUpActivity";
     public FragmentRegisterBinding viewBinding;
-    SignupContract.Presenter presenter;
-    private int clicked_image;
-    boolean flag=false;
-    //fb
-    String Email, Password;
-    ProgressDialog mDialog;
-    FirebaseAuth mAuth;
-    DatabaseReference mDatabase;
+    boolean flag = false;
+    private SignupContract.Presenter presenter;
+    private int clickedImageID;
+    private String Email;
+    private String Password;
+    private ProgressDialog mDialog;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
     //TODO:注册时选择头像对应id，代码未合并
     int avatarId;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    @Nullable
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new SignUpPresenter();
@@ -88,21 +86,20 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
 //            Toast.makeText(getApplicationContext(), "用户已存在，注册失败", Toast.LENGTH_SHORT).show();
 //        }
 
-        //fb
         Email = viewBinding.UserNumber.getText().toString().trim();
         Password = viewBinding.loginPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(Email)){
-            Toast.makeText(getApplicationContext(), "Enter Email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "请输入您的Email", Toast.LENGTH_SHORT).show();
             return;
         }else if (TextUtils.isEmpty(Password)){
-            Toast.makeText(getApplicationContext(), "Enter Password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "请输入您的密码", Toast.LENGTH_SHORT).show();
             return;
         }else if (Password.length()<6){
-            Toast.makeText(getApplicationContext(),"Password must be greater then 6 digit",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "密码不能少于六位", Toast.LENGTH_SHORT).show();
             return;
         }
-        mDialog.setMessage("Creating User please wait...");
+        mDialog.setMessage("正在为您创建用户...");
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
         mAuth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -119,7 +116,7 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                     myRef.setValue("Hello, World!");
                     presenter.SignUp();
                 }else{
-                    Toast.makeText(getApplicationContext(),"error on creating user",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "创建用户失败，请重新创建", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -149,9 +146,7 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
         User user = BuildNewUser();
         //TODO:无法添加到数据库
         mDatabase.child(uid).setValue(user);
-        //腾讯云存储
-        CloudUser cloudUser = new CloudUser(this);
-        cloudUser.uploadUser(uid, user);
+        CloudUser.get().uploadUser(uid, user);
     }
 
     private User BuildNewUser() {
@@ -173,30 +168,30 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
         this.finish();
     }
 
+    @SuppressLint("NonConstantResourceId")
     public void click(View v) {
-        if(flag==true)
-        {
-            switch (clicked_image){
-            case R.id.imageView:
-                viewBinding.includeAvatarPicker.imageView.setImageResource(R.drawable.circle);
-                break;
-            case R.id.imageView2:
-                viewBinding.includeAvatarPicker.imageView2.setImageResource(R.drawable.circle);
-                break;
-            case R.id.imageView3:
-                viewBinding.includeAvatarPicker.imageView3.setImageResource(R.drawable.circle);
-                break;
-            case R.id.imageView4:
-                viewBinding.includeAvatarPicker.imageView4.setImageResource(R.drawable.circle);
-                break;
-            case R.id.imageView5:
-                viewBinding.includeAvatarPicker.imageView5.setImageResource(R.drawable.circle);
-                break;
-            case R.id.imageView6:
-                viewBinding.includeAvatarPicker.imageView6.setImageResource(R.drawable.circle);
-                break;
-            default:
-                break;
+        if (flag) {
+            switch (clickedImageID) {
+                case R.id.imageView:
+                    viewBinding.includeAvatarPicker.imageView.setImageResource(R.drawable.circle);
+                    break;
+                case R.id.imageView2:
+                    viewBinding.includeAvatarPicker.imageView2.setImageResource(R.drawable.circle);
+                    break;
+                case R.id.imageView3:
+                    viewBinding.includeAvatarPicker.imageView3.setImageResource(R.drawable.circle);
+                    break;
+                case R.id.imageView4:
+                    viewBinding.includeAvatarPicker.imageView4.setImageResource(R.drawable.circle);
+                    break;
+                case R.id.imageView5:
+                    viewBinding.includeAvatarPicker.imageView5.setImageResource(R.drawable.circle);
+                    break;
+                case R.id.imageView6:
+                    viewBinding.includeAvatarPicker.imageView6.setImageResource(R.drawable.circle);
+                    break;
+                default:
+                    break;
             }
         }
         switch (v.getId()) {
@@ -221,7 +216,7 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
             default:
                 break;
         }
-        clicked_image=v.getId();
-        flag=true;
+        clickedImageID = v.getId();
+        flag = true;
     }
 }
