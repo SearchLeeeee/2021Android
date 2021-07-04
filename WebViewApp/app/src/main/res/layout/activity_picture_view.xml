@@ -31,10 +31,11 @@
     <ImageView
         android:id="@+id/save"
         android:padding="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:src="@mipmap/ic_launcher" />
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:src="@drawable/download" />
 
     <ImageView
         android:id="@+id/picture"

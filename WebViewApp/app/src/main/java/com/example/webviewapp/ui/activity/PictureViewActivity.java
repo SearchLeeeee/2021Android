@@ -55,9 +55,6 @@ public class PictureViewActivity extends BaseActivity {
     private void initValue() {
         curImageUrl = getIntent().getStringExtra("curImageUrl");
         imageUrls = getIntent().getStringArrayExtra("imageUrls");
-//        curImageUrl = "https://dfzximg02.dftoutiao.com/news/20210308/20210308134708_d0216565f1d6fe1abdfa03efb4f3e23c_0_mwpm_03201609.png";
-//        imageUrls = new String[]{"https://dfzximg02.dftoutiao.com/news/20210308/20210308134708_d0216565f1d6fe1abdfa03efb4f3e23c_0_mwpm_03201609.png",
-//                "https://dfzximg02.dftoutiao.com/news/20210308/20210308134708_d0216565f1d6fe1abdfa03efb4f3e23c_1_mwpm_03201609.png"};
         Log.d(TAG, "initValue: curImageUrls" + curImageUrl);
         Log.d(TAG, "initValue: imageUrls" + imageUrls[0]);
 

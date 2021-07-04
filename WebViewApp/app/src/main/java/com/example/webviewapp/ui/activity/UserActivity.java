@@ -11,7 +11,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.webviewapp.R;
 import com.example.webviewapp.databinding.ActivityUserBinding;
-import com.google.android.material.snackbar.Snackbar;
 
 public class UserActivity extends AppCompatActivity {
 
@@ -57,6 +56,4 @@ public class UserActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
-
-
 }

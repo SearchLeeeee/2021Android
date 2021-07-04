@@ -1,5 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -37,9 +38,6 @@ import com.example.webviewapp.presenter.MainPresenter;
 
 import java.util.List;
 
-//TODO:删除无意义注释、无意义log
-//TODO：Java驼峰命名，xml下划线和小写
-//TODO：有复杂逻辑的地方要写注释
 public class MainActivity extends BaseActivity implements MainContract.View {
     private static final String TAG = "MainActivity";
     private MainContract.Presenter presenter;
@@ -174,6 +172,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         });
     }
 
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void initWebView() {
         viewBinding.webview.loadUrl("https://www.baidu.com/");
         WebSettings webSettings = viewBinding.webview.getSettings();
@@ -203,6 +202,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     /**
      * 菜单栏的实现
      */
+    @SuppressLint("ClickableViewAccessibility")
     public void popWindow() {
         // PopWindow 布局发
         View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
