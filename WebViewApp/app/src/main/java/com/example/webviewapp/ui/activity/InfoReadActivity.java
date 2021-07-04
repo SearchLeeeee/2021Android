@@ -62,8 +62,8 @@ public class InfoReadActivity extends BaseActivity {
         EventUtils.register(this);
         EventUtils.post(new EventUtils.NewsDataChangeEvent());
 
-        initData();
-        initViewPager();
+//        initData();
+//        initViewPager();
     }
 
     private void initData() {

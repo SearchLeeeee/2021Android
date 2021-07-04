@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="输入搜索"
+        android:maxLength="2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,7 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:visibility="gone" />
 
         <com.example.webviewapp.ui.view.RecordEditButton
             android:id="@+id/select_all"

@@ -30,7 +30,6 @@ public class AdBlocker {
                 try {
                     loadFromAssets(context);
                 } catch (IOException e) {
-                    // noop
                 }
                 return null;
             }
