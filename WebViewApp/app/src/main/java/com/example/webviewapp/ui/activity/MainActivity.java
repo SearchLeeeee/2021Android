@@ -22,7 +22,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,10 +46,10 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private static final String TAG = "MainActivity";
     private MainContract.Presenter presenter;
     public ActivityMainBinding viewBinding;
-    PopupWindow popWindow;
-    View view;
-    TextView tx;
-    ImageView addLabel;
+    private PopupWindow popWindow;
+    private View view;
+    private TextView addedText;
+    private ImageView addLabel;
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
     CustomWebViewClient webViewClient = new CustomWebViewClient(presenter) {
         @Override
@@ -61,10 +63,10 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {//页面开始加载
             viewBinding.progressbar.setVisibility(View.VISIBLE);
             if (presenter.getLabelUrl().contains(viewBinding.webview.getUrl())) {
-                tx.setText("已添加");
+                addedText.setText("已添加");
                 addLabel.setImageResource(R.drawable.collected);
             } else {
-                tx.setText("添加");
+                addedText.setText("添加");
                 addLabel.setImageResource(R.drawable.uncollected);
             }
         }
@@ -265,29 +267,29 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             return false;
         });
 
+        LinearLayout userCenter = view.findViewById(R.id.user_center);
+        RelativeLayout quitButton = view.findViewById(R.id.quit_button);
+        RelativeLayout historyButton = view.findViewById(R.id.history_button);
+        RelativeLayout refreshButton = view.findViewById(R.id.refresh_button);
+        RelativeLayout addLabelButton = view.findViewById(R.id.add_bookmark_button);
+        addLabel = view.findViewById(R.id.add_bookmark_image);
+        addedText = view.findViewById(R.id.add_bookmark_text);
 
-        ImageView userButton = view.findViewById(R.id.user);
-        ImageView quitButton = view.findViewById(R.id.user_image);
-        ImageView historyButton = view.findViewById(R.id.history_image);
-        addLabel = view.findViewById(R.id.addbookmark_image);
-        ImageView refreshButton = view.findViewById(R.id.refresh_image);
-        tx = view.findViewById(R.id.addbookmark_text);
-
-        userButton.setOnClickListener(v -> {
+        userCenter.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, UserActivity.class));
         });
         historyButton.setOnClickListener(v -> {
             popWindow.dismiss();
             startActivity(new Intent(MainActivity.this, RecordActivity.class));
         });
-        addLabel.setOnClickListener(v -> {
-            if (tx.getText().toString().equals("添加")) {
+        addLabelButton.setOnClickListener(v -> {
+            if (addedText.getText().toString().equals("添加")) {
                 addLabel();
-                tx.setText("已添加");
+                addedText.setText("已添加");
                 addLabel.setImageResource(R.drawable.collected);
             } else {
                 deleteLabel();
-                tx.setText("添加");
+                addedText.setText("添加");
                 addLabel.setImageResource(R.drawable.uncollected);
             }
         });
