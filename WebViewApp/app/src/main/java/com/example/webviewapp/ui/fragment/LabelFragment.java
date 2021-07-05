@@ -131,7 +131,6 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
             records = presenter.refreshRecord();
             initView(records);
         });
-
     }
 
     @Override
@@ -158,7 +157,6 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
         viewBinding.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -175,7 +173,6 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
     }

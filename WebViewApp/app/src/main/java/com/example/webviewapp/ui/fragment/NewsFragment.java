@@ -26,7 +26,7 @@ import java.util.List;
 public class NewsFragment extends Fragment {
     private static final String TAG = "NewsFragment";
     public FragmentNewsBinding viewBinding;
-    String jsonString;
+    private final String jsonString;
 
     private List<NewsItem> news;
 
@@ -53,13 +53,7 @@ public class NewsFragment extends Fragment {
         for (int i = 0; i < data.size(); i++) {
             JSONObject object = data.getJSONObject(i);
             NewsItem item = new NewsItem();
-
-            item.setUniquekey(object.getString("uniquekey"));
-            item.setTitle(object.getString("title"));
-            item.setCategory(object.getString("category"));
-            item.setAuthorName(object.getString("author_name"));
-            item.setUrl(object.getString("url"));
-            item.setIsContent(object.getString("is_content"));
+            initItem(object, item);
 
             for (String key : object.keySet()) {
                 if (key.contains("thumbnail_pic_s")) {
@@ -69,5 +63,14 @@ public class NewsFragment extends Fragment {
 
             news.add(item);
         }
+    }
+
+    private void initItem(JSONObject object, NewsItem item) {
+        item.setUniquekey(object.getString("uniquekey"));
+        item.setTitle(object.getString("title"));
+        item.setCategory(object.getString("category"));
+        item.setAuthorName(object.getString("author_name"));
+        item.setUrl(object.getString("url"));
+        item.setIsContent(object.getString("is_content"));
     }
 }

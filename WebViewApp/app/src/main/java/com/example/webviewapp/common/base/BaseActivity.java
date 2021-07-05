@@ -46,7 +46,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-
     /**
      * 配置View绑定
      * @throws Exception
@@ -67,7 +66,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         }
     }
-
 
     /**
      * 封装好点击一个view跳转到一个activity的动作

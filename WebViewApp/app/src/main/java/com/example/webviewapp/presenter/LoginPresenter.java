@@ -3,10 +3,7 @@ package com.example.webviewapp.presenter;
 import com.example.webviewapp.contract.LoginContract;
 import com.example.webviewapp.data.DataManager;
 
-
 public class LoginPresenter implements LoginContract.Presenter {
-
-
     @Override
     public void Login() {
         // 判断输入是否为空再进行toString转换
@@ -27,6 +24,4 @@ public class LoginPresenter implements LoginContract.Presenter {
     public void logout() {
         DataManager.get().isLogin = false;
     }
-
-
 }

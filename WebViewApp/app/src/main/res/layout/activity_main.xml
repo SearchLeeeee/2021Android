@@ -8,7 +8,6 @@
     android:background="@color/black"
     tools:context=".ui.activity.MainActivity">
 
-
     <WebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
@@ -103,6 +102,4 @@
             app:srcCompat="@drawable/menu"/>
 
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

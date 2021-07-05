@@ -35,10 +35,9 @@ public class FirstFragment extends Fragment implements LoginContract.View {
     LoginContract.Presenter presenter = new LoginPresenter();
     private FragmentFirstBinding binding;
 
-    //fb
-    FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener mAuthListner;
-    FirebaseUser mUser;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListner;
+    private FirebaseUser mUser;
 
     @Override
     public View onCreateView(
