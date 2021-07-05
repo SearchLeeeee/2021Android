@@ -25,7 +25,6 @@ public class RecordActivity extends BaseActivity {
         getSupportActionBar().hide();
 
         initViewPager();
-
         viewBinding.backBtn.setOnClickListener(v -> finish());
     }
 

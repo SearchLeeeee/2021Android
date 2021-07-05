@@ -46,5 +46,4 @@ public class JavaScripInterfaceAdapter {
         Log.d(TAG, "openImage: urls" + video);
         context.startActivity(intent);
     }
-
 }

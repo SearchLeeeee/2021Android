@@ -128,7 +128,7 @@ public final class PermissionUtils {
     }
 
     public static final class PermissionsManager {
-        private Context context;
+        private final Context context;
 
         /**
          * @param context                   当前activity
@@ -167,7 +167,5 @@ public final class PermissionUtils {
                 DataManager.get().addDeniedPermission(permission);
             }
         }
-
     }
-
 }

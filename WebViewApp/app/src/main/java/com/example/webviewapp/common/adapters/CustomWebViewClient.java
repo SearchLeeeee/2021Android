@@ -16,7 +16,6 @@ public class CustomWebViewClient extends WebViewClient {
     private static final String TAG = "CustomWebViewClient";
 
     public String blockUrl = "";
-
     private final MainContract.Presenter presenter;
 
     public CustomWebViewClient(MainContract.Presenter presenter) {

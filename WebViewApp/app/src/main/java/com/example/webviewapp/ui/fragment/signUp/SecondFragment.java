@@ -21,9 +21,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class SecondFragment extends Fragment {
     private static final String TAG = "SecondFragment";
-
     private FragmentSecondBinding binding;
     String email;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -36,9 +36,7 @@ public class SecondFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
-
 
     private void getUserShow(){
         //获取用户信息

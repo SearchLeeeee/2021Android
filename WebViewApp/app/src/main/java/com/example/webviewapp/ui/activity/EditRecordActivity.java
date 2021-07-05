@@ -15,9 +15,9 @@ import com.example.webviewapp.presenter.EditRecordPresenter;
 public class EditRecordActivity extends BaseActivity implements EditRecordContract.View {
     private static final String TAG = "EditRecordActivity";
     public ActivityEditRecordBinding viewBinding;
-    EditRecordContract.Presenter presenter;
+    private EditRecordContract.Presenter presenter;
 
-    Record record;
+    private Record record;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

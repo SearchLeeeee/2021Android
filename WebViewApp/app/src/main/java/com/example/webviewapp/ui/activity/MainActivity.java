@@ -73,7 +73,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     };
 
     private void initUrl(WebView view) {
-        //TODO:部分img和video的url还是无法获取，视频跳转后需要点两次返回才能退出
         view.loadUrl("javascript:(function()" +
                 "    {" +
                 "        var objs = document.getElementsByTagName('img');" +

@@ -37,7 +37,6 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
     private ProgressDialog mDialog;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    //TODO:注册时选择头像对应id，代码未合并
     int avatarId;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
