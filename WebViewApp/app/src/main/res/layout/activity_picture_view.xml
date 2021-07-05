@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".ui.activity.PictureViewActivity">
 
     <androidx.viewpager.widget.ViewPager
@@ -12,22 +13,29 @@
 
     <ImageView
         android:id="@+id/back_button"
+        android:layout_margin="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@drawable/arrow" />
 
     <TextView
         android:id="@+id/order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="1 / 2"
+        android:textColor="@color/white"
+        android:textSize="20sp"
         android:layout_gravity="bottom|start" />
 
     <ImageView
         android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:src="@mipmap/ic_launcher" />
+        android:padding="10dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:src="@drawable/download" />
 
     <ImageView
         android:id="@+id/picture"

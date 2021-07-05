@@ -50,6 +50,4 @@ public class UserActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
-
-
 }

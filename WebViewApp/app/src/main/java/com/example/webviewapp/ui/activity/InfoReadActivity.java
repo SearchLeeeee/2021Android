@@ -2,11 +2,13 @@ package com.example.webviewapp.ui.activity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.example.webviewapp.common.base.BaseActivity;
 import com.example.webviewapp.common.utils.EventUtils;
@@ -52,6 +54,11 @@ public class InfoReadActivity extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             return titles.get(position);
         }
+
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return PagerAdapter.POSITION_NONE;
+        }
     };
     public ActivityInfoReadBinding viewBinding;
 
@@ -71,7 +78,6 @@ public class InfoReadActivity extends BaseActivity {
             titles.add(type_cn[i]);
             query(type_en[i]);
         }
-
     }
 
     private void initViewPager() {
@@ -89,7 +95,7 @@ public class InfoReadActivity extends BaseActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d(TAG, "onFailure: ");
+                Toast.makeText(InfoReadActivity.this, "获取不到信息，请检查您的网络情况！", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -97,9 +103,7 @@ public class InfoReadActivity extends BaseActivity {
                 if (response.body() != null) {
                     fragments.add(new NewsFragment(response.body().string()));
                     EventUtils.post(new EventUtils.NewsDataChangeEvent());
-                    Log.d(TAG, "onResponse: not null");
                 }
-                Log.d(TAG, "onResponse: ");
             }
         });
     }

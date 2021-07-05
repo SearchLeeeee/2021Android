@@ -2,6 +2,9 @@ package com.example.webviewapp.common.utils;
 
 import android.app.Application;
 import android.content.res.AssetManager;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -9,7 +12,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.webviewapp.common.base.BaseApplication;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -115,11 +124,37 @@ public class DataFormatUtils {
                 name, "drawable", app.getPackageName());
     }
 
+    /**
+     * 从文件路径读取字符流
+     *
+     * @param fileName
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public static String readJsonFile(String fileName) {
+        String jsonStr = "";
+        try {
+            File jsonFile = new File(fileName);
+            FileReader fileReader = new FileReader(jsonFile);
+            Reader reader = new InputStreamReader(new FileInputStream(jsonFile), StandardCharsets.UTF_8);
+            int ch = 0;
+            StringBuffer sb = new StringBuffer();
+            while ((ch = reader.read()) != -1) {
+                sb.append((char) ch);
+            }
+            fileReader.close();
+            reader.close();
+            jsonStr = sb.toString();
+            return jsonStr;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public String text2Show(int len, String str) {
         if (str.length() <= len) return str;
         String res = str.substring(0, len) + "...";
         return res;
     }
-
 }

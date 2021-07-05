@@ -8,6 +8,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -17,6 +21,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".common.base.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,11 +29,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WebViewApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".data.cloud.CloudActivity"></activity>
+        <service
+            android:name=".common.utils.Cloud.CloudService"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity android:name=".ui.activity.InfoReadActivity" />
-        <activity android:name=".ui.activity.VideoViewActivity" />
+        <activity
+            android:name=".ui.activity.VideoViewActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="portrait" />
         <activity android:name=".ui.activity.PictureViewActivity" />
-        <activity android:name=".ui.activity.SignUpActivity" android:label="@string/sign_up"/>
+        <activity
+            android:name=".ui.activity.SignUpActivity"
+            android:label="@string/sign_up" />
         <activity
             android:name=".ui.activity.UserActivity"
             android:label="@string/title_activity_user"

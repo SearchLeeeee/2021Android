@@ -8,15 +8,6 @@
     android:background="@color/black"
     tools:context=".ui.activity.MainActivity">
 
-    <!--        <androidx.appcompat.widget.Toolbar-->
-    <!--            android:id="@+id/toolbar"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:background="?attr/colorPrimary"-->
-    <!--            android:minHeight="?attr/actionBarSize"-->
-    <!--            android:theme="?attr/actionBarTheme"-->
-    <!--            tools:layout_editor_absoluteY="90dp" />-->
-
 
     <WebView
         android:id="@+id/webview"
@@ -24,9 +15,7 @@
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
     </WebView>
-
 
     <SearchView
         android:id="@+id/searchbar"

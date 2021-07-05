@@ -34,17 +34,12 @@ import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.CustomWebViewClient;
 import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
 import com.example.webviewapp.common.base.BaseActivity;
-import com.example.webviewapp.common.utils.AdBlocker;
 import com.example.webviewapp.contract.MainContract;
-import com.example.webviewapp.data.DataManager;
 import com.example.webviewapp.databinding.ActivityMainBinding;
 import com.example.webviewapp.presenter.MainPresenter;
 
 import java.util.List;
 
-//TODO:删除无意义注释、无意义log
-//TODO：Java驼峰命名，xml下划线和小写
-//TODO：有复杂逻辑的地方要写注释
 public class MainActivity extends BaseActivity implements MainContract.View {
     private static final String TAG = "MainActivity";
     private MainContract.Presenter presenter;
@@ -59,6 +54,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         public void onPageFinished(WebView view, String url) {//页面加载完成
             presenter.addHistory(url, view.getTitle());
             viewBinding.progressbar.setVisibility(View.GONE);
+            initUrl(view);
         }
 
         @Override
@@ -73,6 +69,37 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             }
         }
     };
+
+    private void initUrl(WebView view) {
+        //TODO:部分img和video的url还是无法获取，视频跳转后需要点两次返回才能退出
+        view.loadUrl("javascript:(function()" +
+                "    {" +
+                "        var objs = document.getElementsByTagName('img');" +
+                "        var array=new Array();" +
+                "        for(var j=0;j<objs.length;j++)" +
+                "            {" +
+                "                array[j]=objs[j].src;" +
+                "            }" +
+                "        for(var i=0;i<objs.length;i++)" +
+                "            {" +
+                "                objs[i].onclick=function()" +
+                "                    {" +
+                "                        window.imagelistener.openImage(this.src,array);" +
+                "                    }" +
+                "            }" +
+                "    })()");
+        view.loadUrl("javascript:(function()" +
+                "    {" +
+                "        var objs = document.getElementsByTagName('video');" +
+                "        for(var i=0;i<objs.length;i++)" +
+                "            {" +
+                "                objs[i].addEventListener('play', function () {" +
+                "                   window.imagelistener.openVideo(this.currentSrc);" +
+                "                   this.pause();"+
+                "                });" +
+                "            }" +
+                "    })()");
+    }
     /**
      * WebChromeClient主要辅助WebView处理Javascript的对话框、网站图标、网站title、加载进度等
      */
@@ -80,7 +107,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         //监听js alert弹窗事件
         @Override
         public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
-            Log.i("get到的参数", message);
             if (message.equals("1")) {
                 Log.i("弹窗", "继续访问:" + webViewClient.blockUrl);
                 webView.loadUrl(webViewClient.blockUrl);
@@ -105,8 +131,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
+        presenter = new MainPresenter(this);
 
-        initUtils();
         initWebView();
         initButton();
         initSearchBar();
@@ -197,6 +223,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         });
     }
 
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void initWebView() {
         viewBinding.webview.loadUrl("https://www.baidu.com/");
         WebSettings webSettings = viewBinding.webview.getSettings();
@@ -210,14 +237,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         viewBinding.webview.addJavascriptInterface(javaScripInterface, "blockListener");
         viewBinding.webview.setWebViewClient(webViewClient);
         viewBinding.webview.setWebChromeClient(webChromeClient);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void initUtils() {
-        //TODO:未解决DataManager单例初始化问题
-        DataManager.init(this);
-        AdBlocker.init(this);
-        presenter = new MainPresenter(this);
     }
 
     @Override

@@ -1,13 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black"
     tools:context=".ui.activity.VideoViewActivity">
 
-    <VideoView
-        android:id="@+id/video_view"
+    <!--    容器用于全屏旋转,使视频宽高比保持不变-->
+    <RelativeLayout
+        android:id="@+id/video_view_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="200dp"
+        android:background="@android:color/black"
+        android:minHeight="200dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</LinearLayout>
+        <VideoView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:src="@drawable/arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/btn_play"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:src="@drawable/play_btn"
+        app:layout_constraintEnd_toEndOf="@id/video_view_container"
+        app:layout_constraintStart_toStartOf="@id/video_view_container"
+        app:layout_constraintTop_toTopOf="@id/video_view_container" />
+
+    <ImageView
+        android:id="@+id/btn_change"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:layout_margin="10dp"
+        android:src="@drawable/screen_rotation"
+        app:layout_constraintBottom_toBottomOf="@id/video_view_container"
+        app:layout_constraintEnd_toEndOf="@id/video_view_container" />
+
+    <ImageView
+        android:id="@+id/btn_seek"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:layout_margin="10dp"
+        android:src="@drawable/back_to_begin"
+        app:layout_constraintEnd_toEndOf="@id/video_view_container"
+        app:layout_constraintTop_toTopOf="@id/video_view_container" />
+
+    <LinearLayout
+        android:id="@+id/voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/video_view_container"
+        app:layout_constraintEnd_toEndOf="@+id/video_view_container"
+        app:layout_constraintStart_toStartOf="@+id/video_view_container"
+        app:layout_constraintTop_toTopOf="@+id/video_view_container">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/voice" />
+
+        <TextView
+            android:id="@+id/voice_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="100%"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
