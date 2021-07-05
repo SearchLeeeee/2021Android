@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -82,6 +83,7 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
 //        } else {
 //            Toast.makeText(getApplicationContext(), "用户已存在，注册失败", Toast.LENGTH_SHORT).show();
 //        }
+        Log.i(TAG, "图片id: "+ clickedImageID);
 
         Email = viewBinding.UserNumber.getText().toString().trim();
         Password = viewBinding.loginPassword.getText().toString().trim();
@@ -107,10 +109,6 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                     mDialog.dismiss();
                     OnAuth(task.getResult().getUser());
                     mAuth.signOut();
-                    // Write a message to the database
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("message");
-                    myRef.setValue("Hello, World!");
                     presenter.SignUp();
                 }else{
                     Toast.makeText(getApplicationContext(), "创建用户失败，请重新创建", Toast.LENGTH_SHORT).show();
@@ -149,16 +147,12 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
     private User BuildNewUser() {
         return new User(
                 getUserEmail(),
-                getUserAvatarId()
+                clickedImageID
         );
     }
 
     public String getUserEmail() {
         return Email;
-    }
-
-    public int getUserAvatarId() {
-        return avatarId;
     }
 
     public void back() {

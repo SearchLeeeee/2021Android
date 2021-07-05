@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.webviewapp.common.base.BaseApplication;
 import com.example.webviewapp.common.utils.DataFormatUtils;
-import com.example.webviewapp.data.EventManager;
+import com.example.webviewapp.common.utils.EventUtils;
 import com.example.webviewapp.data.Record;
 import com.example.webviewapp.data.User;
 import com.tencent.cos.xml.CosXmlService;
@@ -27,8 +27,6 @@ import com.tencent.cos.xml.transfer.TransferManager;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
 import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,9 +38,9 @@ public class CloudUser {
     private static final String TAG = "CloudAddUser";
     private volatile static CloudUser instance;
 
-    private final String bucket = "web-view-1301940023"; //存储桶，格式：BucketName-APPID
-    private final String SECRET_ID = "AKIDoJZZIkwrVt0qOggPs4zd181g4C6j6D5g"; // 密钥id SecretId
-    private final String SECRET_KEY = "MSIsDI9k0AF8l9JEtISN2RaS6UcU7UaP"; // 密钥key SecretKey
+    private final String bucket = "webview-1306366413"; //存储桶，格式：BucketName-APPID
+    private final String SECRET_ID = ""; // 密钥id SecretId
+    private final String SECRET_KEY = ""; // 密钥key SecretKey
     private final String REGION = "ap-guangzhou";
     private final Context context;
     private String savePathDir;
@@ -140,19 +138,21 @@ public class CloudUser {
     public User getUserCloud(String uid) {
         String fileName = uid + "user.json";
         User user = new User();
+        String cosPath = uid + "user";
 
         COSXMLDownloadTask cosxmlDownloadTask =
-                transferManager.download(context, bucket, uid, savePathDir, fileName);
+                transferManager.download(context, bucket, cosPath, savePathDir, fileName);
 
         cosxmlDownloadTask.setCosXmlResultListener(new CosXmlResultListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
-                String uri = savePathDir + "/" + fileName + ".json";
+                String uri = savePathDir + "/" + fileName;
                 String json = DataFormatUtils.readJsonFile(uri);
                 JSONObject object = JSON.parseObject(json);
                 user.setEmail(object.getString("email"));
-                EventBus.getDefault().post(new EventManager.EmailEvent(user.getEmail()));
+                user.setAvatarId(object.getInteger("avatarId"));
+                EventUtils.post(new EventUtils.UserEvent(user.getEmail(), user.getAvatarId()));
             }
 
             @Override
@@ -209,15 +209,16 @@ public class CloudUser {
     public List<Record> getRecordsCloud(String uid) {
         String fileName = uid + "records.json";
         List<Record> records = new ArrayList<>();
+        String cosPath = uid + "user";
 
         COSXMLDownloadTask cosxmlDownloadTask =
-                transferManager.download(context, bucket, uid, savePathDir, fileName);
+                transferManager.download(context, bucket, cosPath, savePathDir, fileName);
 
         cosxmlDownloadTask.setCosXmlResultListener(new CosXmlResultListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
-                String uri = savePathDir + "/" + fileName + ".json";
+                String uri = savePathDir + "/" + fileName;
                 String json = DataFormatUtils.readJsonFile(uri);
                 JSONArray array = JSON.parseArray(json);
                 Record record = new Record();
