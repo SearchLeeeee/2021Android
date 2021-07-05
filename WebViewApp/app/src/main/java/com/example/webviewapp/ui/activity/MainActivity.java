@@ -1,5 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +37,7 @@ import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.CustomWebViewClient;
 import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
 import com.example.webviewapp.common.base.BaseActivity;
+import com.example.webviewapp.common.utils.PermissionUtils;
 import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.databinding.ActivityMainBinding;
 import com.example.webviewapp.presenter.MainPresenter;
@@ -138,6 +140,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         initButton();
         initSearchBar();
 
+        requestPermissions();
     }
     @Override
     protected void onResume() {
@@ -328,5 +331,18 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
     }
 
+    private void requestPermissions() {
+        new PermissionUtils.PermissionsManager(MainActivity.this).requestPermissions(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.VIBRATE,
+                Manifest.permission.WRITE_SETTINGS,
+                Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS
+        );
+    }
 }
 
