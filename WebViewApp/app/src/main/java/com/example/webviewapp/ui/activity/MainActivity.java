@@ -7,12 +7,14 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -42,13 +44,15 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private static final String TAG = "MainActivity";
     private MainContract.Presenter presenter;
     public ActivityMainBinding viewBinding;
-
+    PopupWindow popWindow;
+    View view;
+    TextView tx;
+    ImageView addLabel;
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
     CustomWebViewClient webViewClient = new CustomWebViewClient(presenter) {
         @Override
         public void onPageFinished(WebView view, String url) {//页面加载完成
             presenter.addHistory(url, view.getTitle());
-            Log.d(TAG, "onPageFinished: " + view.getTitle());
             viewBinding.progressbar.setVisibility(View.GONE);
             initUrl(view);
         }
@@ -56,6 +60,13 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {//页面开始加载
             viewBinding.progressbar.setVisibility(View.VISIBLE);
+            if (presenter.getLabelUrl().contains(viewBinding.webview.getUrl())) {
+                tx.setText("已添加");
+                addLabel.setImageResource(R.drawable.collected);
+            } else {
+                tx.setText("添加");
+                addLabel.setImageResource(R.drawable.uncollected);
+            }
         }
     };
 
@@ -104,7 +115,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 webView.goBack();
                 webView.goBack();
             }
-
             result.confirm();
             return true;
         }
@@ -114,8 +124,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         public void onProgressChanged(WebView view, int newProgress) {
             viewBinding.progressbar.setProgress(newProgress);
         }
-
-
     };
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -178,13 +186,24 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private void initButton() {
         //设置按钮的点击事件
+        view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(dm);
+        initPopWindow();
         viewBinding.menuButton.setOnClickListener(v -> {
-            popWindow();
+            int height = dm.heightPixels;
+            Log.d(TAG, "initButton: ");
+            if (popWindow.isShowing()) popWindow.dismiss();
+            else {
+                popWindow.showAtLocation(view, Gravity.NO_GRAVITY, 0, dm.heightPixels - 400);
+            }
         });
 
         viewBinding.refreshButton.setOnClickListener(v -> {
             viewBinding.webview.loadUrl(DEFAULT_URL);
         });
+
 
         viewBinding.backButton.setOnClickListener(v -> {
             if (viewBinding.webview.canGoBack())
@@ -195,6 +214,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 viewBinding.webview.goBack();
                 viewBinding.webview.goBack();
             }
+        });
+        viewBinding.nextButton.setOnClickListener(v -> {
+            viewBinding.webview.goForward();
         });
         viewBinding.fowardButton.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, InfoReadActivity.class));
@@ -232,39 +254,48 @@ public class MainActivity extends BaseActivity implements MainContract.View {
      * 菜单栏的实现
      */
     @SuppressLint("ClickableViewAccessibility")
-    public void popWindow() {
+    public void initPopWindow() {
         // PopWindow 布局发
-        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
-        final PopupWindow popWindow = new PopupWindow(view,
+        popWindow = new PopupWindow(view,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popWindow.setTouchable(true);
-        popWindow.setTouchInterceptor((v, event) -> false);
-        popWindow.showAtLocation(view, Gravity.BOTTOM, 0, -40);
+        popWindow.setOutsideTouchable(true);
+        popWindow.setAnimationStyle(R.anim.nav_default_pop_enter_anim);
+        popWindow.setTouchInterceptor((v, event) -> {
+            return false;
+        });
+
 
         ImageView userButton = view.findViewById(R.id.user);
         ImageView quitButton = view.findViewById(R.id.user_image);
         ImageView historyButton = view.findViewById(R.id.history_image);
-        ImageView addLabel = view.findViewById(R.id.addbookmark_image);
-        TextView tx = view.findViewById(R.id.addbookmark_text);
-        if (presenter.getLabelUrl().contains(viewBinding.webview.getUrl())) {
-            tx.setText("已添加");
-            addLabel.setImageResource(R.drawable.collected);
-        } else {
-            tx.setText("添加");
-            addLabel.setImageResource(R.drawable.uncollected);
-        }
+        addLabel = view.findViewById(R.id.addbookmark_image);
+        ImageView refreshButton = view.findViewById(R.id.refresh_image);
+        tx = view.findViewById(R.id.addbookmark_text);
+
         userButton.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, UserActivity.class));
         });
         historyButton.setOnClickListener(v -> {
+            popWindow.dismiss();
             startActivity(new Intent(MainActivity.this, RecordActivity.class));
         });
         addLabel.setOnClickListener(v -> {
-            addLabel();
-            tx.setText("已添加");
-            addLabel.setImageResource(R.drawable.collected);
+            if (tx.getText().toString().equals("添加")) {
+                addLabel();
+                tx.setText("已添加");
+                addLabel.setImageResource(R.drawable.collected);
+            } else {
+                deleteLabel();
+                tx.setText("添加");
+                addLabel.setImageResource(R.drawable.uncollected);
+            }
         });
         quitButton.setOnClickListener(v -> finish());
+        refreshButton.setOnClickListener(v -> {
+            viewBinding.webview.reload();
+            Toast.makeText(this, "刷新成功", Toast.LENGTH_SHORT).show();
+        });
     }
 
     public void addLabel() {
@@ -272,6 +303,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         presenter.addLabel(viewBinding.webview.getUrl(), viewBinding.webview.getTitle());
 
     }
+
+    public void deleteLabel() {
+        Toast.makeText(this, "取消书签收藏", Toast.LENGTH_SHORT).show();
+        presenter.deleteRecord(viewBinding.webview.getUrl());
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -117,7 +117,7 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         holder.checkBox.setVisibility(View.INVISIBLE);
         String title = dataFormatUtils.text2Show(20, record.getTitle());
         holder.title.setText(title);
-        String url = dataFormatUtils.text2Show(40, record.getUrl());
+        String url = dataFormatUtils.text2Show(35, record.getUrl());
         holder.url.setText(url);
     }
 
