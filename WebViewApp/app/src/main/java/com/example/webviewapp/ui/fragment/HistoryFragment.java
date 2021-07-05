@@ -56,6 +56,9 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
         viewBinding.delete.setText("删除");
         viewBinding.selectAll.setText("取消");
         viewBinding.deleteAll.setText("清空");
+        viewBinding.deleteAll.setImage(R.drawable.delete);
+        viewBinding.selectAll.setImage(R.drawable.close);
+        viewBinding.delete.setImage(R.drawable.delete);
         viewBinding.deleteAll.setOnClickListener(v -> {
             presenter.deleteAllHistory();
             records = presenter.refreshRecord();

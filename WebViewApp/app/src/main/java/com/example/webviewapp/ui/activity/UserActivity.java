@@ -1,7 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -11,7 +10,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.webviewapp.R;
 import com.example.webviewapp.databinding.ActivityUserBinding;
-import com.google.android.material.snackbar.Snackbar;
 
 public class UserActivity extends AppCompatActivity {
 
@@ -35,12 +33,7 @@ public class UserActivity extends AppCompatActivity {
         getSupportActionBar().show();
 
         binding.toolbar.setNavigationIcon(R.drawable.arrow);
-        binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        binding.toolbar.setNavigationOnClickListener(v -> finish());
 //        binding.fab.setOnClickListener(view ->
 //                Snackbar.make(view, "没有收到讯息", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show());
