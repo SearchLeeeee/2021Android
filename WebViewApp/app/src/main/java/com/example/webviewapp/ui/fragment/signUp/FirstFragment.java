@@ -151,7 +151,6 @@ public class FirstFragment extends Fragment implements LoginContract.View {
                     mDialog.dismiss();
                     Toast.makeText(getContext(), "Login not successfully", Toast.LENGTH_SHORT).show();
                 } else {
-                    presenter.Login();
                     mDialog.dismiss();
                     checkIfEmailVerified();
                 }
@@ -171,6 +170,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
 //            finish();
         } else {
             //dialog.dismiss();
+            presenter.Login();
             NavHostFragment.findNavController(FirstFragment.this)
                     .navigate(R.id.action_FirstFragment_to_SecondFragment);
             onDestroyView();
