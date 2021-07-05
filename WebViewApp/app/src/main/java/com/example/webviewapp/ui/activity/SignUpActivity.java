@@ -48,7 +48,6 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
         viewBinding = FragmentRegisterBinding.inflate(getLayoutInflater());
         setContentView(viewBinding.getRoot());
 
-        //fb
         mDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -59,7 +58,6 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
     /**
      * 初始化界面
      */
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void initButton() {
         viewBinding.signupButton.setOnClickListener(v -> signUp());

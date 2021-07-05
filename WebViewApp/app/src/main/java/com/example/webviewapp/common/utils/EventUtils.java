@@ -2,13 +2,17 @@ package com.example.webviewapp.common.utils;
 
 import org.greenrobot.eventbus.EventBus;
 
+/**
+ * 简化注册注销以及发送事件操作
+ * 存放事件类
+ */
 public class EventUtils {
 
-    public static void register(Object object) {
+    public static <T> void register(T object) {
         EventBus.getDefault().register(object);
     }
 
-    public static void unregister(Object object) {
+    public static <T> void unregister(T object) {
         EventBus.getDefault().unregister(object);
     }
 
@@ -17,5 +21,8 @@ public class EventUtils {
     }
 
     public static class NewsDataChangeEvent {
+    }
+
+    public static class TimeEvent {
     }
 }

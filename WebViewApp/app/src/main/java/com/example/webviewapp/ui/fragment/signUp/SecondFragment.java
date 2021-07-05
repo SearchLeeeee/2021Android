@@ -1,4 +1,4 @@
-package com.example.webviewapp.ui.fragment;
+package com.example.webviewapp.ui.fragment.signUp;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -41,7 +41,6 @@ public class SecondFragment extends Fragment {
 
 
     private void getUserShow(){
-        //fb
         //获取用户信息
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid;
