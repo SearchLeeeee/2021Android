@@ -25,4 +25,14 @@ public class EventUtils {
 
     public static class TimeEvent {
     }
+
+    public static class UserEvent {
+        public String email;
+        public int avatarId;
+
+        public UserEvent(String email, int avatarId) {
+            this.email = email;
+            this.avatarId = avatarId;
+        }
+    }
 }
