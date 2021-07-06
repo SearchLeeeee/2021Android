@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.webviewapp.R;
+import com.example.webviewapp.common.utils.Cloud.CloudUser;
 import com.example.webviewapp.contract.LoginContract;
 import com.example.webviewapp.databinding.FragmentFirstBinding;
 import com.example.webviewapp.presenter.LoginPresenter;
@@ -130,10 +131,10 @@ public class FirstFragment extends Fragment implements LoginContract.View {
     //fb
     private void userSign(String email, String password) {
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getContext(), "Enter the correct Email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "请输入正确的邮箱", Toast.LENGTH_SHORT).show();
             return;
         } else if (TextUtils.isEmpty(password)) {
-            Toast.makeText(getContext(), "Enter the correct password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "请输入正确的密码", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -141,7 +142,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
         ProgressDialog mDialog;
         mDialog = new ProgressDialog(getContext());
 
-        mDialog.setMessage("Loging in please wait...");
+        mDialog.setMessage("正在登录中...");
         mDialog.setIndeterminate(true);
         mDialog.show();
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -149,7 +150,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
                     mDialog.dismiss();
-                    Toast.makeText(getContext(), "Login not successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "登录失败", Toast.LENGTH_SHORT).show();
                 } else {
                     mDialog.dismiss();
                     checkIfEmailVerified();
@@ -165,7 +166,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
         FirebaseUser users = FirebaseAuth.getInstance().getCurrentUser();
         boolean emailVerified = users.isEmailVerified();
         if (!emailVerified) {
-            Toast.makeText(getContext(), "Verify the Email Id", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "请先完成邮箱验证", Toast.LENGTH_SHORT).show();
             mAuth.signOut();
 //            finish();
         } else {

@@ -38,8 +38,6 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
     private ProgressDialog mDialog;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    //TODO:注册时选择头像对应id，代码未合并
-    int avatarId;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -126,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
-                        Toast.makeText(getApplicationContext(),"Check your Email for verification",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"请在邮箱中验证",Toast.LENGTH_SHORT).show();
                         FirebaseAuth.getInstance().signOut();
                     }
                 }
@@ -140,8 +138,6 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
 
     private void createAnewUser(String uid) {
         User user = BuildNewUser();
-        //TODO:无法添加到数据库
-        mDatabase.child(uid).setValue(user);
         CloudUser.get().uploadUser(uid, user);
     }
 

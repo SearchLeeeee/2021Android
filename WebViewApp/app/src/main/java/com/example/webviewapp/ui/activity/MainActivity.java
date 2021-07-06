@@ -187,14 +187,15 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         });
 
         viewBinding.backButton.setOnClickListener(v -> {
-            if (viewBinding.webview.canGoBack())
-                viewBinding.webview.goBack();
-            else onBackPressed();
             if (viewBinding.webview.getUrl().equals("file:///android_asset/askToJump.html")) {//在风险访问h5页面需要两次goback才能回去
                 Log.i("TAG", "same");
                 viewBinding.webview.goBack();
                 viewBinding.webview.goBack();
             }
+            else if (viewBinding.webview.canGoBack())
+                viewBinding.webview.goBack();
+            else onBackPressed();
+
         });
         viewBinding.fowardButton.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, InfoReadActivity.class));
