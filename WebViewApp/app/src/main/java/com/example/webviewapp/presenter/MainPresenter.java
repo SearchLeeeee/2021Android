@@ -73,5 +73,10 @@ public class MainPresenter implements MainContract.Presenter {
         return DataManager.get().historyList;
     }
 
+    @Override
+    public void deleteRecord(String url) {
+        DataManager.get().deleteRecordsByUrl(url, IS_LABEL);
+    }
+
 
 }

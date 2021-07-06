@@ -93,16 +93,24 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
 
     private void initButton() {
         viewBinding.delete.setText("删除");
-        viewBinding.selectAll.setText("全选");
         viewBinding.cancel.setText("取消");
         viewBinding.edit.setText("编辑");
+
+        viewBinding.delete.setImage(R.drawable.delete);
+        viewBinding.edit.setImage(R.drawable.edit);
+        viewBinding.cancel.setImage(R.drawable.clean);
+
         viewBinding.edit.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), EditRecordActivity.class);
             if (adapter.getSelectedPosition() == 0)
                 Toast.makeText(getActivity(), "无点击书签", Toast.LENGTH_SHORT).show();
             else {
-                intent.putExtra("primaryKey", adapter.getSelectedPosition());
-                startActivity(intent);
+                if (adapter.getSelectedPositions().size() > 1)
+                    Toast.makeText(getActivity(), "只能选择一个书签", Toast.LENGTH_SHORT).show();
+                else {
+                    intent.putExtra("primaryKey", adapter.getSelectedPosition());
+                    startActivity(intent);
+                }
             }
         });
         viewBinding.cancel.setOnClickListener(v -> {
@@ -123,7 +131,6 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
             records = presenter.refreshRecord();
             initView(records);
         });
-
     }
 
     @Override
@@ -150,7 +157,6 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
         viewBinding.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -167,7 +173,6 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
     }

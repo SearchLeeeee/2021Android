@@ -30,6 +30,7 @@ public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
     String email;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,

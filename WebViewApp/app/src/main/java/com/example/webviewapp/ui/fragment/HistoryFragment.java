@@ -43,7 +43,6 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
         initEditView();
         initButton();
         return viewBinding.getRoot();
-
     }
 
 
@@ -56,6 +55,9 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
         viewBinding.delete.setText("删除");
         viewBinding.selectAll.setText("取消");
         viewBinding.deleteAll.setText("清空");
+        viewBinding.deleteAll.setImage(R.drawable.delete);
+        viewBinding.selectAll.setImage(R.drawable.close);
+        viewBinding.delete.setImage(R.drawable.delete);
         viewBinding.deleteAll.setOnClickListener(v -> {
             presenter.deleteAllHistory();
             records = presenter.refreshRecord();
@@ -122,12 +124,10 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
     }
 
     @Override
-
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initEditView();
     }
-
 
     public void onResume() {
         super.onResume();
@@ -139,7 +139,6 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
         viewBinding.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -156,7 +155,6 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
     }
@@ -169,5 +167,4 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
             viewBinding.editText.setVisibility(View.GONE);
         }
     }
-
 }

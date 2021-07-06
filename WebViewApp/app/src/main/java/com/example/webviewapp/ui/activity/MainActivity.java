@@ -1,5 +1,6 @@
 package com.example.webviewapp.ui.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -7,12 +8,14 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -20,7 +23,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +37,7 @@ import com.example.webviewapp.R;
 import com.example.webviewapp.common.adapters.CustomWebViewClient;
 import com.example.webviewapp.common.adapters.JavaScripInterfaceAdapter;
 import com.example.webviewapp.common.base.BaseActivity;
+import com.example.webviewapp.common.utils.PermissionUtils;
 import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.databinding.ActivityMainBinding;
 import com.example.webviewapp.presenter.MainPresenter;
@@ -42,13 +48,15 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private static final String TAG = "MainActivity";
     private MainContract.Presenter presenter;
     public ActivityMainBinding viewBinding;
-
+    private PopupWindow popWindow;
+    private View view;
+    private TextView addedText;
+    private ImageView addLabel;
     public static final String DEFAULT_URL = "file:///android_asset/index.html";
     CustomWebViewClient webViewClient = new CustomWebViewClient(presenter) {
         @Override
         public void onPageFinished(WebView view, String url) {//页面加载完成
             presenter.addHistory(url, view.getTitle());
-            Log.d(TAG, "onPageFinished: " + view.getTitle());
             viewBinding.progressbar.setVisibility(View.GONE);
             initUrl(view);
         }
@@ -56,11 +64,17 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {//页面开始加载
             viewBinding.progressbar.setVisibility(View.VISIBLE);
+            if (presenter.getLabelUrl().contains(viewBinding.webview.getUrl())) {
+                addedText.setText("已添加");
+                addLabel.setImageResource(R.drawable.collected);
+            } else {
+                addedText.setText("添加");
+                addLabel.setImageResource(R.drawable.uncollected);
+            }
         }
     };
 
     private void initUrl(WebView view) {
-        //TODO:部分img和video的url还是无法获取，视频跳转后需要点两次返回才能退出
         view.loadUrl("javascript:(function()" +
                 "    {" +
                 "        var objs = document.getElementsByTagName('img');" +
@@ -104,7 +118,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 webView.goBack();
                 webView.goBack();
             }
-
             result.confirm();
             return true;
         }
@@ -114,8 +127,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         public void onProgressChanged(WebView view, int newProgress) {
             viewBinding.progressbar.setProgress(newProgress);
         }
-
-
     };
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -129,6 +140,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         initButton();
         initSearchBar();
 
+        requestPermissions();
     }
     @Override
     protected void onResume() {
@@ -178,13 +190,24 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private void initButton() {
         //设置按钮的点击事件
+        view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(dm);
+        initPopWindow();
         viewBinding.menuButton.setOnClickListener(v -> {
-            popWindow();
+            int height = dm.heightPixels;
+            Log.d(TAG, "initButton: ");
+            if (popWindow.isShowing()) popWindow.dismiss();
+            else {
+                popWindow.showAtLocation(view, Gravity.NO_GRAVITY, 0, dm.heightPixels - 400);
+            }
         });
 
         viewBinding.refreshButton.setOnClickListener(v -> {
             viewBinding.webview.loadUrl(DEFAULT_URL);
         });
+
 
         viewBinding.backButton.setOnClickListener(v -> {
             if (viewBinding.webview.getUrl().equals("file:///android_asset/askToJump.html")) {//在风险访问h5页面需要两次goback才能回去
@@ -196,6 +219,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 viewBinding.webview.goBack();
             else onBackPressed();
 
+        });
+        viewBinding.nextButton.setOnClickListener(v -> {
+            viewBinding.webview.goForward();
         });
         viewBinding.fowardButton.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, InfoReadActivity.class));
@@ -233,39 +259,48 @@ public class MainActivity extends BaseActivity implements MainContract.View {
      * 菜单栏的实现
      */
     @SuppressLint("ClickableViewAccessibility")
-    public void popWindow() {
+    public void initPopWindow() {
         // PopWindow 布局发
-        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.menu_mainpage, null, false);
-        final PopupWindow popWindow = new PopupWindow(view,
+        popWindow = new PopupWindow(view,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popWindow.setTouchable(true);
-        popWindow.setTouchInterceptor((v, event) -> false);
-        popWindow.showAtLocation(view, Gravity.BOTTOM, 0, -40);
+        popWindow.setOutsideTouchable(true);
+        popWindow.setAnimationStyle(R.anim.nav_default_pop_enter_anim);
+        popWindow.setTouchInterceptor((v, event) -> {
+            return false;
+        });
 
-        ImageView userButton = view.findViewById(R.id.user);
-        ImageView quitButton = view.findViewById(R.id.user_image);
-        ImageView historyButton = view.findViewById(R.id.history_image);
-        ImageView addLabel = view.findViewById(R.id.addbookmark_image);
-        TextView tx = view.findViewById(R.id.addbookmark_text);
-        if (presenter.getLabelUrl().contains(viewBinding.webview.getUrl())) {
-            tx.setText("已添加");
-            addLabel.setImageResource(R.drawable.collected);
-        } else {
-            tx.setText("添加");
-            addLabel.setImageResource(R.drawable.uncollected);
-        }
-        userButton.setOnClickListener(v -> {
+        LinearLayout userCenter = view.findViewById(R.id.user_center);
+        RelativeLayout quitButton = view.findViewById(R.id.quit_button);
+        RelativeLayout historyButton = view.findViewById(R.id.history_button);
+        RelativeLayout refreshButton = view.findViewById(R.id.refresh_button);
+        RelativeLayout addLabelButton = view.findViewById(R.id.add_bookmark_button);
+        addLabel = view.findViewById(R.id.add_bookmark_image);
+        addedText = view.findViewById(R.id.add_bookmark_text);
+
+        userCenter.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, UserActivity.class));
         });
         historyButton.setOnClickListener(v -> {
+            popWindow.dismiss();
             startActivity(new Intent(MainActivity.this, RecordActivity.class));
         });
-        addLabel.setOnClickListener(v -> {
-            addLabel();
-            tx.setText("已添加");
-            addLabel.setImageResource(R.drawable.collected);
+        addLabelButton.setOnClickListener(v -> {
+            if (addedText.getText().toString().equals("添加")) {
+                addLabel();
+                addedText.setText("已添加");
+                addLabel.setImageResource(R.drawable.collected);
+            } else {
+                deleteLabel();
+                addedText.setText("添加");
+                addLabel.setImageResource(R.drawable.uncollected);
+            }
         });
         quitButton.setOnClickListener(v -> finish());
+        refreshButton.setOnClickListener(v -> {
+            viewBinding.webview.reload();
+            Toast.makeText(this, "刷新成功", Toast.LENGTH_SHORT).show();
+        });
     }
 
     public void addLabel() {
@@ -273,6 +308,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         presenter.addLabel(viewBinding.webview.getUrl(), viewBinding.webview.getTitle());
 
     }
+
+    public void deleteLabel() {
+        Toast.makeText(this, "取消书签收藏", Toast.LENGTH_SHORT).show();
+        presenter.deleteRecord(viewBinding.webview.getUrl());
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -291,5 +332,18 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
     }
 
+    private void requestPermissions() {
+        new PermissionUtils.PermissionsManager(MainActivity.this).requestPermissions(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.VIBRATE,
+                Manifest.permission.WRITE_SETTINGS,
+                Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS
+        );
+    }
 }
 
