@@ -1,94 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Document</title>
     <style>
-        html,body{
+        html,
+        body {
             width: 100%;
+            height: 100%;
             margin: 0;
         }
 
-        .container{
-            width: 100%;
-            margin: 0;
+        a {
+            outline: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         }
 
+        .container {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: -50px;
+        }
 
+        .hotWebsBox {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 80%;
+            margin-top: 30px;
+        }
+
+        .hotWebs {
+            width: 16%;
+            height: auto;
+
+        }
+
+        .imgBox {
+            width: 100%;
+            padding-top: 100%;
+            border-radius: 50%;
+        }
+
+        div.search {
+            width: 100%;
+            height: 10vw;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .searchBox {
+            width: 80%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            /* justify-content: center; */
+            align-items: center;
+        }
+
+        div.search .searchBox input:nth-child(2) {
+            width: 100%;
+            height: 100%;
+            font-size: 16px;
+            text-indent: 40px;
+            border-radius: 10px;
+            /* border: none; */
+            float: left;
+        }
+
+        div.search .searchBox img {
+            position: absolute;
+            /* left: 50vw; */
+            /* transform: translateX(-250px); */
+            /* margin-top: 10px; */
+            align-self: center;
+            margin-left: 10px;
+            height: 20px;
+        }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <img src="img1.jpg" width="100%"></img>
-    <img src="img2.jpg" style="margin-top: 10px;" width="100%"></img>
-    <a href="https://vd4.bdstatic.com/mda-mg01wusz4z1ja3am/sc/cae_h264/1625102728518022335/mda-mg01wusz4z1ja3am.mp4?v_from_s=hkapp-haokan-hnb&auth_key=1625192170-0-0-87b3bd3328be83839248429dc615c7a2&bcevod_channel=searchbox_feed&pd=1&pt=3&abtest=">打开链接</a>
-    <video controls height="auto" style="margin-top: 10px;" width="100%">
-        <source src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4">
-    </video>
-    <video controls height="auto" onclick="test()" style="margin-top: 10px;" width="100%">
-        <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
-    </video>
-</div>
+    <div class="container">
+        <img src="logo.png" style="width: 80%; height: auto;">
+        <div class="search">
+            <div class="searchBox">
+                <img src="search.png" alt="">
+                <input type="text" id="input" placeholder="请输入搜索条件" onkeypress="if(window.event.keyCode == 13) jump()">
+            </div>
+        </div>
+        <div class="hotWebsBox">
+            <a class="hotWebs" href="https://www.taobao.com">
+                <div class="imgBox" style="background: url(taobao.png);background-size: cover;"></div>
+            </a>
+            <a class="hotWebs" href="https://github.com">
+                <div class="imgBox" style="background: url(github.png);background-size: cover;"></div>
+            </a>
+            <a class="hotWebs" href="https://www.baidu.com/">
+                <div class="imgBox" style="background: url(baidu.png);background-size: cover;"></div>
+            </a>
+            <a class="hotWebs" href="https://www.bilibili.com/">
+                <div class="imgBox" style="background: url(bilibili.jpg);background-size: cover;"></div>
+            </a>
+        </div>
+    </div>
 </body>
 
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script>
-    function test()
-    {
-       alert("221");
-               var objs = document.getElementsByTagName("img");
-        var array=new Array();
-        for(var j=0;j<objs.length;j++)
-            {
-                array[j]=objs[j].src;
-            }
-        for(var i=0;i<objs.length;i++)
-            {
-                objs[i].onclick=function()
-                    {
-                        alert("222");
-                    }
-            }
+    var input = document.getElementById('input');
+    function jump() {
+        if (input.value == '') {
+            return;
+        } else {
+            window.location.href = "https://wap.baidu.com/s?word=" + input.value
+        }
     }
-
 </script>
-<script>
-    function imageCall()
-    {
-        var objs = document.getElementsByTagName('img');
-        var array=new Array();
-        for(var j=0;j<objs.length;j++)
-            {
-                array[j]=objs[j].src;
-            }
-        for(var i=0;i<objs.length;i++)
-            {
-                objs[i].onclick=function()
-                    {
-                        window.imagelistener.openImage(this.src,array);
-                        //javascript: imagelistener.openImage(this.src,array);
-                        //alert('image')
-                    }
-            }
-    }
-    imageCall()
-</script>
-
-<script>
-    function videoCall()
-    {
-        var objs = document.getElementsByTagName('video');
-        for(var i=0;i<objs.length;i++)
-            {
-                objs[i].addEventListener('play', function () { //播放开始执行的函数
-                    window.imagelistener.openVideo(this.currentSrc);
-                });
-            }
-    }
-    videoCall()
-</script>
-
 
 </html>
