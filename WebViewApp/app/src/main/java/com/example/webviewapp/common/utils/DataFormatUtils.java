@@ -1,6 +1,7 @@
 package com.example.webviewapp.common.utils;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Build;
 
@@ -112,6 +113,31 @@ public class DataFormatUtils {
             e.printStackTrace();
             return new JSONObject();
         }
+    }
+
+    /**
+     * 从assets得到json文件中的内容
+     *
+     * @param context
+     * @param fileName
+     * @return json字符串
+     */
+    public static String getJson(Context context, String fileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        //获得assets资源管理器
+        AssetManager assetManager = context.getAssets();
+        //使用IO流读取json文件内容
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                    assetManager.open(fileName), StandardCharsets.UTF_8));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
     }
 
     /**

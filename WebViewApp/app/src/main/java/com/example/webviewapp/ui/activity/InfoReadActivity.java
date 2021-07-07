@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.example.webviewapp.common.base.BaseActivity;
+import com.example.webviewapp.common.utils.DataFormatUtils;
 import com.example.webviewapp.common.utils.EventUtils;
 import com.example.webviewapp.databinding.ActivityInfoReadBinding;
 import com.example.webviewapp.ui.fragment.NewsFragment;
@@ -29,7 +30,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-// TODO:大概率会发生crash，notifyDataSetChanged的时机不对
 public class InfoReadActivity extends BaseActivity {
     public static final String URL_HOST = "http://v.juhe.cn/toutiao/index?key=8cc3761c4e5d283b49e8d5062ebc2ab6&type=";
     public static final String[] type_en = {"top", "guonei", "guoji", "yule", "tiyu", "junshi", "keji", "caijing", "shishang", "youxi", "qiche", "jiankang"};
@@ -37,6 +37,7 @@ public class InfoReadActivity extends BaseActivity {
     private static final String TAG = "InfoReadActivity";
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> titles = new ArrayList<>();
+    public ActivityInfoReadBinding viewBinding;
     private final FragmentPagerAdapter pagerAdapter = new FragmentPagerAdapter(this.getSupportFragmentManager()) {
         @NonNull
         @Override
@@ -60,24 +61,32 @@ public class InfoReadActivity extends BaseActivity {
             return PagerAdapter.POSITION_NONE;
         }
     };
-    public ActivityInfoReadBinding viewBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         EventUtils.register(this);
-        EventUtils.post(new EventUtils.NewsDataChangeEvent());
 
+        initButton();
         initData();
         initViewPager();
     }
 
+    private void initButton() {
+        viewBinding.backBtn.setOnClickListener(v -> finish());
+    }
+
     private void initData() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < type_en.length; i++) {
             titles.add(type_cn[i]);
-            query(type_en[i]);
+//            query(type_en[i]);
+            queryLocal(type_en[i]);
         }
+    }
+
+    private void queryLocal(String type) {
+        fragments.add(new NewsFragment(DataFormatUtils.getJson(InfoReadActivity.this, type + ".json")));
     }
 
     private void initViewPager() {

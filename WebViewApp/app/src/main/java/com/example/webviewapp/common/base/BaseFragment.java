@@ -52,7 +52,6 @@ public abstract class BaseFragment extends Fragment {
     protected void setupViews() {
         try {
             setupViewBinding();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

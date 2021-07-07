@@ -22,7 +22,6 @@ public class DataManager {
     public static final int IS_HISTORY = 1;
     public static final int IS_LABEL = 2;
 
-
     private volatile static DataManager instance;
 
     public static DataManager get() {
@@ -92,8 +91,6 @@ public class DataManager {
         labelList.sort((o1, o2) -> (int) (o2.getTime() - o1.getTime()));
     }
 
-
-
     ////////////////////////记录相关/////////////////////////
 
     /**
@@ -123,7 +120,6 @@ public class DataManager {
         }
         return pk + 1;
     }
-
 
     /**
      * 删掉所有的书签/历史记录
@@ -203,7 +199,6 @@ public class DataManager {
         if (res == null) return null;
         return res.getTitle();
     }
-
 
     /**
      * 往数据库中添加记录

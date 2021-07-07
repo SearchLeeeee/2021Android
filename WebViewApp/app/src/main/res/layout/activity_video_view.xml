@@ -43,6 +43,7 @@
         android:src="@drawable/play_btn"
         app:layout_constraintEnd_toEndOf="@id/video_view_container"
         app:layout_constraintStart_toStartOf="@id/video_view_container"
+        app:layout_constraintBottom_toBottomOf="@+id/video_view_container"
         app:layout_constraintTop_toTopOf="@id/video_view_container" />
 
     <ImageView

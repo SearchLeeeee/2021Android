@@ -42,27 +42,16 @@ public class VideoViewActivity extends BaseActivity {
     private static final String VIDEO_TAG = "video_sample";
     private static final String SCHEME_HTTP = "https";
     private final int deltaTime = 2500;
-    //        String uri;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        getSupportActionBar().hide();
-//
-//        uri = getIntent().getStringExtra("video");
-//        //本地视频无法播放
-//        uri = "file:///android_asset/video1.mp4";
-//        //TODO:测试用uri
-//        uri = "https://media.w3.org/2010/05/sintel/trailer.mp4";
-//        Log.d(TAG, "onCreate: " + uri);
-//        viewBinding.videoView.setVideoPath(uri);
-//        MediaController mediaController = new MediaController(this);
-//        mediaController.setMediaPlayer(viewBinding.videoView);
-//        viewBinding.videoView.setMediaController(mediaController);
-//        viewBinding.back.setOnClickListener(v -> finish());
-//    }
     private GestureDetector mGestureDetector;
     private AudioManager mAudioManager;
+    private int mStreamVolume;
+    private int mPlayingPos;
+    private int mNetworkState = 0;//当前网络状态 0-不可用 1-wifi 2-mobile
+    private BroadcastReceiver mNetworkReceiver;
+    private int mLastLoadLength = -1;// 断网 / onStop前缓存的位置信息(ms)
+    private Uri mVideoUri;
+    private Timer mCheckPlayingProgressTimer;
+    private CountDownTimer timer;
     private final GestureDetector.OnGestureListener mGestureListener = new GestureDetector.OnGestureListener() {
         @Override
         public boolean onDown(MotionEvent e) {
@@ -71,7 +60,9 @@ public class VideoViewActivity extends BaseActivity {
 
         @Override
         public void onShowPress(MotionEvent e) {
-
+            viewBinding.btnPlay.setVisibility(View.INVISIBLE);
+            viewBinding.btnChange.setVisibility(View.INVISIBLE);
+            viewBinding.btnSeek.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -92,6 +83,9 @@ public class VideoViewActivity extends BaseActivity {
 
         @Override
         public void onLongPress(MotionEvent e) {
+            viewBinding.btnPlay.setVisibility(View.VISIBLE);
+            viewBinding.btnChange.setVisibility(View.VISIBLE);
+            viewBinding.btnSeek.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -99,14 +93,6 @@ public class VideoViewActivity extends BaseActivity {
             return false;
         }
     };
-    private int mStreamVolume;
-    private int mPlayingPos;
-    private int mNetworkState = 0;//当前网络状态 0-不可用 1-wifi 2-mobile
-    private BroadcastReceiver mNetworkReceiver;
-    private int mLastLoadLength = -1;//断网/onStop前缓存的位置信息(ms)
-    private Uri mVideoUri;
-    private Timer mCheckPlayingProgressTimer;
-    private CountDownTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +100,8 @@ public class VideoViewActivity extends BaseActivity {
         EventUtils.register(this);
 
         initData();
-        initView();
+        initVideoView();
+        initListener();
     }
 
     private void initData() {
@@ -142,11 +129,6 @@ public class VideoViewActivity extends BaseActivity {
                 currentVolume * 100 / maxVolume <= 100) {
             viewBinding.voiceText.setText(currentVolume * 100 / maxVolume + "%");
         }
-        EventUtils.post(new EventUtils.TimeEvent());
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onTimeEvent(EventUtils.TimeEvent event) {
         if (timer == null) {
             timer = new CountDownTimer(3000, 1000) {
                 @Override
@@ -155,34 +137,19 @@ public class VideoViewActivity extends BaseActivity {
 
                 @Override
                 public void onFinish() {
-                    viewBinding.voice.setVisibility(View.GONE);
+                    EventUtils.post(new EventUtils.TimeEvent());
                 }
             };
         }
         timer.start();
     }
 
-    /**
-     * 设置当前屏幕亮度值 0--255，并使之生效
-     */
-    private void setScreenBrightness(float value) {
-        Window mWindow = getWindow();
-        WindowManager.LayoutParams mParams = mWindow.getAttributes();
-        int flag = value > 0 ? -1 : 1;
-
-        mParams.screenBrightness += flag * 20 / 255.0F;
-        if (mParams.screenBrightness >= 1) {
-            mParams.screenBrightness = 1;
-        } else if (mParams.screenBrightness <= 0.1) {
-            mParams.screenBrightness = 0.1f;
-        }
-        mWindow.setAttributes(mParams);
-
-        // 保存设置的屏幕亮度值
-//        Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, (int) value);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTimeEvent(EventUtils.TimeEvent event) {
+        viewBinding.voice.setVisibility(View.GONE);
     }
 
-    private void initView() {
+    private void initVideoView() {
         mVideoUri = Uri.parse(getIntent().getStringExtra("video"));
         viewBinding.videoView.setVideoURI(mVideoUri);
 
@@ -192,7 +159,17 @@ public class VideoViewActivity extends BaseActivity {
         mediaController.setMediaPlayer(viewBinding.videoView);
         mLastLoadLength = -1;
         mPlayingPos = -1;
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        mStreamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
+        mGestureDetector = new GestureDetector(this, mGestureListener);
+        viewBinding.videoViewContainer.setOnTouchListener((v, event) ->
+                mGestureDetector.onTouchEvent(event));
+
+        registerNetworkReceiver();
+    }
+
+    private void initListener() {
         viewBinding.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
@@ -201,7 +178,6 @@ public class VideoViewActivity extends BaseActivity {
         viewBinding.videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
-                debugLog("onError what = " + what + " mPlayingPos = " + mPlayingPos);
                 if (SCHEME_HTTP.equalsIgnoreCase(mVideoUri.getScheme()) && mNetworkState == 0) {
                     Toast.makeText(BaseApplication.getInstance(), "播放时发生错误", Toast.LENGTH_SHORT).show();
                 } else {
@@ -217,7 +193,6 @@ public class VideoViewActivity extends BaseActivity {
             }
         });
 
-        //播放按钮
         viewBinding.btnPlay.setOnClickListener(View -> {
             if (mNetworkState == 0) {
                 if (SCHEME_HTTP.equalsIgnoreCase(mVideoUri.getScheme())) {
@@ -244,26 +219,11 @@ public class VideoViewActivity extends BaseActivity {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
         });
-
         viewBinding.backBtn.setOnClickListener(v -> finish());
-
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        mStreamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-
-        // 监听手势
-        mGestureDetector = new GestureDetector(this, mGestureListener);
-        viewBinding.videoViewContainer.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return mGestureDetector.onTouchEvent(event);
-            }
-        });
-
-        registerNetworkReceiver();
     }
 
     /**
-     * 监听网络变化,用于重新缓冲
+     * 监听网络变化,用于重新缓存
      */
     private void registerNetworkReceiver() {
         if (mNetworkReceiver == null) {
@@ -282,7 +242,7 @@ public class VideoViewActivity extends BaseActivity {
     }
 
     /**
-     * 网络播放
+     * 网络播放进行缓存
      */
     public void doWhenNetworkChange() {
         mNetworkState = NetworkUtils.getNetworkType(this);
@@ -294,7 +254,6 @@ public class VideoViewActivity extends BaseActivity {
         if (currentPosition > 0) {
             mPlayingPos = currentPosition;
         }
-        debugLog(bufferPercentage + " 网络变化 ... " + mNetworkState + " 缓存长度 " + mLastLoadLength + " -- " + currentPosition);
 
         if (mNetworkState == NetworkUtils.NETWORK_TYPE_INVALID && bufferPercentage < 100) {
             // 监听当前播放位置,在达到缓冲长度前自动停止
@@ -333,13 +292,33 @@ public class VideoViewActivity extends BaseActivity {
         mPlayingPos = 0;
     }
 
+    /**
+     * 设置当前屏幕亮度值 0--255，并使之生效
+     */
+    private void setScreenBrightness(float value) {
+        Window mWindow = getWindow();
+        WindowManager.LayoutParams mParams = mWindow.getAttributes();
+        int flag = value > 0 ? -1 : 1;
+
+        mParams.screenBrightness += flag * 20 / 255.0F;
+        if (mParams.screenBrightness >= 1) {
+            mParams.screenBrightness = 1;
+        } else if (mParams.screenBrightness <= 0.1) {
+            mParams.screenBrightness = 0.1f;
+        }
+        mWindow.setAttributes(mParams);
+
+        // 保存设置的屏幕亮度值
+        Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, (int) value);
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (viewBinding.videoView == null) {
+        if (null == viewBinding.videoView) {
             return;
         }
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {//横屏
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {// 横屏
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().getDecorView().invalidate();
             float height = DensityUtils.getWidthInPx(this);
@@ -357,7 +336,6 @@ public class VideoViewActivity extends BaseActivity {
             viewBinding.videoViewContainer.getLayoutParams().width = (int) width;
         }
     }
-
 
     @Override
     protected void onResume() {
@@ -386,14 +364,11 @@ public class VideoViewActivity extends BaseActivity {
 
     @Override
     protected void onStop() {
-        debugLog("onStop mPlayingPos0 = " + mPlayingPos + " -- " + mLastLoadLength);
         if (viewBinding.videoView.isPlaying() || viewBinding.videoView.canPause()) {
             viewBinding.videoView.stopPlayback();
         }
-        debugLog("onStop mPlayingPos1 = " + mPlayingPos + " -- " + mLastLoadLength);
         mLastLoadLength = 0;
         super.onStop();
-        debugLog("onStop mPlayingPos = " + mPlayingPos + " -- " + mLastLoadLength);
     }
 
     @Override
@@ -423,9 +398,5 @@ public class VideoViewActivity extends BaseActivity {
 
     private boolean ifSdCardAccessable() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
-    }
-
-    public void debugLog(String msg) {
-        Log.d(this.getClass().getName(), msg);
     }
 }

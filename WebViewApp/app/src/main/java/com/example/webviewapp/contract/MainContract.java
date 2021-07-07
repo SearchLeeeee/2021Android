@@ -19,5 +19,9 @@ public interface MainContract {
         List<String> getLabelUrl();
 
         List<Record> getHistoryRecord();
+
+        void deleteRecord(String url);
+
+
     }
 }
