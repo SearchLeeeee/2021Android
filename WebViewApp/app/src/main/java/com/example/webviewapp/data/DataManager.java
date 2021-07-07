@@ -257,6 +257,19 @@ public class DataManager {
         return realm.copyFromRealm(res);
     }
 
+    /**
+     * 查找所有历史记录
+     * @return
+     */
+
+
+    public List<Record> queryAllHistoryRecord() {
+        List<Record> res = realm.where(Record.class)
+                .equalTo("isHistory", IS_HISTORY)
+                .findAll();
+        return realm.copyFromRealm(res);
+    }
+
     /////////////////////////////记录相关//////////////////////////
 
     //////////////////////////////////权限相关/////////////////////////////////

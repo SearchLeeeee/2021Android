@@ -1,5 +1,7 @@
 package com.example.webviewapp.presenter;
 
+import android.util.Log;
+
 import com.example.webviewapp.contract.MainContract;
 import com.example.webviewapp.data.DataManager;
 import com.example.webviewapp.data.Record;
@@ -29,15 +31,16 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public List<String> getHistory() {
-        List<Record> note = DataManager.get().historyList;
+        //获取即使记录
+        List<Record> note = DataManager.get().queryAllHistoryRecord();
         List<String> history = new ArrayList<>();
         HashMap<String, Integer> hm = new HashMap<>();
         String temp;
         for (int i = 0; i < note.size(); i++) {
             if (!hm.containsKey(note.get(i).getTitle())) {
                 hm.put(note.get(i).getTitle(), i);
-                if (note.get(i).getTitle().contains("百度")) {
-                    temp = note.get(i).getTitle().replaceAll("百度", "");
+                if (note.get(i).getTitle().contains("-百度")) {
+                    temp = note.get(i).getTitle().replaceAll("- 百度", "");
                     history.add(temp);
                 }
             }
