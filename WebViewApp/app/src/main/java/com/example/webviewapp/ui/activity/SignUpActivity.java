@@ -27,12 +27,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SignUpActivity extends AppCompatActivity implements SignupContract.View {
     private static final String TAG = "SignUpActivity";
     public FragmentRegisterBinding viewBinding;
     boolean flag = false;
     private SignupContract.Presenter presenter;
-    private int clickedImageID;
+    private int clickedImageID = 2131230895;
     private String Email;
     private String Password;
     private ProgressDialog mDialog;
@@ -90,7 +93,10 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
         if (TextUtils.isEmpty(Email)){
             Toast.makeText(getApplicationContext(), "请输入您的Email", Toast.LENGTH_SHORT).show();
             return;
-        }else if (TextUtils.isEmpty(Password)){
+        }else if (!checkEmail(Email)){
+            Toast.makeText(getApplicationContext(), "请输入正确邮箱格式", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (TextUtils.isEmpty(Password)){
             Toast.makeText(getApplicationContext(), "请输入您的密码", Toast.LENGTH_SHORT).show();
             return;
         }else if (Password.length()<6){
@@ -110,7 +116,8 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                     mAuth.signOut();
                     presenter.SignUp();
                 }else{
-                    Toast.makeText(getApplicationContext(), "创建用户失败，请重新创建", Toast.LENGTH_SHORT).show();
+                    mDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "创建用户失败，可能原因:\n1.网络连接失败\n2.该账号已存在", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -130,6 +137,16 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                 }
             });
         }
+    }
+
+    public static boolean checkEmail(String email)
+    {// 验证邮箱的正则表达式
+        String rule = "[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?";
+        Pattern pattern;
+        Matcher matcher;
+        pattern = Pattern.compile(rule);
+        matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private void OnAuth(FirebaseUser user) {

@@ -149,7 +149,7 @@ public class FirstFragment extends Fragment implements LoginContract.View {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
                     mDialog.dismiss();
-                    Toast.makeText(getContext(), "登录失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "登录失败，请输入正确用户名或密码或检查网络", Toast.LENGTH_SHORT).show();
                 } else {
                     presenter.Login(email);
                     try {
