@@ -11,15 +11,15 @@ import com.example.webviewapp.data.User;
 import java.util.List;
 
 public class SignUpPresenter implements SignupContract.Presenter {
-//TODO：改正确MVP
+
 @Override
 public void SignUp() {
     Log.d("TAG", "SignUp:  succssed");
 }
 
+
     @Override
     public Boolean ContainsUid(Editable uidText) {
-
         if (uidText.toString().equals("")) return true;
         long uid = Long.parseLong(uidText.toString());
 //        return DataManager.get().queryUserPasswordByUid(uid) != -1;
@@ -30,6 +30,4 @@ public void SignUp() {
     public List<User> getUser() {
         return DataManager.get().userList;
     }
-
-
 }

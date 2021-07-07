@@ -55,8 +55,6 @@ public class PictureViewActivity extends BaseActivity {
     private void initValue() {
         curImageUrl = getIntent().getStringExtra("curImageUrl");
         imageUrls = getIntent().getStringArrayExtra("imageUrls");
-        Log.d(TAG, "initValue: curImageUrls" + curImageUrl);
-        Log.d(TAG, "initValue: imageUrls" + imageUrls[0]);
 
         initialedPositions = new int[imageUrls.length];
         Arrays.fill(initialedPositions, -1);
@@ -143,7 +141,6 @@ public class PictureViewActivity extends BaseActivity {
         viewBinding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -160,7 +157,6 @@ public class PictureViewActivity extends BaseActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
@@ -211,7 +207,6 @@ public class PictureViewActivity extends BaseActivity {
         if (imageUrls == null || curImageUrl == null) {
             return -1;
         }
-        //TODO:有重复图片就不行
         for (int i = 0; i < imageUrls.length; i++) {
             if (curImageUrl.equals(imageUrls[i])) {
                 return i;

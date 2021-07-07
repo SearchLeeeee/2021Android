@@ -7,7 +7,6 @@ public class User{
     public User() {
     }
 
-    //fb
     public User(String Email, int avatarId) {
         this.email = Email;
         this.avatarId = avatarId;

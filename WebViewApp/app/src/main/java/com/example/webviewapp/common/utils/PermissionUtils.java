@@ -131,8 +131,7 @@ public final class PermissionUtils {
         private final Context context;
 
         /**
-         * @param context                   当前activity
-         * @param requestPermissionCallback 实现接口，请求成功 和 请求失败
+         * @param context 当前activity
          */
         public PermissionsManager(Context context) {
             this.context = context;
