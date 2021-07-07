@@ -45,8 +45,8 @@
 
     <LinearLayout
         android:id="@+id/buttomview"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_width="404dp"
+        android:layout_height="51dp"
         android:background="@color/white"
         android:foregroundGravity="top"
         android:gravity="bottom"
@@ -59,8 +59,8 @@
             android:id="@+id/backButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginVertical="15dp"
             android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="15dp"
             android:layout_weight="1"
             android:src="@drawable/search_back_icon" />
 
@@ -68,8 +68,8 @@
             android:id="@+id/nextButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginVertical="15dp"
             android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="15dp"
             android:layout_weight="1"
             android:rotationY="180"
             android:src="@drawable/search_back_icon" />
@@ -78,8 +78,8 @@
             android:id="@+id/refreshButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginVertical="15dp"
             android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="15dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/home" />
 
@@ -87,8 +87,8 @@
             android:id="@+id/fowardButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginVertical="15dp"
             android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="15dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/fire" />
 
@@ -96,10 +96,10 @@
             android:id="@+id/menuButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginVertical="15dp"
             android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="15dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/menu"/>
+            app:srcCompat="@drawable/menu" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

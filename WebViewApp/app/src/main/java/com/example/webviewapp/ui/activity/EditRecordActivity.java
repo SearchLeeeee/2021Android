@@ -78,7 +78,7 @@ public class EditRecordActivity extends BaseActivity implements EditRecordContra
                 Toast.makeText(this, "书签详情不能为空！", Toast.LENGTH_SHORT).show();
             } else {
                 record.setTitle(viewBinding.title.getText().toString());
-                record.setDetails(viewBinding.url.getText().toString());
+                record.setUrl(viewBinding.url.getText().toString());
                 presenter.updateRecord(record);
                 finish();
             }

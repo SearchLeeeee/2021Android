@@ -161,7 +161,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         viewBinding.listView.setOnItemClickListener((parent, view, position, id) -> {
             String result = parent.getItemAtPosition(position).toString();//获取选择项的值
-            Toast.makeText(MainActivity.this, "您点击了" + result, Toast.LENGTH_SHORT).show();
+            String url = "https://wap.baidu.com/s?word=" + result;
+            viewBinding.webview.loadUrl(url);
+            viewBinding.listView.setVisibility(View.GONE);
         });
 
         viewBinding.searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -196,11 +198,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         wm.getDefaultDisplay().getMetrics(dm);
         initPopWindow();
         viewBinding.menuButton.setOnClickListener(v -> {
-            int height = dm.heightPixels;
-            Log.d(TAG, "initButton: ");
             if (popWindow.isShowing()) popWindow.dismiss();
             else {
-                popWindow.showAtLocation(view, Gravity.NO_GRAVITY, 0, dm.heightPixels - 400);
+                popWindow.showAtLocation(view, Gravity.BOTTOM, 0, viewBinding.buttomview.getHeight());
             }
         });
 
@@ -210,14 +210,15 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
 
         viewBinding.backButton.setOnClickListener(v -> {
-            if (viewBinding.webview.canGoBack())
-                viewBinding.webview.goBack();
-            else onBackPressed();
             if (viewBinding.webview.getUrl().equals("file:///android_asset/askToJump.html")) {//在风险访问h5页面需要两次goback才能回去
                 Log.i("TAG", "same");
                 viewBinding.webview.goBack();
                 viewBinding.webview.goBack();
             }
+            else if (viewBinding.webview.canGoBack())
+                viewBinding.webview.goBack();
+            else onBackPressed();
+
         });
         viewBinding.nextButton.setOnClickListener(v -> {
             viewBinding.webview.goForward();
@@ -264,7 +265,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popWindow.setTouchable(true);
         popWindow.setOutsideTouchable(true);
-        popWindow.setAnimationStyle(R.anim.nav_default_pop_enter_anim);
+        popWindow.setAnimationStyle(R.style.Animation_Design_BottomSheetDialog);
         popWindow.setTouchInterceptor((v, event) -> {
             return false;
         });

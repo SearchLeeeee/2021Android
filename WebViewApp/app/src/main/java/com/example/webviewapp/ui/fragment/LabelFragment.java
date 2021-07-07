@@ -108,6 +108,7 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
                 if (adapter.getSelectedPositions().size() > 1)
                     Toast.makeText(getActivity(), "只能选择一个书签", Toast.LENGTH_SHORT).show();
                 else {
+                    viewBinding.bottomBar.setVisibility(View.GONE);
                     intent.putExtra("primaryKey", adapter.getSelectedPosition());
                     startActivity(intent);
                 }
@@ -126,10 +127,15 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
         });
 
         viewBinding.delete.setOnClickListener(v -> {
-            List<String> temp = adapter.getSelectedPositions();
-            presenter.deleteLabel(temp);
-            records = presenter.refreshRecord();
-            initView(records);
+            if (adapter.getSelectedPosition() == 0)
+                Toast.makeText(getActivity(), "无点击书签", Toast.LENGTH_SHORT).show();
+            else {
+                List<String> temp = adapter.getSelectedPositions();
+                presenter.deleteLabel(temp);
+                records = presenter.refreshRecord();
+                initView(records);
+                viewBinding.bottomBar.setVisibility(View.GONE);
+            }
         });
     }
 

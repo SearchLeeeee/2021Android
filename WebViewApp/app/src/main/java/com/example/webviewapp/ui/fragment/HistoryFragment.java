@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -78,10 +79,17 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
 
         });
         viewBinding.delete.setOnClickListener(v -> {
-            List<String> temp = adapter.getSelectedPositions();
-            presenter.deleteHistoryByUrl(temp);
-            records = presenter.refreshRecord();
-            initView(records);
+            if (adapter.getSelectedPosition() == 0)
+                Toast.makeText(getActivity(), "无点击书签", Toast.LENGTH_SHORT).show();
+            else{
+                List<String> temp = adapter.getSelectedPositions();
+                presenter.deleteHistoryByUrl(temp);
+                records = presenter.refreshRecord();
+                initView(records);
+                viewBinding.deleteAll.setVisibility(View.VISIBLE);
+                viewBinding.selectAll.setVisibility(View.GONE);
+                viewBinding.delete.setVisibility(View.GONE);
+            }
         });
     }
 
