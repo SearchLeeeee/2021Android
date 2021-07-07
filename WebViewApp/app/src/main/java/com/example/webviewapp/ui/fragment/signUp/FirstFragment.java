@@ -151,6 +151,12 @@ public class FirstFragment extends Fragment implements LoginContract.View {
                     mDialog.dismiss();
                     Toast.makeText(getContext(), "登录失败", Toast.LENGTH_SHORT).show();
                 } else {
+                    presenter.Login(email);
+                    try {
+                        presenter.loadRecord(email);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     mDialog.dismiss();
                     checkIfEmailVerified();
                 }
@@ -169,8 +175,6 @@ public class FirstFragment extends Fragment implements LoginContract.View {
             mAuth.signOut();
 //            finish();
         } else {
-            //dialog.dismiss();
-            presenter.Login();
             NavHostFragment.findNavController(FirstFragment.this)
                     .navigate(R.id.action_FirstFragment_to_SecondFragment);
             onDestroyView();
