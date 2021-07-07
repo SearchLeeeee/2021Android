@@ -42,7 +42,6 @@ public class MainPresenter implements MainContract.Presenter {
                 }
             }
         }
-
         return history;
     }
 
@@ -77,6 +76,4 @@ public class MainPresenter implements MainContract.Presenter {
     public void deleteRecord(String url) {
         DataManager.get().deleteRecordsByUrl(url, IS_LABEL);
     }
-
-
 }

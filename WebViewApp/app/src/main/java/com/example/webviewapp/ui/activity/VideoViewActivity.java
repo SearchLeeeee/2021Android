@@ -12,7 +12,6 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -74,7 +73,7 @@ public class VideoViewActivity extends BaseActivity {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             float v = e2.getY() - e1.getY();
             Log.d(VIDEO_TAG, "v = " + v);
-            if (Math.abs(v) > 10) {
+            if (Math.abs(v) > 5) {
 //                setScreenBrightness(v);
                 setVoiceVolume(v);
             }
@@ -204,6 +203,9 @@ public class VideoViewActivity extends BaseActivity {
             }
 
             viewBinding.videoView.start();
+            viewBinding.btnPlay.setVisibility(android.view.View.INVISIBLE);
+            viewBinding.btnChange.setVisibility(android.view.View.INVISIBLE);
+            viewBinding.btnSeek.setVisibility(android.view.View.INVISIBLE);
         });
 
         viewBinding.btnSeek.setOnClickListener(view -> {
@@ -394,9 +396,5 @@ public class VideoViewActivity extends BaseActivity {
         } else {
             finish();
         }
-    }
-
-    private boolean ifSdCardAccessable() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }
