@@ -45,8 +45,8 @@ public class SecondFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Button logoutBtn = binding.logout;
         logoutBtn.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
             presenter.logout();
+            FirebaseAuth.getInstance().signOut();
             NavHostFragment.findNavController(SecondFragment.this)
                     .navigate(R.id.action_SecondFragment_to_FirstFragment);
         });

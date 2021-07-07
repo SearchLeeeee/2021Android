@@ -161,7 +161,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         viewBinding.listView.setOnItemClickListener((parent, view, position, id) -> {
             String result = parent.getItemAtPosition(position).toString();//获取选择项的值
-            Toast.makeText(MainActivity.this, "您点击了" + result, Toast.LENGTH_SHORT).show();
+            String url = "https://wap.baidu.com/s?word=" + result;
+            viewBinding.webview.loadUrl(url);
         });
 
         viewBinding.searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

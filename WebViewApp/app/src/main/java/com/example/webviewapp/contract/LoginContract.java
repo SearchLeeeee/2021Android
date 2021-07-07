@@ -6,10 +6,12 @@ public interface LoginContract {
     }
 
     interface Presenter {
-        void Login();
+        void Login(String  uid);
 
         Boolean isLogin();
 
         void logout();
+
+        void loadRecord(String uid) throws InterruptedException;
     }
 }

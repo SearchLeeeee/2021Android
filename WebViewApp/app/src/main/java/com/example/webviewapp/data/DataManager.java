@@ -30,7 +30,7 @@ public class DataManager {
 
     public long primaryKey = 1;
     public Boolean isLogin = false;
-    public long LoginUserId;
+    public String LoginUserId ;
 
     Realm realm;
     Context context;
@@ -98,7 +98,7 @@ public class DataManager {
      *
      * @param clazz
      * @param <T>
-     * @return
+     * @return primaryKey
      */
     private <T extends RealmObject> long generatePrimaryKey(Class<T> clazz) {
         RealmResults<T> results = realm.where(clazz).findAll();
@@ -150,6 +150,10 @@ public class DataManager {
             res.deleteAllFromRealm();
         });
     }
+
+
+
+
 
     /**
      * 根据Url删掉书签/历史记录
@@ -246,6 +250,13 @@ public class DataManager {
         return realm.copyFromRealm(res);
     }
 
+
+
+    public List<Record> queryALLRecord() {
+        RealmResults<Record> res = realm.where(Record.class).findAll();
+        return realm.copyFromRealm(res);
+    }
+
     /////////////////////////////记录相关//////////////////////////
 
     //////////////////////////////////权限相关/////////////////////////////////
@@ -305,13 +316,30 @@ public class DataManager {
         });
     }
 
+    /**
+     * 写入登录状态
+     *
+     */
+
+    public void WriteLoginState(String loginUserId,boolean isLogin){
+        LoginState loginState = new LoginState(loginUserId,isLogin);
+        loginState.setPrimaryKey(primaryKey);
+        realm.executeTransaction(realm -> {
+            realm.copyToRealmOrUpdate(loginState);
+        });
+    }
+
+    /**
+     * 读取登录状态
+     */
+
+    public boolean getIsLogin(){
+        LoginState res = realm.where(LoginState.class).findFirst();
+        return  res.getLogin();
+
+    }
+
     //////////////////////////////////权限相关/////////////////////////////////
-
-
-
-
-
-
 
 
     //////////////////////////////////用户相关/////////////////////////////////

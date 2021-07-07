@@ -2,6 +2,8 @@ package com.example.webviewapp.common.utils.Cloud;
 
 import android.content.Context;
 import android.os.Build;
+import android.service.voice.AlwaysOnHotwordDetector;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -39,8 +41,8 @@ public class CloudUser {
     private volatile static CloudUser instance;
 
     private final String bucket = "webview-1306366413"; //存储桶，格式：BucketName-APPID
-    private final String SECRET_ID = ""; // 密钥id SecretId
-    private final String SECRET_KEY = ""; // 密钥key SecretKey
+    private final String SECRET_ID = "AKIDZx5x0nKgqlRr0rRlpdARSCfspVt0qPhh"; // 密钥id SecretId
+    private final String SECRET_KEY = "lGVTCfrmQntiFWWEgsmPlpdBm69vQeAU"; // 密钥key SecretKey
     private final String REGION = "ap-guangzhou";
     private final Context context;
     private String savePathDir;
@@ -187,6 +189,7 @@ public class CloudUser {
         cosxmlUploadTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
+                Log.d(TAG, "onSuccess: ");
             }
 
             @Override
@@ -206,10 +209,11 @@ public class CloudUser {
      * @param uid 用户uid
      * @return 对应用户的记书签历史记录
      */
-    public List<Record> getRecordsCloud(String uid) {
+    public List<Record> getRecordsCloud(String uid) throws InterruptedException {
+        boolean bit = true;
         String fileName = uid + "records.json";
         List<Record> records = new ArrayList<>();
-        String cosPath = uid + "user";
+        String cosPath = uid + "records";
 
         COSXMLDownloadTask cosxmlDownloadTask =
                 transferManager.download(context, bucket, cosPath, savePathDir, fileName);
@@ -221,12 +225,11 @@ public class CloudUser {
                 String uri = savePathDir + "/" + fileName;
                 String json = DataFormatUtils.readJsonFile(uri);
                 JSONArray array = JSON.parseArray(json);
-                Record record = new Record();
                 for (int i = 0; i < array.size(); i++) {
+                    Record record = new Record();
                     JSONObject jsonObject = array.getJSONObject(i);
                     record.setUrl(jsonObject.getString("url"));
                     record.setUid(jsonObject.getLong("uid"));
-                    record.setPrimaryKey(jsonObject.getLong("primaryKay"));
                     record.setTime(jsonObject.getLong("time"));
                     record.setTitle(jsonObject.getString("title"));
                     record.setIsHistory(jsonObject.getInteger("isHistory"));
@@ -246,6 +249,8 @@ public class CloudUser {
                 }
             }
         });
+        Thread.sleep(3000);
+        Log.d(TAG, "LoginPresenter getRecordsCloud: "+records.size());
         return records;
     }
 }
