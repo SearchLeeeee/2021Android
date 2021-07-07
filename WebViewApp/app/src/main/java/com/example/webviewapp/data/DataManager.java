@@ -335,8 +335,8 @@ public class DataManager {
 
     public boolean getIsLogin(){
         LoginState res = realm.where(LoginState.class).findFirst();
-        return  res.getLogin();
-
+        if (res!=null) return  res.getLogin();
+        else return false;
     }
 
     //////////////////////////////////权限相关/////////////////////////////////
