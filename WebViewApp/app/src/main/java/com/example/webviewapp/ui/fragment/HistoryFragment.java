@@ -46,7 +46,6 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
         return viewBinding.getRoot();
     }
 
-
     private void initData() {
         records = presenter.getData();
         initView(records);
@@ -128,7 +127,6 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
                 presenter.checkScrolled(dy);
             }
         });
-
     }
 
     @Override
@@ -154,7 +152,8 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
                 String input = viewBinding.editText.getText().toString();
                 List<Record> output = new ArrayList<>();
                 for (Record record : records) {
-                    if (record.getTitle().contains(input) || record.getDetails().contains(input)) {
+                    if (record.getTitle().toLowerCase().contains(input.toLowerCase()) ||
+                            record.getDetails().toLowerCase().contains(input.toLowerCase())) {
                         output.add(record);
                     }
                 }

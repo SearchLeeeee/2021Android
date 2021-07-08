@@ -12,13 +12,11 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.Toast;
@@ -75,7 +73,6 @@ public class VideoViewActivity extends BaseActivity {
             float v = e2.getY() - e1.getY();
             Log.d(VIDEO_TAG, "v = " + v);
             if (Math.abs(v) > 10) {
-//                setScreenBrightness(v);
                 setVoiceVolume(v);
             }
             return true;
@@ -107,7 +104,6 @@ public class VideoViewActivity extends BaseActivity {
     private void initData() {
         try {
             int screenMode = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE);
-            int bright = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
 
             if (screenMode == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {
                 Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
@@ -292,26 +288,6 @@ public class VideoViewActivity extends BaseActivity {
         mPlayingPos = 0;
     }
 
-    /**
-     * 设置当前屏幕亮度值 0--255，并使之生效
-     */
-    private void setScreenBrightness(float value) {
-        Window mWindow = getWindow();
-        WindowManager.LayoutParams mParams = mWindow.getAttributes();
-        int flag = value > 0 ? -1 : 1;
-
-        mParams.screenBrightness += flag * 20 / 255.0F;
-        if (mParams.screenBrightness >= 1) {
-            mParams.screenBrightness = 1;
-        } else if (mParams.screenBrightness <= 0.1) {
-            mParams.screenBrightness = 0.1f;
-        }
-        mWindow.setAttributes(mParams);
-
-        // 保存设置的屏幕亮度值
-        Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, (int) value);
-    }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -379,10 +355,6 @@ public class VideoViewActivity extends BaseActivity {
             mCheckPlayingProgressTimer = null;
         }
 
-        Window mWindow = getWindow();
-        WindowManager.LayoutParams mParams = mWindow.getAttributes();
-        mParams.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
-        mWindow.setAttributes(mParams);
         unregisterNetworkReceiver();
         EventUtils.unregister(this);
     }
@@ -394,9 +366,5 @@ public class VideoViewActivity extends BaseActivity {
         } else {
             finish();
         }
-    }
-
-    private boolean ifSdCardAccessable() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }

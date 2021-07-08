@@ -71,7 +71,6 @@ public class EditRecordActivity extends BaseActivity implements EditRecordContra
     private void initButton() {
         viewBinding.backButton.setOnClickListener(v -> finish());
         viewBinding.confirmButton.setOnClickListener(v -> {
-            //TODO:把修改写回数据库
             if (viewBinding.title.getText().toString().isEmpty()) {
                 Toast.makeText(this, "书签标题不能为空！", Toast.LENGTH_SHORT).show();
             } else if (viewBinding.url.getText().toString().isEmpty()) {

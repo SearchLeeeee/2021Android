@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 
 public class CloudService extends Service {
+    private static final String TAG = "CloudService";
     public static final int TIME_INTERVAL = 5000; // 这是5s
     public static final String TEST_ACTION = "XXX.XXX.XXX" + "_TEST_ACTION";
     private PendingIntent pendingIntent;

@@ -170,7 +170,8 @@ public class LabelFragment extends BaseFragment implements LabelContract.View {
                 String input = viewBinding.editText.getText().toString();
                 List<Record> output = new ArrayList<>();
                 for (Record record : records) {
-                    if (record.getTitle().contains(input) || record.getDetails().contains(input)) {
+                    if (record.getTitle().toLowerCase().contains(input.toLowerCase()) ||
+                            record.getDetails().toLowerCase().contains(input.toLowerCase())) {
                         output.add(record);
                     }
                 }

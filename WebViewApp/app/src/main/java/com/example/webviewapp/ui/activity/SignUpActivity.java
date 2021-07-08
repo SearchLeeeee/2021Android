@@ -115,7 +115,7 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                     OnAuth(task.getResult().getUser());
                     mAuth.signOut();
                     presenter.SignUp();
-                }else{
+                } else {
                     mDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "创建用户失败，可能原因:\n1.网络连接失败\n2.该账号已存在", Toast.LENGTH_SHORT).show();
                 }
@@ -123,30 +123,34 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
         });
     }
 
-    //Email verification code using FirebaseUser object and using isSucccessful()function.
-    private void sendEmailVerification() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user!=null){
-            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()){
-                        Toast.makeText(getApplicationContext(),"请在邮箱中验证",Toast.LENGTH_SHORT).show();
-                        FirebaseAuth.getInstance().signOut();
-                    }
-                }
-            });
-        }
-    }
-
-    public static boolean checkEmail(String email)
-    {// 验证邮箱的正则表达式
+    /**
+     * 验证邮箱的正则表达式
+     *
+     * @param email
+     * @return
+     */
+    public static boolean checkEmail(String email) {
         String rule = "[\\w!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?";
         Pattern pattern;
         Matcher matcher;
         pattern = Pattern.compile(rule);
         matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    private void sendEmailVerification() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "请在邮箱中验证", Toast.LENGTH_SHORT).show();
+                        FirebaseAuth.getInstance().signOut();
+                    }
+                }
+            });
+        }
     }
 
     private void OnAuth(FirebaseUser user) {

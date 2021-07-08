@@ -151,10 +151,6 @@ public class DataManager {
         });
     }
 
-
-
-
-
     /**
      * 根据Url删掉书签/历史记录
      *
@@ -250,8 +246,6 @@ public class DataManager {
         return realm.copyFromRealm(res);
     }
 
-
-
     public List<Record> queryALLRecord() {
         RealmResults<Record> res = realm.where(Record.class).findAll();
         return realm.copyFromRealm(res);
@@ -261,8 +255,6 @@ public class DataManager {
      * 查找所有历史记录
      * @return
      */
-
-
     public List<Record> queryAllHistoryRecord() {
         List<Record> res = realm.where(Record.class)
                 .equalTo("isHistory", IS_HISTORY)
@@ -333,7 +325,6 @@ public class DataManager {
      * 写入登录状态
      *
      */
-
     public void WriteLoginState(String loginUserId,boolean isLogin){
         LoginState loginState = new LoginState(loginUserId,isLogin);
         loginState.setPrimaryKey(primaryKey);
@@ -345,7 +336,6 @@ public class DataManager {
     /**
      * 读取登录状态
      */
-
     public boolean getIsLogin(){
         LoginState res = realm.where(LoginState.class).findFirst();
         if (res!=null) return  res.getLogin();

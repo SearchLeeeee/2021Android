@@ -9,7 +9,6 @@ import java.util.List;
 public interface SignupContract {
 
     interface View {
-
     }
 
     interface Presenter {

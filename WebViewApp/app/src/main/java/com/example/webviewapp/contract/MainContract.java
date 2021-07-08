@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface MainContract {
     interface View {
-
     }
 
     interface Presenter {
@@ -21,7 +20,5 @@ public interface MainContract {
         List<Record> getHistoryRecord();
 
         void deleteRecord(String url);
-
-
     }
 }

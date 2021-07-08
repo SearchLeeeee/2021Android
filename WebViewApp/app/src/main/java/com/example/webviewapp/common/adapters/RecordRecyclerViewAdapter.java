@@ -87,7 +87,6 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         super.onViewAttachedToWindow(holder);
         if (visible[0]) holder.checkBox.setVisibility(View.VISIBLE);
         else holder.checkBox.setVisibility(View.INVISIBLE);
-
     }
 
     private void initCheckBox(@NonNull ViewHolder holder, int position) {

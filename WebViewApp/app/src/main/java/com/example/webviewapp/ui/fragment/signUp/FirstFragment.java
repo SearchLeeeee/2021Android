@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.webviewapp.R;
-import com.example.webviewapp.common.utils.Cloud.CloudUser;
 import com.example.webviewapp.contract.LoginContract;
 import com.example.webviewapp.databinding.FragmentFirstBinding;
 import com.example.webviewapp.presenter.LoginPresenter;
@@ -53,8 +52,6 @@ public class FirstFragment extends Fragment implements LoginContract.View {
      * 还有登录逻辑
      * 数据可以与数据库交互
      */
-    //private AlertDialog dialog;
-
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        binding.loginButton.setOnClickListener(view1 -> loginWindow());
@@ -83,7 +80,6 @@ public class FirstFragment extends Fragment implements LoginContract.View {
         //dialog.setView(dialogView);
         //dialog.show();
 
-        //fb
         mAuth = FirebaseAuth.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mAuthListner = new FirebaseAuth.AuthStateListener() {
@@ -127,7 +123,6 @@ public class FirstFragment extends Fragment implements LoginContract.View {
         binding = null;
     }
 
-    //fb
     private void userSign(String email, String password) {
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(getContext(), "请输入正确的邮箱", Toast.LENGTH_SHORT).show();
@@ -137,7 +132,6 @@ public class FirstFragment extends Fragment implements LoginContract.View {
             return;
         }
 
-        //fb
         ProgressDialog mDialog;
         mDialog = new ProgressDialog(getContext());
 

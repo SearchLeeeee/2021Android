@@ -42,7 +42,6 @@ public class CustomWebViewClient extends WebViewClient {
         Log.d(TAG, "onPageStarted: 页面初始化" + title);
     }
 
-
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onPageFinished(WebView view, String url) {

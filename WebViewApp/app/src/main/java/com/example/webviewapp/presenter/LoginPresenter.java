@@ -28,7 +28,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void logout() {
         List<Record> records = DataManager.get().queryALLRecord();
-        String  uid = DataManager.get().LoginUserId;
+        String uid = DataManager.get().LoginUserId;
         Log.d(TAG, " logout: "+uid);
         CloudUser.get().uploadRecord(uid,records);
         DataManager.get().isLogin = false;
