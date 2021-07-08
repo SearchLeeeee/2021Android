@@ -6,17 +6,14 @@ import android.net.NetworkInfo;
 
 public class NetworkUtils {
 
-    public static final int NETWORK_TYPE_INVALID = 0;
-    public static final int NETWORK_TYPE_MOBILE = 1;
-    public static final int NETWORK_TYPE_WIFI = 2;
+    public static final int NETWORK_TYPE_INVALID = 0;//网络不可用
+    public static final int NETWORK_TYPE_MOBILE = 1;//流量
+    public static final int NETWORK_TYPE_WIFI = 2;//wifi
 
     /**
      * 获取当前网络连接状况
      *
-     * @return <br>
-     * 网络不可用 : {@link #NETWORK_TYPE_INVALID} <br>
-     * 蜂窝网络 : {@link #NETWORK_TYPE_MOBILE}<br>
-     * wifi连接 : {@link #NETWORK_TYPE_WIFI}
+     * @return
      */
     public static int getNetworkType(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

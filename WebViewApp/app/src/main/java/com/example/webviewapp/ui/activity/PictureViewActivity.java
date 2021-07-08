@@ -207,7 +207,6 @@ public class PictureViewActivity extends BaseActivity {
         if (imageUrls == null || curImageUrl == null) {
             return -1;
         }
-
         for (int i = 0; i < imageUrls.length; i++) {
             if (curImageUrl.equals(imageUrls[i])) {
                 return i;
