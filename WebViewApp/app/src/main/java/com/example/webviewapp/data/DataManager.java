@@ -79,7 +79,7 @@ public class DataManager {
                 .equalTo("isHistory", IS_HISTORY)
                 .findAll();
         historyList = realm.copyFromRealm(res);
-        historyList.sort((o1, o2) -> (int) (o2.getTime() - o1.getTime()));
+        historyList.sort((o1, o2) -> (int) (o2.time - o1.time));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -88,7 +88,7 @@ public class DataManager {
                 .equalTo("isHistory", IS_LABEL)
                 .findAll();
         labelList = realm.copyFromRealm(res);
-        labelList.sort((o1, o2) -> (int) (o2.getTime() - o1.getTime()));
+        labelList.sort((o1, o2) -> (int) (o2.time - o1.time));
     }
 
     ////////////////////////记录相关/////////////////////////
@@ -116,7 +116,7 @@ public class DataManager {
         Record record;
         for (int i = 0; i < results.size(); i++) {
             record = results.get(i);
-            pk = Math.max(record.getPrimaryKey(), pk);
+            pk = Math.max(record.primaryKey, pk);
         }
         return pk + 1;
     }
@@ -197,7 +197,7 @@ public class DataManager {
                 .equalTo("isHistory", isHistory)
                 .findFirst();
         if (res == null) return null;
-        return res.getTitle();
+        return res.title;
     }
 
     /**
@@ -208,7 +208,7 @@ public class DataManager {
     public void addRecord(Record record) {
         realm.executeTransaction(realm1 -> {
 //            record.setPrimaryKey(generatePrimaryKey(Record.class));
-            record.setPrimaryKey(generateRecodePrimaryKey());
+            record.primaryKey = generateRecodePrimaryKey();
             realm.copyToRealmOrUpdate(record);
         });
     }

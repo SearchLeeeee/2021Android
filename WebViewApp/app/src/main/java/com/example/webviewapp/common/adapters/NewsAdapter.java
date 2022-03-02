@@ -43,30 +43,30 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         NewsItem item = news.get(position);
-        holder.title.setText(item.getTitle());
-        holder.authorName.setText(item.getAuthorName());
-        if (item.getThumbnailPics().size() == 1) {
+        holder.title.setText(item.title);
+        holder.authorName.setText(item.authorName);
+        if (item.thumbnailPics.size() == 1) {
             RelativeLayout.LayoutParams imgParams = (RelativeLayout.LayoutParams) holder.newsImage1.getLayoutParams();
             imgParams.addRule(RelativeLayout.RIGHT_OF, R.id.title);
             imgParams.addRule(RelativeLayout.BELOW, RelativeLayout.ALIGN_PARENT_TOP);
             RelativeLayout.LayoutParams titleParams = (RelativeLayout.LayoutParams) holder.title.getLayoutParams();
             titleParams.width = 600;
-            Glide.with(context).load(item.getThumbnailPics().get(0)).into(holder.newsImage1);
+            Glide.with(context).load(item.thumbnailPics.get(0)).into(holder.newsImage1);
         }
-        if (item.getThumbnailPics().size() == 2) {
-            Glide.with(context).load(item.getThumbnailPics().get(0)).into(holder.newsImage1);
-            Glide.with(context).load(item.getThumbnailPics().get(1)).into(holder.newsImage2);
+        if (item.thumbnailPics.size() == 2) {
+            Glide.with(context).load(item.thumbnailPics.get(0)).into(holder.newsImage1);
+            Glide.with(context).load(item.thumbnailPics.get(1)).into(holder.newsImage2);
         }
-        if (item.getThumbnailPics().size() >= 3) {
-            Glide.with(context).load(item.getThumbnailPics().get(0)).into(holder.newsImage1);
-            Glide.with(context).load(item.getThumbnailPics().get(1)).into(holder.newsImage2);
-            Glide.with(context).load(item.getThumbnailPics().get(2)).into(holder.newsImage3);
+        if (item.thumbnailPics.size() >= 3) {
+            Glide.with(context).load(item.thumbnailPics.get(0)).into(holder.newsImage1);
+            Glide.with(context).load(item.thumbnailPics.get(1)).into(holder.newsImage2);
+            Glide.with(context).load(item.thumbnailPics.get(2)).into(holder.newsImage3);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra("url", item.getUrl());
+                intent.putExtra("url", item.url);
                 context.startActivity(intent);
             }
         });
