@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.webviewapp.R;
 import com.example.webviewapp.common.utils.Cloud.CloudUser;
-import com.example.webviewapp.contract.SignupContract;
+import com.example.webviewapp.contract.SignUpContract;
 import com.example.webviewapp.data.User;
 import com.example.webviewapp.databinding.FragmentRegisterBinding;
 import com.example.webviewapp.presenter.SignUpPresenter;
@@ -30,11 +30,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignUpActivity extends AppCompatActivity implements SignupContract.View {
+public class SignUpActivity extends AppCompatActivity implements SignUpContract.View {
     private static final String TAG = "SignUpActivity";
     public FragmentRegisterBinding viewBinding;
     boolean flag = false;
-    private SignupContract.Presenter presenter;
+    private SignUpContract.Presenter presenter;
     private int clickedImageID = 2131230895;
     private String Email;
     private String Password;
@@ -114,7 +114,7 @@ public class SignUpActivity extends AppCompatActivity implements SignupContract.
                     mDialog.dismiss();
                     OnAuth(task.getResult().getUser());
                     mAuth.signOut();
-                    presenter.SignUp();
+                    presenter.signUp();
                 } else {
                     mDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "创建用户失败，可能原因:\n1.网络连接失败\n2.该账号已存在", Toast.LENGTH_SHORT).show();

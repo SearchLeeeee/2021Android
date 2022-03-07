@@ -53,8 +53,8 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
      */
     private void initDateMap(List<Record> records) {
         for (int i = 0; i < records.size() - 1; i++) {
-            String today = DataFormatUtils.time2Date(records.get(i).getTime());
-            String lastDay = DataFormatUtils.time2Date(records.get(i + 1).getTime());
+            String today = DataFormatUtils.time2Date(records.get(i).time);
+            String lastDay = DataFormatUtils.time2Date(records.get(i + 1).time);
             if (lastDay.equals(today)) {
                 dateMap.put(i + 1, true);
             }
@@ -109,21 +109,21 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
     private void initItemView(@NonNull ViewHolder holder, int position, Record record) {
         if (!dateMap.containsKey(position)) {
             holder.date.setVisibility(View.VISIBLE);
-            holder.date.setText(DataFormatUtils.time2Date(record.getTime()));
+            holder.date.setText(DataFormatUtils.time2Date(record.time));
         } else {
             holder.date.setVisibility(View.GONE);
         }
         holder.checkBox.setVisibility(View.INVISIBLE);
-        String title = dataFormatUtils.text2Show(20, record.getTitle());
+        String title = dataFormatUtils.text2Show(20, record.title);
         holder.title.setText(title);
-        String url = dataFormatUtils.text2Show(30, record.getUrl());
+        String url = dataFormatUtils.text2Show(30, record.url);
         holder.url.setText(url);
     }
 
     public long getSelectedPosition() {
         if (checkboxMap.size() != 0) {
             List<Integer> list = new ArrayList<>(checkboxMap.keySet());
-            return records.get(list.get(0)).getPrimaryKey();
+            return records.get(list.get(0)).primaryKey;
         }
         return 0;
     }
@@ -133,7 +133,7 @@ public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecycl
         if (checkboxMap.size() != 0) {
             List<Integer> list = new ArrayList<>(checkboxMap.keySet());
             for (int i = 0; i < list.size(); i++)
-                res.add(records.get(list.get(i)).getUrl());
+                res.add(records.get(list.get(i)).url);
 //            return records.get(list.get(0)).getPrimaryKey();
         }
         return res;

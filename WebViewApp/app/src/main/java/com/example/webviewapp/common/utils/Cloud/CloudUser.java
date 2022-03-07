@@ -152,9 +152,9 @@ public class CloudUser {
                 String uri = savePathDir + "/" + fileName;
                 String json = DataFormatUtils.readJsonFile(uri);
                 JSONObject object = JSON.parseObject(json);
-                user.setEmail(object.getString("email"));
-                user.setAvatarId(object.getInteger("avatarId"));
-                EventUtils.post(new EventUtils.UserEvent(user.getEmail(), user.getAvatarId()));
+                user.email = object.getString("email");
+                user.avatarId = object.getInteger("avatarId");
+                EventUtils.post(new EventUtils.UserEvent(user.email, user.avatarId));
             }
 
             @Override
@@ -228,12 +228,12 @@ public class CloudUser {
                 for (int i = 0; i < array.size(); i++) {
                     Record record = new Record();
                     JSONObject jsonObject = array.getJSONObject(i);
-                    record.setUrl(jsonObject.getString("url"));
-                    record.setUid(jsonObject.getLong("uid"));
-                    record.setTime(jsonObject.getLong("time"));
-                    record.setTitle(jsonObject.getString("title"));
-                    record.setIsHistory(jsonObject.getInteger("isHistory"));
-                    record.setDetails(jsonObject.getString("details"));
+                    record.url = jsonObject.getString("url");
+                    record.uid = jsonObject.getLong("uid");
+                    record.time = jsonObject.getLong("time");
+                    record.title = jsonObject.getString("title");
+                    record.isHistory = jsonObject.getInteger("isHistory");
+                    record.details = jsonObject.getString("details");
                     records.add(record);
                 }
             }

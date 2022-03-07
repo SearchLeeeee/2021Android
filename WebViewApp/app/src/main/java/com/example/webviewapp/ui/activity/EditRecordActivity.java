@@ -32,7 +32,7 @@ public class EditRecordActivity extends BaseActivity implements EditRecordContra
     }
 
     private void initEditView() {
-        viewBinding.title.setText(record.getTitle());
+        viewBinding.title.setText(record.title);
         viewBinding.title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -49,7 +49,7 @@ public class EditRecordActivity extends BaseActivity implements EditRecordContra
                 presenter.checkContent(viewBinding.title.getText().toString(), viewBinding.url.getText().toString());
             }
         });
-        viewBinding.url.setText(record.getUrl());
+        viewBinding.url.setText(record.url);
         viewBinding.url.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -76,8 +76,8 @@ public class EditRecordActivity extends BaseActivity implements EditRecordContra
             } else if (viewBinding.url.getText().toString().isEmpty()) {
                 Toast.makeText(this, "书签详情不能为空！", Toast.LENGTH_SHORT).show();
             } else {
-                record.setTitle(viewBinding.title.getText().toString());
-                record.setUrl(viewBinding.url.getText().toString());
+                record.title = viewBinding.title.getText().toString();
+                record.url = viewBinding.url.getText().toString();
                 presenter.updateRecord(record);
                 finish();
             }

@@ -37,10 +37,10 @@ public class MainPresenter implements MainContract.Presenter {
         HashMap<String, Integer> hm = new HashMap<>();
         String temp;
         for (int i = 0; i < note.size(); i++) {
-            if (!hm.containsKey(note.get(i).getTitle())) {
-                hm.put(note.get(i).getTitle(), i);
-                if (note.get(i).getTitle().contains("-百度")) {
-                    temp = note.get(i).getTitle().replaceAll("- 百度", "");
+            if (!hm.containsKey(note.get(i).title)) {
+                hm.put(note.get(i).title, i);
+                if (note.get(i).title.contains("-百度")) {
+                    temp = note.get(i).title.replaceAll("- 百度", "");
                     history.add(temp);
                 }
             }
@@ -62,9 +62,9 @@ public class MainPresenter implements MainContract.Presenter {
         List<String> label = new ArrayList<>();
         HashMap<String, Integer> hm = new HashMap<>();
         for (int i = 0; i < note.size(); i++) {
-            if (!hm.containsKey(note.get(i).getUrl())) {
-                hm.put(note.get(i).getUrl(), i);
-                label.add(note.get(i).getUrl());
+            if (!hm.containsKey(note.get(i).url)) {
+                hm.put(note.get(i).url, i);
+                label.add(note.get(i).url);
             }
         }
         return label;

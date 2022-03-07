@@ -40,9 +40,9 @@ public class LoginPresenter implements LoginContract.Presenter {
     public void loadRecord(String uid) throws InterruptedException {
         List<Record> records =  CloudUser.get().getRecordsCloud(uid);
         for (int i=0;i<records.size();i++) {
-            Log.d(TAG, "loadRecord: "+ records.get(i).getTitle());
-            if (DataManager.get().queryRecordTitleByUrl(records.get(i).getUrl(), records.get(i).getIsHistory()) != null)
-                DataManager.get().deleteRecordsByUrl(records.get(i).getUrl(), records.get(i).getIsHistory());
+            Log.d(TAG, "loadRecord: "+ records.get(i).title);
+            if (DataManager.get().queryRecordTitleByUrl(records.get(i).url, records.get(i).isHistory) != null)
+                DataManager.get().deleteRecordsByUrl(records.get(i).url, records.get(i).isHistory);
             DataManager.get().addRecord(records.get(i));
         }
     }

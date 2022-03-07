@@ -47,7 +47,7 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
     }
 
     private void initData() {
-        records = presenter.getData();
+        records = presenter.data;
         initView(records);
     }
 
@@ -100,7 +100,7 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
             public void onItemClick(View view, int position) {
                 //TODO:历史点击处理
                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra("url", re.get(position).getUrl());
+                intent.putExtra("url", re.get(position).url);
                 startActivity(intent);
             }
 
@@ -152,8 +152,8 @@ public class HistoryFragment extends BaseFragment implements HistoryContract.Vie
                 String input = viewBinding.editText.getText().toString();
                 List<Record> output = new ArrayList<>();
                 for (Record record : records) {
-                    if (record.getTitle().toLowerCase().contains(input.toLowerCase()) ||
-                            record.getDetails().toLowerCase().contains(input.toLowerCase())) {
+                    if (record.title.toLowerCase().contains(input.toLowerCase()) ||
+                            record.details.toLowerCase().contains(input.toLowerCase())) {
                         output.add(record);
                     }
                 }

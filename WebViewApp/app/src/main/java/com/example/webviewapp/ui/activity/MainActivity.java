@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {//页面开始加载
             viewBinding.progressbar.setVisibility(View.VISIBLE);
-            if (presenter.getLabelUrl().contains(viewBinding.webview.getUrl())) {
+            if (presenter.labelUrl.contains(viewBinding.webview.getUrl())) {
                 addedText.setText("已添加");
                 addLabel.setImageResource(R.drawable.collected);
             } else {
@@ -153,7 +153,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private void initSearchBar() {
         viewBinding.searchbar.setIconifiedByDefault(false);
-        List<String> history = presenter.getHistory();
+        List<String> history = presenter.history;
         ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, history);
         viewBinding.listView.setAdapter(adapter);
         viewBinding.listView.setTextFilterEnabled(true);

@@ -57,7 +57,7 @@ public class NewsFragment extends Fragment {
 
             for (String key : object.keySet()) {
                 if (key.contains("thumbnail_pic_s")) {
-                    item.getThumbnailPics().add(object.getString(key));
+                    item.thumbnailPics.add(object.getString(key));
                 }
             }
 
@@ -66,11 +66,11 @@ public class NewsFragment extends Fragment {
     }
 
     private void initItem(JSONObject object, NewsItem item) {
-        item.setUniquekey(object.getString("uniquekey"));
-        item.setTitle(object.getString("title"));
-        item.setCategory(object.getString("category"));
-        item.setAuthorName(object.getString("author_name"));
-        item.setUrl(object.getString("url"));
-        item.setIsContent(object.getString("is_content"));
+        item.uniquekey = object.getString("uniquekey");
+        item.title = object.getString("title");
+        item.category = object.getString("category");
+        item.authorName = object.getString("author_name");
+        item.url = object.getString("url");
+        item.isContent = object.getString("is_content");
     }
 }

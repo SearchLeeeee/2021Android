@@ -148,7 +148,7 @@ public final class PermissionUtils {
                     requestPermission(permission);
                     continue;
                 }
-                long time = new Date().getTime() - DataManager.get().queryDeniedPermission(permission).getTime();
+                long time = new Date().getTime() - DataManager.get().queryDeniedPermission(permission).time;
                 if (time > GAP_48_HOURS) {
                     requestPermission(permission);
                 } else if (time <= GAP_48_HOURS) {
